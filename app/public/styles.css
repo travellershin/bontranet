@@ -1,0 +1,376 @@
+html{
+    /*-ms-overflow-style: none;*/
+    width:100%;
+    height:100%;
+}
+body{
+    width:100%;
+    height:100%;
+    font-family: sans-serif;
+    position: relative;
+}
+input{
+    border-style:none;
+}
+h1,h2,h3,h4,h5,h6,p,ul,li,div,html,body,img,a,input,button{
+  margin:0;
+  padding:0;
+  border: none;
+
+}
+a{
+    text-decoration: none;
+}
+textarea{
+    resize: none;
+    font-family: sans-serif;
+}
+ul,li{
+  list-style:none;
+}
+p,h1 {
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+}
+/*직접 수정하지 말 것. gulp>sprite.css를 통해 자동 생성된 파일.*/
+.icon{
+    background-image: url('/assets/sprites/sprite-ac89a738.svg');
+}
+.icon--bluepin {
+    width: 20px;
+    height: 28px;
+    background-position: 0 52.94117647058823%;
+}
+.icon--calendar {
+    width: 24px;
+    height: 24px;
+    background-position: 27.77777777777778% 49.09090909090909%;
+}
+.icon--city {
+    width: 24px;
+    height: 24px;
+    background-position: 61.111111111111114% 49.09090909090909%;
+}
+.icon--during {
+    width: 16px;
+    height: 16px;
+    background-position: 60% 87.3015873015873%;
+}
+.icon--fee {
+    width: 16px;
+    height: 16px;
+    background-position: 80% 87.3015873015873%;
+}
+.icon--logo {
+    width: 80px;
+    height: 27px;
+    background-position: 0 0;
+}
+.icon--open {
+    width: 16px;
+    height: 16px;
+    background-position: 100% 0;
+}
+.icon--reset {
+    width: 24px;
+    height: 24px;
+    background-position: 0 100%;
+}
+.icon--share {
+    width: 24px;
+    height: 24px;
+    background-position: 33.333333333333336% 100%;
+}
+.icon--web {
+    width: 16px;
+    height: 16px;
+    background-position: 100% 25.396825396825395%;
+}
+.header{
+    height: 56px;
+    width: 100%;
+    opacity: 0.98;
+    background-color: #333333;
+    -webkit-box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1);
+}
+.header_logo{
+        width: 80px;
+        height: 27px;
+        text-indent: 101%;
+        overflow: hidden;
+        display:inline-block;
+        margin:13px 50px 0 60px;
+        float: left;
+    }
+#app{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.wrapper{
+    height: calc(100% - 56px);
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+#map{
+    width: calc(100% - 672px);
+    height: 100%;
+    float: left;
+}
+.selector{
+    float: left;
+    width: 400px;
+    height: 100%;
+    background-color: #fafafa;
+    -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+.reco{
+    float: right;
+    width: 272px;
+    overflow: hidden;
+}
+.selector_imgBox{
+        width: 400px;
+        height: 160px;
+        overflow: hidden;
+        position: relative;
+    }
+.selector_imgBox img{
+            width: 400px;
+            height: auto;
+        }
+.selector_optBox{
+        width: 400px;
+        height: 36px;
+        
+    }
+.selector_infoBox{
+        width: 400px;
+        height: calc(100% - 252px);
+        overflow: auto;
+    }
+.selector_infoBox .ib{
+            -webkit-user-select: none;
+               -moz-user-select: none;
+                -ms-user-select: none;
+                    user-select: none;
+        }
+.selector_infoBox .ib_box{
+                overflow: hidden;
+                width: 380px;
+                height: 60px;
+                cursor: pointer;
+                color: #333333;
+            }
+.selector_infoBox .ib_box:hover{
+                    color: #5d85ff;
+                }
+.selector_infoBox .ib_box:hover .ib_toggle{
+                        background-image: url("./assets/list-minus.png");
+                    }
+.selector_infoBox .ib_pin{
+                float: left;
+                width: 32px;
+                height: 32px;
+                margin: 14px;
+                background-image: url("./assets/pin-on.png");
+            }
+.selector_infoBox .ib_idx{
+                float: left;
+                height: 60px;
+                line-height: 58px;
+                font-size: 20px;
+                letter-spacing: -0.6px;
+                width: 36px;
+            }
+.selector_infoBox .ib_name{
+                float: left;
+                height: 60px;
+                line-height: 59px;
+                font-size:15px;
+                font-weight: bold;
+                letter-spacing: -0.8px;
+                -webkit-user-select: none;
+                   -moz-user-select: none;
+                    -ms-user-select: none;
+                        user-select: none;
+            }
+.selector_infoBox .ib_toggle{
+                float: right;
+                width: 32px;
+                height: 32px;
+                margin: 14px 2px;
+                background-image: none;
+            }
+.selector_allBox{
+        overflow: hidden;
+        width: 400px;
+        height: 56px;
+    }
+.selector_allBox>*{
+            width: 96px;
+            height: 28px;
+            -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+            float: right;
+            border-radius: 3px;
+            border: solid 1px #e0e0e0;
+            font-size: 13px;
+            text-align:right;
+            padding: 3px 12px 3px 8px;
+            color: #555555;
+            letter-spacing: -0.4px;
+            cursor: pointer;
+        }
+.selector_allBox>*>p{
+                float: right;
+                margin-top: 1px;
+            }
+.selector_allBox>*>span{
+                float: left;
+                width: 20px;
+                height: 20px;
+                background-size: contain;
+            }
+.selector_allBox>.ab_unSelect{
+            margin: 14px 20px 14px 8px;
+        }
+.selector_allBox .ab_on{
+            background-image: url("./assets/pin-on.png");
+        }
+.selector_allBox .ab_off{
+            background-image: url("./assets/pin-off.png");
+        }
+.selector_allBox>.ab_select{
+            margin-top: 14px;
+        }
+.unSelected{
+    color: #b4b2b8 !important;
+}
+.unSelected .ib_pin{
+        background-image: url("./assets/pin-off.png");
+    }
+.unSelected:hover{
+        color: #5d85ff !important;
+    }
+.unSelected:hover .ib_toggle{
+            background-image: url("./assets/list-plus.png") !important;
+        }
+.reco_header{
+        width: 100%;
+        height: 52px;
+        background-color: #fff;
+        overflow: hidden;
+    }
+.reco_header>h2{
+            float: left;
+            color: #555555;
+            font-size: 18px;
+            line-height: 52px;
+            margin-left: 20px;
+        }
+.reco_header>div{
+            float: right;
+            height: 52px;
+            margin-right: 16px;
+        }
+.reco_filter{
+        width: 100%;
+        height: 220px;
+        background-color: #f9f9f9;
+        padding-top: 8px;
+    }
+.reco_filter_hint{
+            margin-left: 20px;
+            height: 16px;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 16px;
+            letter-spacing: -0.2px;
+            color: #9e9e9e;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+.reco_filter_checkBoxDiv{
+            width: 100%;
+            overflow: hidden;
+        }
+.reco_filter_checkBoxDiv>input{
+                display: none;
+            }
+.reco_filter_checkBoxDiv>label{
+                margin: 0 0 16px 16px;
+                float: left;
+                width: 120px;
+                font-size: 14px;
+                height: 16px;
+                line-height: 16px;
+                letter-spacing: -0.4px;
+                cursor: pointer;
+                -webkit-user-select: none;
+                   -moz-user-select: none;
+                    -ms-user-select: none;
+                        user-select: none;
+            }
+.reco_filter_checkBoxDiv>label:last-child{
+                    width: calc(100% - 20px);
+                }
+.reco_filter_checkBoxDiv>label>span{
+                    margin-right: 8px;
+                    width: 16px;
+                    height: 16px;
+                    background-image:url("./assets/checkbox-off.png");
+                    float: left;
+                }
+.reco_filter_checkBoxDiv input[type="checkbox"]:checked + label span {
+                background-image:url("./assets/checkbox-on.png")
+            }
+.recoBox{
+    width: 100%;
+}
+.recoBox_header{
+        width: 100%;
+        height: 70px;
+        overflow: hidden;
+    }
+.recoBox_header>p{
+            float: left;
+            font-size: 24px;
+            line-height: 28px;
+            margin: 20px 0 0 20px;
+            color:white;
+            -webkit-user-select: none;
+               -moz-user-select: none;
+                -ms-user-select: none;
+                    user-select: none;
+        }
+.recoBox_header>a{
+            background-color: rgba(255, 255, 255, 0.1);
+            border: solid 1px rgba(255, 255, 255, 0.8);
+            color: white;
+            line-height: 24px;
+            height: 24px;
+            width: 140px;
+            font-size: 13px;
+            text-align: center;
+            letter-spacing: -0.4px;
+            display: block;
+            float: right;
+            margin: 22px 20px 0 0;
+            border-radius: 3px;
+        }
+.recoBox_areaName{
+        width: 232px;
+        margin-left: 20px;
+        height: 24px;
+        padding-bottom: 20px;
+        font-size: 18px;
+        letter-spacing: -0.4px;
+        color: rgba(255,255,255,0.9);
+        line-height: 24px;
+    }

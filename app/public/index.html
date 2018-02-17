@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <div id="app">
+        <!--modules/header.css-->
+        <header class="header">
+            <a href="#" v-on:click.prevent="">
+                <h1>
+                    <span class="header_logo icon icon--logo">트리픽</span>
+                 </h1>
+             </a>
+            <city-selector></city-selector>
+        </header>
+    
+
+        <!--modules/layout.css-->
+        <div class="wrapper">
+            <div class="selector">
+                <!--modules/selector.css-->
+                <div class="selector_imgBox">
+                    <img src="./assets/city/ny.jpg" alt="뉴욕 이미지">
+                    <p class="selector_cityName">NEW YORK</p>
+                    <p class="selector_natName">United States</p>
+                </div>
+                <div class="selector_optBox"></div>
+                <div class="selector_infoBox">
+                    <div class="ib_box" v-for="(spot, idx) in spots" :idx=[idx] :id="['spot_'+idx]" @mouseenter="spotEnter" @mouseleave="spotLeave">
+                        <span class="ib_pin" @click="spotClicked" :idx=[idx]></span>
+                        <p class="ib_idx" :idx=[idx]>{{ idx>8 ? (idx+1) : "0"+(idx+1) }}</p>
+                        <p class="ib_name" :idx=[idx]>{{ spot.name }}</p>
+                    </div>
+                </div>
+                <div class="selector_allBox">
+                    <div class="ab_unSelect" @click="allUnSelect"><span class="ab_off"></span><p>전체해제</p></div>
+                    <div class="ab_select" @click="allSelect"><span class="ab_on"></span><p>전체선택</p></div>
+                </div>
+            </div>
+            <div id="map"></div>
+
+            <!--modules/layout.css-->
+            <div class="reco">
+                <!--modules/reco.css-->
+                <div class="reco_header">
+                    <h2>숙소지역 추천</h2>
+                    <div>
+                        <span></span>
+                        <!-- <p>필터영역 접기</p> -->
+                    </div>
+                </div>
+                <div class="reco_filter">
+                    <p class="reco_filter_hint">숙소지역 추천 기준</p>
+                    <div class="reco_filter_checkBoxDiv">
+                        <input type="checkbox" @change="standChecked" id="reco_0" value=0 checked>
+                        <label for="reco_0"><span></span>공항 접근성</label>
+                        <input type="checkbox" @change="standChecked" id="reco_1" value=1 checked>
+                        <label for="reco_1"><span></span>대중교통</label>
+                        <input type="checkbox" @change="standChecked" id="reco_2" value=2 checked>
+                        <label for="reco_2"><span></span>주변 편의시설</label>
+                        <input type="checkbox" @change="standChecked" id="reco_3" value=3 checked>
+                        <label for="reco_3"><span></span>치안</label>
+                        <input type="checkbox" @change="standChecked" id="reco_4" value=4 checked>
+                        <label for="reco_4"><span></span>관광지 접근성 - 선택된 {{ noOfSpot }}개 관광지</label>
+                    </div>
+                </div>
+                <div class="recoBox" id="areaBox_0">
+                    <div class="recoBox_header">
+                        <p>01</p>
+                        <a id="areaUrl_0" href="https://www.agoda.com/ko-kr/">이 지역 숙소 보러가기</a>
+                    </div>
+                    <p class="recoBox_areaName" id="areaName_0"></p>
+                </div>
+                <div class="recoBox" id="areaBox_1">
+                    <div class="recoBox_header">
+                        <p>02</p>
+                        <a id="areaUrl_1" href="https://www.agoda.com/ko-kr/">이 지역 숙소 보러가기</a>
+                    </div>
+                    <p class="recoBox_areaName" id="areaName_1"></p>
+            
+                </div>
+                <div class="recoBox" id="areaBox_2">
+                    <div class="recoBox_header">
+                        <p>03</p>
+                        <a id="areaUrl_2" href="https://www.agoda.com/ko-kr/">이 지역 숙소 보러가기</a>
+                    </div>
+                    <p class="recoBox_areaName" id="areaName_2"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <template id="city-selector">
+        <div class="citySelector" v-on:click="changeCity">
+            <span class="icon icon--city"></span>
+            <p>{{ cityNameKo }}</p>
+        </div>
+    </template>
+
+    <script src="./scripts/libraries/fecha.js"></script>
+    <script src="./scripts/libraries/datepicker.js"></script>
+    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB14yPdQPLZ-jh7gL-PmJF0vkvTSHTt8Aw&callback=initMap"></script>
+    <script src="./scripts/map.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCYaUa2NFgNbOcw3jKuckB-0XYyQF_fOyw",
+            authDomain: "tripic-fb74f.firebaseapp.com",
+            databaseURL: "https://tripic-fb74f.firebaseio.com",
+            projectId: "tripic-fb74f",
+            storageBucket: "tripic-fb74f.appspot.com",
+            messagingSenderId: "618311237529"
+        };
+        firebase.initializeApp(config);
+    </script>
+    <script src="./scripts/app.js"></script>
+</body>
+
+</html>
