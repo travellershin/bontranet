@@ -4,3 +4,5 @@
 @import "modules/layout";
 @import "modules/selector";
 @import "modules/reco";
+@import "modules/nysprite";
+@import "modules/infowindow";

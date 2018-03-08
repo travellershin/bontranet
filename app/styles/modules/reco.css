@@ -115,4 +115,50 @@
         color: rgba(255,255,255,0.9);
         line-height: 24px;
     }
+
+    &_rating{
+        height:96px;
+        box-sizing: border-box;
+        padding:8px 20px 24px 20px;
+
+        &_liner{
+            width:115px;
+            height: 24px;
+            float: left;
+            overflow: hidden;
+
+            &>.title{
+                width: 84px;
+                line-height: 16px;
+                color: rgba(0,0,0,0.7);
+                letter-spacing: -0.4px;
+                font-size:13px;
+                float: left;
+                font-weight: bold;
+            }
+
+            &>.rating{
+                width: 12px;
+                line-height: 16px;
+                font-size: 14px;
+                color:white;
+                float: left;
+                margin-left:4px;
+            }
+
+            &:last-child{
+                height: 16px;
+            }
+        }
+        & .leftLine{
+            border-right:1px solid rgba(0,0,0,0.3);
+        }
+        & .rightLine{
+            &>.title{
+                margin-left:16px;
+                width: 60px;
+            }
+        }
+
+    }
 }

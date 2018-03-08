@@ -1,65 +1,87 @@
-import citySelector from './modules/citySelector';
-import Spots from './modules/spots';
-import Recommend from './modules/recommend';
-import Area from './modules/area';
+import Spots from "./modules/spots.js";
+import Area from "./modules/area.js";
 
-Vue.component('city-selector', citySelector);
+let db = {}
 
+firebase.database().ref("ny").once("value", snap => {
+    db = snap.val();
+    console.log(db)
+    Area.init(db.areas.agoda);
+    Spots.init(db.spots);
+    Area.calculate();
+    Spots.hotelTest(db.tests);
+    Spots.metroTest(db.metro);
+})
 
-let main = new Vue({
-    el: '#app',
-    data:{
-        db:{},
-        spots:[],
-        noOfSpot:0,
-        finalResult:[]
-    },
-    mounted: function(){
-        firebase.database().ref("ny").once("value", snap => {
-            this.db = snap.val();
-            this.spots = this.db.spots;
-            //list를 인자로 받아 spot을 지도에 마킹한다.
-            Spots.mark(this.db.spots);
-            Area.create(this.db);
-            Area.calculate();
-            this.calculateNoOfSpot();
-            this.finalResult = Area.finalResult;
-        })
-    },
-    methods: {
-        spotClicked: function(){
-            //클릭된 박스 번호를 인자로 받아 spot의 상태표시를 변경한다.
-            Spots.clicked(event.target.getAttribute("idx"));
-            this.calculateNoOfSpot();
-            this.finalResult = Area.finalResult;
-        },
-        spotEnter: function(){
-            Spots.enter(event.target.getAttribute("idx"));
-            this.calculateNoOfSpot();
-        },
-        spotLeave: function () {
-            Spots.leave(event.target.getAttribute("idx"));
-            this.calculateNoOfSpot();
-        },
-        allSelect: function(){
-            Spots.allSelect();
-            this.calculateNoOfSpot();
-            this.finalResult = Area.finalResult;
-        },
-        allUnSelect: function () {
-            Spots.allUnSelect();
-            this.calculateNoOfSpot();
-            this.finalResult = Area.finalResult;
-        },
-        calculateNoOfSpot: function() {
-            this.noOfSpot = this.spots.length - document.querySelectorAll(".unSelected").length
-        },
-        standChecked: function(){
-            Area.calculate();
-            this.finalResult = Area.finalResult;
-        }
-    }
-});
+$(".selector_infoBox").on("click", ".ib_box", function(){
+    Spots.checked($(this).attr("idx"));
+    Area.calculate();
+})
+$(".selector_infoBox").on("mouseover", ".ib_box", function () {
+    Spots.mouseOver($(this).attr("idx"));
+})
+$(".selector_infoBox").on("mouseout", ".ib_box", function () {
+    Spots.mouseOut($(this).attr("idx"));
+})
+$(".reco_filter_checkBoxDiv>input").change(function(){
+    Area.calculate();
+})
+$(".ab_select").click(function(){
+    Spots.checkAll();
+    Area.calculate();
+})
+$(".ab_unSelect").click(function () {
+    Spots.unCheckAll();
+    Area.calculate();
+})
+$(".ob_rank").click(function(){
+    Spots.sort("rank")
+})
+$(".ob_name").click(function () {
+    Spots.sort("name")
+})
 
-export default main;
+// let hi = {
+//     "criteria": {
+//         "cityId": 9395,
+//         "area": {
+//             "id": 0,
+//             "cityId": 0
+//         },
+//         "landmarkId": 0,
+//         "checkInDate": "2017-09-02",
+//         "checkOutDate": "2017-09-03",
+//         "additional": {
+//             "language": "en-us",
+//             "sortBy": "PriceAsc",
+//             "maxResult": 10,
+//             "discountOnly": false,
+//             "minimumStarRating": 0,
+//             "minimumReviewScore": 0,
+//             "dailyRate": {
+//                 "minimum": 1,
+//                 "maximum": 100
+//             },
+//             "occupancy": {
+//                 "numberOfAdult": 2,
+//                 "numberOfChildren": 1
+//             },
+//             "currency": "USD"
+//         }
+//     }
+// }
 
+// $.ajax({
+//     method: 'POST',
+//     headers: {
+//         'Authorization': '1799898:79c9455c-0649-402b-a5da-565d8faad17e'
+//     },
+//     url: 'http://affiliateapi7643.agoda.com/affiliateservice',
+//     data:JSON.stringify(hi),
+//     contentType:'application/json',
+//     dataType:'json',
+//     success: function (data) {
+//         console.log(data);
+//     }
+
+// })

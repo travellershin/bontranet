@@ -1,6 +1,6 @@
 .selector{
     &_imgBox{
-        width: 400px;
+        width: 380px;
         height: 160px;
         overflow: hidden;
         position: relative;
@@ -10,12 +10,12 @@
         }
     }
     &_optBox{
-        width: 400px;
+        width: 380px;
         height: 36px;
         
     }
     &_infoBox{
-        width: 400px;
+        width: 380px;
         height: calc(100% - 252px);
         overflow: auto;
 
@@ -24,7 +24,7 @@
 
             &_box{
                 overflow: hidden;
-                width: 380px;
+                width: 360px;
                 height: 60px;
                 cursor: pointer;
                 color: #333333;
@@ -44,7 +44,7 @@
                 margin: 14px;
                 background-image: url("./assets/pin-on.png");
             }
-            &_idx{
+            &_rank{
                 float: left;
                 height: 60px;
                 line-height: 58px;
@@ -73,7 +73,7 @@
 
     &_allBox{
         overflow: hidden;
-        width: 400px;
+        width: 380px;
         height: 56px;
 
         &>*{

@@ -1,99 +1,101 @@
-import Spots from './spots';
+import Spots from "./spots.js";
 
 let Area = {
-    selected: "agoda",
-    colorSet: ["#f15721", "#fc961a", "#f2c939", "#b9c242", 
-        "#5c9850", "#10825d", "#11abca", "#4783f5", 
+    list:[],
+    colorSet: ["#f15721", "#fc961a", "#f2c939", "#b9c242",
+        "#5c9850", "#10825d", "#11abca", "#4783f5",
         "#9a1c48", "#7c3893", "#3f5ca8", "#795547"
     ],
-    where: [],
-    name:[],
-    polygons:[],
-    score:[],
-    scoreObjArray: [],
 
-    create: function(data){
-        //agoda 또는 booking.com 기준 데이터 하나만 선택
-        let sData = data.areas[this.selected];
-        if (this.selected === "agoda") {
-            for (let i = 0; i < data.spots.length; i++) {
-                this.where.push(data.spots[i].area[0]);
-            }
-        }
-        for (let i = 0; i < sData.length; i++) {
-            let pg = new google.maps.Polygon({
-                paths: sData[i].coor,
+    init: function(data){
+        for (let i = 0; i < data.length; i++) {
+            data[i].polygon = new google.maps.Polygon({
+                paths: data[i].coor,
                 fillColor: this.colorSet[i],
-                fillOpacity:0.2,
-                strokeWeight:1.2,
-                strokeColor:this.colorSet[i]
+                fillOpacity: 0.2,
+                strokeWeight: 1.2,
+                strokeColor: this.colorSet[i]
             })
-            for (let i = 0; i < sData[i].score.length; i++) {
-                let mdScore
-            }
-            this.polygons.push(pg);
-            this.score.push(sData[i].score);
-            this.name.push(sData[i].name)
+
+            this.list.push(data[i])
         }
     },
 
-    calculate: function(){
-        let standards = [false,false,false,false,false];
+    calculate: function () {
+        let standards = [false, false, false, false, false];
         for (let i = 0; i < 5; i++) {
-            if(document.querySelector("#reco_"+i).checked){
+            if ($("#reco_" + i).is(":checked")) {
                 standards[i] = true;
             }
         }
 
-        this.scoreObjArray = [];
-        for (let i = 0; i < this.score.length; i++) {
-            //score 4번째 요소가 관광지 점수!
-            this.score[i][4] = 0;
+        for (let i = 0; i < this.list.length; i++) {
+            //관광지 점수를 초기화한다.
+            this.list[i].score[4] = 0;
         }
-        let len = this.where.length;
-        for (let i = 0; i < len; i++) {
-            if(Spots.marked[i]){
-                if (typeof this.where[i] === 'number'){
-                    this.score[this.where[i]][4]+=1.1;
-                }else{
-                    for (let j = 0; j < this.where.length; j++) {
-                        if(typeof this.where[i][j] === 'number'){
-                            this.score[this.where[i][j]][4]+=1.1;
+
+        for (let i = 0; i < Spots.list.length; i++) {
+            if (Spots.list[i].checked){
+                if (typeof Spots.list[i].area === 'number') {
+                    this.list[Spots.list[i].area].score[4] += 1.1;
+                } else {
+                    for (let j = 0; j < Spots.list[i].area.length; j++) {
+                        if (typeof Spots.list[i].area[j] === 'number') {
+                            this.list[Spots.list[i].area[j]].score[4] += 1.1;
                         }
                     }
                 }
             }
         }
-        for (let i = 0; i < this.score.length; i++) {
+
+        let scoreSumArray = [];
+
+        for (let i = 0; i < this.list.length; i++) {
             let scoreSum = 0;
             if (standards[0]){
                 //0번째 요소는 공항평점 - 일단 0번째로 고정(jfk임)
-                scoreSum += this.score[i][0][0];
+                scoreSum += this.list[i].score[0][0];
             }
-            for (let j = 1; j < this.score[i].length; j++) {
-                if (standards[j]){
-                    scoreSum += this.score[i][j]
+            for (let j = 1; j < 5; j++) {
+                if (standards[j]) {
+                    scoreSum += this.list[i].score[j]
                 }
             }
-            this.scoreObjArray.push({areaNo:i,score:scoreSum})
+            scoreSumArray.push({ areaNo: i, score: scoreSum });
         }
-        this.scoreObjArray.sort(function(a,b){
-            return a.score<b.score ? 1 : a.score > b.score ? -1 : 0;
+
+        scoreSumArray.sort(function (a, b) {
+            return a.score < b.score ? 1 : a.score > b.score ? -1 : 0;
         })
-        this.result([this.scoreObjArray[0].areaNo, this.scoreObjArray[1].areaNo, this.scoreObjArray[2].areaNo])
+        this.result([scoreSumArray[0].areaNo, scoreSumArray[1].areaNo, scoreSumArray[2].areaNo])
     },
 
-    result: function(rArray){
-        for (let i = 0; i < this.polygons.length; i++) {
-            if (!rArray.includes(i)){
-                this.polygons[i].setMap(null)
+    result: function (resultArray) {
+        for (let i = 0; i < this.list.length; i++) {
+            if (!resultArray.includes(i)) {
+                this.list[i].polygon.setMap(null)
             }
         }
 
-        for (let i = 0; i < rArray.length; i++) {
-            this.polygons[rArray[i]].setMap(map);
-            document.querySelector("#areaName_"+i).innerHTML = this.name[rArray[i]];
-            document.querySelector("#areaBox_" + i).style.backgroundColor = this.colorSet[rArray[i]]
+        for (let i = 0; i < resultArray.length; i++) {
+            let url = "https://www.agoda.com/partners/partnersearch.aspx?cid=1799898&pcs=1&hl=ko&city=318&checkIn=2018-03-13&checkOut=2018-03-15&los=2&rooms=1&adults=1&hotelArea=60866";
+            this.list[resultArray[i]].polygon.setMap(map);
+            document.querySelector("#areaName_" + i).innerHTML = this.list[resultArray[i]].name;
+            document.querySelector("#areaBox_" + i).style.backgroundColor = this.colorSet[resultArray[i]];
+            document.querySelector("#areaUrl_" + i).setAttribute("href", "");
+
+            let sc = this.list[resultArray[i]].score;
+
+            //공항평점. 공항선택 기능 넣으면 배열 두번째 [0]은 해당 선택 idx
+            let air = sc[0][0];
+            if(air>4.4){
+                $("#score_"+i+"_0")
+            }
+
+            for (let i = 1; i < 5; i++) {
+                
+                
+            }
         }
     }
 }

@@ -117,13 +117,13 @@ p,h1 {
     overflow: hidden;
 }
 #map{
-    width: calc(100% - 672px);
+    width: calc(100% - 652px);
     height: 100%;
     float: left;
 }
 .selector{
     float: left;
-    width: 400px;
+    width: 380px;
     height: 100%;
     background-color: #fafafa;
     -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -135,7 +135,7 @@ p,h1 {
     overflow: hidden;
 }
 .selector_imgBox{
-        width: 400px;
+        width: 380px;
         height: 160px;
         overflow: hidden;
         position: relative;
@@ -145,12 +145,12 @@ p,h1 {
             height: auto;
         }
 .selector_optBox{
-        width: 400px;
+        width: 380px;
         height: 36px;
         
     }
 .selector_infoBox{
-        width: 400px;
+        width: 380px;
         height: calc(100% - 252px);
         overflow: auto;
     }
@@ -162,7 +162,7 @@ p,h1 {
         }
 .selector_infoBox .ib_box{
                 overflow: hidden;
-                width: 380px;
+                width: 360px;
                 height: 60px;
                 cursor: pointer;
                 color: #333333;
@@ -180,7 +180,7 @@ p,h1 {
                 margin: 14px;
                 background-image: url("./assets/pin-on.png");
             }
-.selector_infoBox .ib_idx{
+.selector_infoBox .ib_rank{
                 float: left;
                 height: 60px;
                 line-height: 58px;
@@ -209,7 +209,7 @@ p,h1 {
             }
 .selector_allBox{
         overflow: hidden;
-        width: 400px;
+        width: 380px;
         height: 56px;
     }
 .selector_allBox>*{
@@ -374,3 +374,156 @@ p,h1 {
         color: rgba(255,255,255,0.9);
         line-height: 24px;
     }
+.recoBox_rating{
+        height:96px;
+        -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+        padding:8px 20px 24px 20px;
+
+    }
+.recoBox_rating_liner{
+            width:115px;
+            height: 24px;
+            float: left;
+            overflow: hidden;
+        }
+.recoBox_rating_liner>.title{
+                width: 84px;
+                line-height: 16px;
+                color: rgba(0,0,0,0.7);
+                letter-spacing: -0.4px;
+                font-size:13px;
+                float: left;
+                font-weight: bold;
+            }
+.recoBox_rating_liner>.rating{
+                width: 12px;
+                line-height: 16px;
+                font-size: 14px;
+                color:white;
+                float: left;
+                margin-left:4px;
+            }
+.recoBox_rating_liner:last-child{
+                height: 16px;
+            }
+.recoBox_rating .leftLine{
+            border-right:1px solid rgba(0,0,0,0.3);
+        }
+.recoBox_rating .rightLine>.title{
+                margin-left:16px;
+                width: 60px;
+            }
+.infoImage{ display: inline-block; background: url('./assets/ny.jpg') no-repeat; overflow: hidden; text-indent: -9999px; text-align: left;  width: 240px; height: 160px; }
+.ny_0 { background-position: -0px -0px;}
+.ny_1 { background-position: -240px -0px;}
+.ny_10 { background-position: -480px -0px;}
+.ny_11 { background-position: -720px -0px;}
+.ny_12 { background-position: -960px -0px;}
+.ny_13 { background-position: -1200px -0px;}
+.ny_14 { background-position: -1440px -0px;}
+.ny_15 { background-position: -0px -160px;}
+.ny_16 { background-position: -240px -160px;}
+.ny_17 { background-position: -480px -160px;}
+.ny_18 { background-position: -720px -160px;}
+.ny_19 { background-position: -960px -160px;}
+.ny_2 { background-position: -1200px -160px;}
+.ny_20 { background-position: -1440px -160px;}
+.ny_21 { background-position: -0px -320px;}
+.ny_22 { background-position: -240px -320px;}
+.ny_23 { background-position: -480px -320px;}
+.ny_24 { background-position: -720px -320px;}
+.ny_25 { background-position: -960px -320px;}
+.ny_26 { background-position: -1200px -320px;}
+.ny_27 { background-position: -1440px -320px;}
+.ny_28 { background-position: -0px -480px;}
+.ny_29 { background-position: -240px -480px;}
+.ny_3 { background-position: -480px -480px;}
+.ny_30 { background-position: -720px -480px;}
+.ny_31 { background-position: -960px -480px;}
+.ny_32 { background-position: -1200px -480px;}
+.ny_33 { background-position: -1440px -480px;}
+.ny_34 { background-position: -0px -640px;}
+.ny_35 { background-position: -240px -640px;}
+.ny_36 { background-position: -480px -640px;}
+.ny_37 { background-position: -720px -640px;}
+.ny_38 { background-position: -960px -640px;}
+.ny_39 { background-position: -1200px -640px;}
+.ny_4 { background-position: -1440px -640px;}
+.ny_40 { background-position: -0px -800px;}
+.ny_41 { background-position: -240px -800px;}
+.ny_42 { background-position: -480px -800px;}
+.ny_43 { background-position: -720px -800px;}
+.ny_44 { background-position: -960px -800px;}
+.ny_45 { background-position: -1200px -800px;}
+.ny_46 { background-position: -1440px -800px;}
+.ny_47 { background-position: -0px -960px;}
+.ny_48 { background-position: -240px -960px;}
+.ny_49 { background-position: -480px -960px;}
+.ny_5 { background-position: -720px -960px;}
+.ny_50 { background-position: -960px -960px;}
+.ny_51 { background-position: -1200px -960px;}
+.ny_52 { background-position: -1440px -960px;}
+.ny_53 { background-position: -0px -1120px;}
+.ny_54 { background-position: -240px -1120px;}
+.ny_55 { background-position: -480px -1120px;}
+.ny_56 { background-position: -720px -1120px;}
+.ny_57 { background-position: -960px -1120px;}
+.ny_6 { background-position: -1200px -1120px;}
+.ny_7 { background-position: -1440px -1120px;}
+.ny_8 { background-position: -0px -1280px;}
+.ny_9 { background-position: -240px -1280px;}
+.infowindow{
+    width: 240px;
+    overflow: hidden;
+}
+.infoTitle{
+    font-size: 16px;
+    margin: 20px 0 12px 0;
+    line-height: 20px;
+    font-weight: bold;
+    color: #333333;
+    letter-spacing: -0.7px;
+    padding:0 16px;
+    word-break:keep-all;
+}
+.infoDesc{
+    font-size: 14px;
+    line-height: 22px;
+    color: #666666;
+    font-weight: bold;
+    margin-bottom: 8px;
+    padding:0 16px;
+    letter-spacing: -0.4px;
+}
+.gm-style-pbc+div>div:nth-child(2)>div:nth-child(4)>div{
+    width: 240px !important;
+    -webkit-transform:translateX(23px);
+            transform:translateX(23px)
+}
+.gm-style-pbc+div>div:nth-child(2)>div:nth-child(4)>div>div:first-child>div:nth-child(2){
+    width: 240px !important;
+}
+.gm-style-pbc+div>div:nth-child(2)>div:nth-child(4)>div>div:first-child>div:nth-child(4){
+    width: 240px !important;
+    top:0 !important;
+    left:0 !important;
+}
+.gm-style-pbc+div>div:nth-child(2)>div:nth-child(4)>div>div:first-child>div:nth-child(3)>div:first-child{
+    left: -30px !important;
+}
+.gm-style-pbc+div>div:nth-child(2)>div:nth-child(4)>div>div:first-child>div:nth-child(3)>div:nth-child(2){
+    left: -14px !important;
+}
+.gm-style-pbc+div>div:nth-child(2)>div:nth-child(4)>div>div:first-child>div:first-child{
+    -webkit-transform:translateX(-22px);
+            transform:translateX(-22px);
+}
+/* 아래는 닫기 표시를 없애는 css인데, 요걸 추가해버리면 커스텀 iw 뿐만 아니라 모든 iw창에 닫기가 없어져버림 */
+/* .gm-style-iw + div {display: none;} */
+.gm-style-iw{
+    top:0 !important;
+    left:0 !important;
+    width: 240px !important;
+    border:none !important;
+}

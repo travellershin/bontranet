@@ -10,13 +10,13 @@
     overflow: hidden;
 }
 #map{
-    width: calc(100% - 672px);
+    width: calc(100% - 652px);
     height: 100%;
     float: left;
 }
 .selector{
     float: left;
-    width: 400px;
+    width: 380px;
     height: 100%;
     background-color: #fafafa;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);

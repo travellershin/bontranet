@@ -1,92 +1,165 @@
-import Area from './area';
-
 let Spots = {
-    marker:[],
-    marked:[],
-    infoArray:[],
-    
-    mark: function(sdata){
-        for (let i = 0; i < sdata.length; i++) {
-            let mk = new google.maps.Marker({
-                position: sdata[i].coor,
+    list: [],
+    inf:[],
+    count: 0,  //몇 개 선택되었는지 카운트
+    showAll:true, //false인경우 체크된 것만 보기
+
+    init: function(data){
+        for (let i = 0; i < data.length; i++) {
+            data[i].checked = true;
+
+            data[i].marker = new google.maps.Marker({
+                position: data[i].coor,
                 map: map,
-                icon: markerImg
+                icon: './assets/pin-map.png'
             });
-            let infowindow = new google.maps.InfoWindow({
-                content: '<p class="mkTitle">' + sdata[i].name + '</p>'
+            let rank = 0;
+            if (data[i].rank < 9) {
+                rank = "0" + (data[i].rank + 1);
+            } else {
+                rank += data[i].rank + 1;
+            }
+            let ct = '<div class="infowindow"><div class="infoImage ny_'+i+'"></div>'
+            ct += '<p class="infoTitle">'+ rank + " " + data[i].name + '</p><p class="infoDesc">' + data[i].description + '</p></div>'
+
+            data[i].infowindow = new google.maps.InfoWindow({
+                content: ct
             })
-            mk.addListener('mouseover', function(){
-                infowindow.open(map, mk);
+
+            data[i].marker.addListener('mouseover', function () {
+                data[i].infowindow.open(map, data[i].marker);
             });
-            mk.addListener('mouseout', function(){
-                infowindow.close(map, mk);
-            })
+
+            data[i].marker.addListener('mouseout', function () {
+                data[i].infowindow.close(map, data[i].marker);
+            });
+
             let that = this;
-            mk.addListener('click', function () {
-                that.moveToList(i)
-            })
-            this.marker.push(mk);
-            this.marked.push(true);
-            this.infoArray.push(infowindow);
+            data[i].marker.addListener('click', function () {
+                that.checked(i)
+            });
+
+            this.list.push(data[i]);
+            this.inf.push(data[i]);
+        }
+        this.count = data.length;
+        this.inflate();
+    },
+
+    hotelTest: function(data){
+        for (let i = 0; i < 15; i++) {
+            let mk = new google.maps.Marker({
+                position: data[i],
+                map: map,
+                icon: './assets/pin-map.png'
+            });
         }
     },
-    //좌측 리스트에서 스팟을 클릭해 선택/해제하는 경우
-    clicked: function(idx){
-        if(this.marked[idx]){
-            this.marker[idx].setMap(null);
-            this.marked[idx] = false;
-            document.querySelector("#spot_"+idx).classList.add("unSelected");
-            Area.calculate();
+
+    inflate: function(){
+        let txt = ""
+        if (this.showAll) {
+            for (let i = 0; i < this.list.length; i++) {
+                let info = this.inf[i];
+                let rank = 0;
+                if(info.rank < 9){
+                    rank = "0" + (info.rank+1);
+                }else{
+                    rank += info.rank+1;
+                }
+                if (this.list[info.rank].checked) {
+                    txt += '<div class="ib_box" idx='+info.rank+'><span class="ib_pin"></span>';
+                    txt += '<p class="ib_rank">' + rank +'</p><p class="ib_name">'+info.name+'</p></div>'
+                }else{
+                    txt += '<div class="ib_box unSelected" idx=' + info.rank +'><span class="ib_pin"></span>';
+                    txt += '<p class="ib_rank">' + rank + '</p><p class="ib_name">' + info.name + '</p></div>'
+                }
+            }
+        }
+        this.updateCount();
+        $(".selector_infoBox").html(txt);
+    },
+    
+    checked: function(i){
+        if(this.list[i].checked){
+            this.list[i].checked = false;
+            this.list[i].marker.setIcon("./assets/pin-map-off.png");
+            $(".ib_box[idx='"+i+"']").addClass("unSelected");
+            this.count--
         }else{
-            this.marker[idx].setMap(map)
-            this.marked[idx] = true;
-            document.querySelector("#spot_" + idx).classList.remove("unSelected");
-            Area.calculate();
+            this.list[i].checked = true;
+            this.list[i].marker.setIcon("./assets/pin-map.png");
+            $(".ib_box[idx='" + i + "']").removeClass("unSelected");
+            this.count++
         }
+        this.updateCount();
     },
-    //좌측 리스트에 마우스 오버하는경우
-    enter: function(idx){
-        this.infoArray[idx].open(map, this.marker[idx]);
-        map.setCenter(this.marker[idx].getPosition());
+    
+    mouseOver: function(i){
+        this.list[i].infowindow.open(map, this.list[i].marker)
     },
-    //좌측 리스트에서 마우스 떠나는경우
-    leave: function(idx){
-        this.infoArray[idx].close(map, this.marker[idx]);
+
+    mouseOut: function (i){
+        this.list[i].infowindow.close(map, this.list[i].marker)
     },
-    //지도 위 마커를 클릭하는 경우 -> 좌측 리스트에서 찾기
-    moveToList: function(idx){
-        let div = document.querySelector(".selector_infoBox");
-        div.scrollTop = 60*(idx-4);
-        let obj = document.querySelector("#spot_"+idx);
-        obj.style.color = '#5d85ff';
-        obj.style.backgroundColor = '#edf2ff';
-        setTimeout(function () {
-            obj.style.color = '#333333'
-            obj.style.backgroundColor = '#fafafa';
-        }, 3000);
+
+    updateCount: function(){
+        $("label[for='reco_4']").html("<span></span>관광지 접근성 - 선택된 "+ this.count +"개 관광지")
     },
-    allSelect: function(){
-        for (let i = 0; i < this.marker.length; i++) {
-            if(!this.marked[i]){
-                this.marker[i].setMap(map);
-                this.marked[i] = true;
-                document.querySelector("#spot_" + i).classList.remove("unSelected");
+
+    checkAll: function(){
+        for (let i = 0; i < this.list.length; i++) {
+            this.list[i].checked = true;
+            this.list[i].marker.setIcon("./assets/pin-map.png");
+            this.list[i].infowindow.close(map, this.list[i].marker);
+            $(".ib_box[idx='" + i + "']").removeClass("unSelected");
+        }
+        this.count = this.list.length;
+        this.updateCount();
+    }, 
+
+    unCheckAll: function(){
+        for (let i = 0; i < this.list.length; i++) {
+            this.list[i].checked = false;
+            this.list[i].marker.setIcon("./assets/pin-map-off.png");
+            $(".ib_box[idx='" + i + "']").addClass("unSelected");
+        }
+        this.count = 0;
+        this.updateCount();
+    },
+
+    sort: function(std){
+        this.inf.sort(function (a, b) {
+            return a[std] < b[std] ? -1 : a[std] > b[std] ? 1 : 0;
+        })
+        this.inflate();
+    },
+
+
+    metroTest: function(metro){
+        console.log(this.list);
+
+        for (let j = 0; j < 58; j++) {
+            let atCoor = this.list[j].coor;
+            this.list[j].metro = false;
+
+            for (let i = 0; i < 473; i++) {
+                let metroName = metro[i][0];
+                let latDif = Math.pow((atCoor.lat - metro[i][1][1])*111034,2);
+                let lngDif = Math.pow((atCoor.lng - metro[i][1][0]) * 85397, 2);
+                let dif = Math.sqrt(latDif+lngDif)
+
+                if(dif<500){
+                    console.log(this.list[j].name + " 관광지는 " + metroName + " 지하철역에서 " + dif + "m 떨어져있다.")
+                    this.list[j].metro = true;
+                }
+                // console.log(( ((atCoor.lat - metro[i][1][1]) * 111000) ^ 2 + ((atCoor.lng - metro[i][1][0]) * 85000) ^ 2))
+                
             }
-            //전체해제 후 좌측 리스트에 마우스오버하다가 전체선택하면 화면에 infoArray들이 가득
-            //표시되는 오류를 없애기 위해 한 번 다 닫아준다.
-            this.infoArray[i].close(map, this.marker[i]);
-        }
-        Area.calculate();
-    },
-    allUnSelect: function(){
-        for (let i = 0; i < this.marker.length; i++) {
-            if(this.marked[i]){
-                this.marker[i].setMap(null);
-                this.marked[i] = false;
-                document.querySelector("#spot_" + i).classList.add("unSelected");
+            if(!this.list[j].metro){
+                console.log(this.list[j].name + " 관광지는 가까운 지하철역이 없다.")
             }
         }
-        Area.calculate();
     }
 }
 
