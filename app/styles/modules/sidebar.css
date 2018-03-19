@@ -1,0 +1,231 @@
+.sb{
+    float: left;
+    width: 340px;
+    height: 100%;
+    box-shadow: 4px 0 15px 0 rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
+
+    & .logoDiv{
+        width: 100%;
+        height: 48px;
+        & .icon{
+            margin-left: 24px;
+        }
+    }
+    .header{
+        position: relative;
+        width: 100%;
+        height: 172px;
+        background-image: url("./assets/city/ny.svg");
+        background-size: contain;
+
+        & .citySelectorBox{
+            width: 248px;
+            height: 56px;
+            border-radius: 8px;
+            position: absolute;
+            background-color: rgba(255,255,255,0.4);
+            top: 30px;
+            left: 36px;
+            z-index: 1;
+            text-align: center;
+            cursor: pointer;
+            box-sizing: content-box;
+
+            &:hover{
+                border: solid 1px #4285f4;
+                left: 35px;
+                top: 29px;
+            }
+
+            & .icon--drop{
+                position: absolute;
+                top: 16px;
+                right: 8px;
+                z-index: 3;
+            }
+
+            & #cityName{
+                margin-top: 8px;
+                width: 248px;
+                height: 24px;
+                font-size: 18px;
+                line-height: 24px;
+                color: #444444;
+                font-weight: bold;
+            }
+            & #countryName{
+                width: 248px;
+                height: 16px;
+                font-size: 12px;
+                line-height: 16px;
+                color: #666666;
+            }
+        }
+
+        & .counter{
+            position: absolute;
+            top: 106px;
+            left: 86px;
+            overflow: hidden;
+            & .icon--pin-on{
+                float: left;
+            }
+            & .text{
+                float: left;
+                margin-left: 8px;
+                height: 36px;
+                line-height: 36px;
+                font-size: 28px;
+                font-weight: bold;
+                letter-spacing: -1px;
+                color: rgba(44,44,44,0.3);
+                & .selected{
+                    color: #444444;
+                }
+                & .selected, .total{
+                    width: 32px;
+                    float: left;
+                }
+                & .slash{
+                    margin: 0 2px;
+                    float: left;
+                    transform: rotate(5deg);
+                }
+                .total{
+                    margin-left: 2px;
+                }
+            }
+        }
+    }
+
+    & .setter{
+        height: 40px;
+        width: 100%;
+        background-color: white;
+        box-shadow: inset 0 -1px 0 0 #e9e9e9;
+
+        & .filter{
+            border-right: 1px solid #e0e0e0;
+        }
+
+        & .filter, .order{
+            width: 170px;
+            box-sizing: border-box;
+            height: 20px;
+            margin-top: 10px;
+            float: left;
+            overflow: hidden;
+
+            & #filter, #order{
+                float: left;
+                font-size: 14px;
+                line-height: 20px;
+                color: #666666;
+                margin-right: 8px;
+            }
+            & .icon{
+                float: left;
+                margin-top: 6px;
+            }
+        }
+    }
+
+    & .spots{
+        height: calc(100% - 320px);
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: scroll;
+
+        & .spotBox{
+            width: 100%;
+            height: 100px;
+            box-shadow: inset 0 -1px 0 0 #f3f4f5;
+            background-color: white;
+            overflow: hidden;
+            cursor: pointer;
+
+            &:hover{
+                background-color:#e9eff6;
+            }
+
+            & .pinDiv{
+                float: left;
+                width: 74px;
+                height: 100%;
+                position: relative;
+                pointer-events: none;
+            }
+
+            & .info{
+                float: left;
+                pointer-events: none;
+
+                & .rank{
+                    width: 40px;
+                    height: 16px;
+                    border-radius: 39px;
+                    background-color: #ffffff;
+                    border: solid 1px #ebebeb;
+                    color: #888888;
+                    font-size: 11px;
+                    line-height: 16px;
+                    text-align: center;
+                    margin-top: 18px;
+                }
+
+                & .name_ko{
+                    height: 24px;
+                    font-size: 16px;
+                    line-height: 24px;
+                    color:#666666;
+                    font-weight: bold;
+                    margin-top: 4px;
+                }
+
+                & .name_en{
+                    font-size: 13px;
+                    line-height: 20px;
+                    height: 20px;
+                    color: #aaaaaa;
+                }
+            }
+        }
+
+        & .selected{
+            background-color: #f6f9fc;
+            box-shadow: inset 0 -1px 0 0 #e8eef4;
+
+            & .rank{
+                color: #777777 !important;
+            }
+            & .name_ko{
+                color:#444444 !important;
+            }
+
+            & .name_en{
+                color: #999999 !important;
+            }
+        }
+    }
+
+    & .showAcco{
+        width: 100%;
+        height: 60px;
+        box-shadow: 0 -1px 4px 0 rgba(0, 0, 0, 0.12), 0 0 2px 0 rgba(0, 0, 0, 0.12);
+        background-color: #333333;
+        font-size: 16px;
+        line-height: 60px;
+        color: white;
+        z-index: 3;
+        position: relative;
+        cursor: pointer;
+
+        &:hover{
+            background-color: #353535;
+            color: #dddddd;
+        }
+    }
+}

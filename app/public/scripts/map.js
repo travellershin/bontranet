@@ -12,3 +12,17 @@ function initMap() {
 function avapil() {
     AVUXI.MapStart(map, '72b5ee53f774f');
 };
+initMap();
+// function calcRoute() {
+//     var directionsService = new google.maps.DirectionsService();
+//   var request = {
+//     origin: "John F. Kennedy International Airport",
+//     destination: {lat:40.755905,lng:-73.970947},
+//     travelMode: 'TRANSIT'
+//   };
+//   directionsService.route(request, function(result, status) {
+//     if (status == 'OK') {
+//       console.log(result)
+//     }
+//   });
+// }

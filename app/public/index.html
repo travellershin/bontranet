@@ -4,125 +4,83 @@
     <meta charset="utf-8">
     <title></title>
     <link rel="stylesheet" href="./styles.css">
+
+    <!-- 폰트는 helvetica-neu, ariel로 적용해보기 -->
 </head>
 
 <body>
-    <div id="app">
-        <!--modules/header.css-->
-        <header class="header">
-            <a href="#" onclick="event.preventDefault()">
-                <h1>
-                    <span class="header_logo icon icon--logo">트리픽</span>
-                 </h1>
-             </a>
-        </header>
-    
-
-        <!--modules/layout.css-->
-        <div class="wrapper">
-            <div class="selector">
-                <!--modules/selector.css-->
-                <div class="selector_imgBox">
-                    <img src="./assets/city/ny.jpg" alt="뉴욕 이미지">
-                    <p class="selector_cityName">NEW YORK</p>
-                    <p class="selector_natName">United States</p>
+    <!--modules/init.css-->
+    <div class="wrapper">
+        <!--modules/sidebar.css-->
+        <div class="sb">
+            <h1 class="logoDiv">
+                <span class="icon icon--logo"></span>
+            </h1>
+            <div class="header">
+                <div class="citySelectorBox">
+                    <h2 id="cityName">NEW YORK</h2>
+                    <h3 id="countryName">The United States</h3>
+                    <span class="icon icon--drop"></span>
                 </div>
-                <div class="selector_optBox">
-                    <p class="ob_rank">인기순</p>
-                    <p class="ob_name">가나다순</p>
-                    <div class="ob_counter"></div>
-                </div>
-                <div class="selector_infoBox">
-                    <!-- <div class="ib_box">
-                        <span class="ib_pin"></span>
-                        <p class="ib_rank">01</p>
-                        <p class="ib_name">메트로</p>
-                    </div> -->
-                </div>
-                <div class="selector_allBox">
-                    <div class="ab_unSelect"><span class="ab_off"></span><p>전체해제</p></div>
-                    <div class="ab_select"><span class="ab_on"></span><p>전체선택</p></div>
+                <div class="counter">
+                    <span class="icon icon--pin-on"></span>
+                    <p class="text">
+                        <span class="selected">23</span>
+                        <span class="slash">/</span>
+                        <span class="total">57</span>
+                    </p>
                 </div>
             </div>
-            <div id="map"></div>
-
-            <!--modules/layout.css-->
-            <div class="reco">
-                <!--modules/reco.css-->
-                <div class="reco_header">
-                    <h2>숙소지역 추천</h2>
-                    <div>
-                        <span></span>
-                        <!-- <p>필터영역 접기</p> -->
+            <div class="setter">
+                <a href="#" onclick="event.preventDefault()" class="filter">
+                    <div class="centerer">
+                        <p id="filter" class="ko">모두보기</p>
+                        <span class="icon icon--drop-small"></span>
                     </div>
-                </div>
-                <div class="reco_filter">
-                    <p class="reco_filter_hint">숙소지역 추천 기준</p>
-                    <div class="reco_filter_checkBoxDiv">
-                        <input type="checkbox" id="reco_0" value=0 checked>
-                        <label for="reco_0"><span></span>공항 접근성</label>
-                        <input type="checkbox" id="reco_1" value=1 checked>
-                        <label for="reco_1"><span></span>대중교통</label>
-                        <input type="checkbox" id="reco_2" value=2 checked>
-                        <label for="reco_2"><span></span>주변 편의시설</label>
-                        <input type="checkbox" id="reco_3" value=3 checked>
-                        <label for="reco_3"><span></span>치안</label>
-                        <input type="checkbox" id="reco_4" value=4 checked>
-                        <label for="reco_4"><span></span>관광지 접근성 - 선택된 0개 관광지</label>
+                </a>
+                <a href="#" onclick="event.preventDefault()" class="order">
+                    <div class="centerer">
+                        <p id="order" class="ko">인기순</p>
+                        <span class="icon icon--drop-small"></span>
                     </div>
-                </div>
-                <div class="recoBox" id="areaBox_0">
-                    <div class="recoBox_header">
-                        <p>01</p>
-                        <a id="areaUrl_0" href="https://www.agoda.com/ko-kr/">이 지역 숙소 보러가기</a>
-                    </div>
-                    <p class="recoBox_areaName" id="areaName_0"></p>
-                    <div class="recoBox_rating">
-                        <div class="recoBox_rating_liner leftLine">
-                            <p class="title" id="score_0_0">공항 접근성</p>
-                            <p class="rating">상</p>
-                        </div>
-                        <div class="recoBox_rating_liner rightLine">
-                            <p class="title">대중교통</p>
-                            <p class="rating">상</p>
-                        </div>
-                        <div class="recoBox_rating_liner leftLine">
-                            <p class="title">주변 편의시설</p>
-                            <p class="rating">상</p>
-                        </div>
-                        <div class="recoBox_rating_liner rightLine">
-                            <p class="title">치안</p>
-                            <p class="rating">상</p>
-                        </div>
-                        <div class="recoBox_rating_liner leftLine">
-                            <p class="title">관광지 접근성</p>
-                            <p class="rating">상</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="recoBox" id="areaBox_1">
-                    <div class="recoBox_header">
-                        <p>02</p>
-                        <a id="areaUrl_1" href="https://www.agoda.com/ko-kr/">이 지역 숙소 보러가기</a>
-                    </div>
-                    <p class="recoBox_areaName" id="areaName_1"></p>
-                    <div class="recoBox_rating"></div>
-            
-                </div>
-                <div class="recoBox" id="areaBox_2">
-                    <div class="recoBox_header">
-                        <p>03</p>
-                        <a id="areaUrl_2" href="https://www.agoda.com/ko-kr/">이 지역 숙소 보러가기</a>
-                    </div>
-                    <p class="recoBox_areaName" id="areaName_2"></p>
-                    <div class="recoBox_rating"></div>
-                </div>
+                </a>
             </div>
+            <div class="spots">
+                <!-- <div class="spotBox">
+                    <div class="pinDiv">
+                        <- modules/pin.css ->
+                        <span class="pincenter"></span>
+                        <span class="pin"></span>
+                    </div>
+                    <div class="info">
+                        <p class="rank">1위</p>
+                        <p class="name_ko ko">센트럴 파크</p>
+                        <p class="name_en">Central Park</p>
+                    </div>
+                </div>
+                <div class="spotBox selected">
+                    <div class="pinDiv">
+                        <span class="pincenter"></span>
+                        <span class="pin"></span>
+                    </div>
+                    <div class="info">
+                        <p class="rank">1위</p>
+                        <p class="name_ko ko">인트레피드 해양항공우주박물관</p>
+                        <p class="name_en">Central Park</p>
+                    </div>
+                </div> -->
+            </div>
+            <input class="showAcco ko" type="button" value="최적의 숙소 보기">
+
+
         </div>
+
+        <!--modules/map.css-->
+        <div class="m" id="map"></div>
     </div>
 
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB14yPdQPLZ-jh7gL-PmJF0vkvTSHTt8Aw&libraries=geometry"></script>
     <script src="./scripts/map.js"></script>
-    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB14yPdQPLZ-jh7gL-PmJF0vkvTSHTt8Aw&callback=initMap"></script>
     <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
     <script>
         // Initialize Firebase

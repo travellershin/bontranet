@@ -1,8 +1,7 @@
 @import "modules/init";
+@import "modules/pin";
+@import "modules/sidebar";
 @import "modules/sprite";
-@import "modules/header";
-@import "modules/layout";
 @import "modules/selector";
-@import "modules/reco";
 @import "modules/nysprite";
-@import "modules/infowindow";
+@import "modules/map";

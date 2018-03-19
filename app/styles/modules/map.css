@@ -1,3 +1,9 @@
+.m{
+    float: left;
+    width: calc(100% - 340px);
+    height: 100%;
+}
+
 .infowindow{
     width: 240px;
     overflow: hidden;
@@ -24,7 +30,7 @@
 .gm-style-pbc+div>div:nth-child(2)>div:nth-child(4)>div{
     width: 240px !important;
     transform:translateX(23px)
-} 
+}
 .gm-style-pbc+div>div:nth-child(2)>div:nth-child(4)>div>div:first-child>div:nth-child(2){
     width: 240px !important;
 }
