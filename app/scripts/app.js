@@ -170,6 +170,7 @@ $(".spot_wrap .counter").on("click",".ab_unSelect",function(){
 
 $(".hotelsDiv").on("click",".hotelCardWrap",function(){
     Hotels.showDetail($(this).attr("id"), $(".hotelCardWrap").index($(this)), Spots.selected, DatePicker.firstDateTxt, DatePicker.secondDateTxt);
+    return false;
 })
 $(".closeHotelDetail").click(function(){
     $(".wrap_hotelDetail").addClass("displayNone")
@@ -177,4 +178,21 @@ $(".closeHotelDetail").click(function(){
 $("header .peopleWrap .dropBox").change(function(){
     Hotels.peopleNo = $("header .peopleWrap .dropBox").val()
     $(".hd_sidebar>.std>span").eq(2).html($("header .peopleWrap .dropBox").val())
+})
+$(".hotelDetail").on("click",".moreFoot",function(){
+    Hotels.moreFoot();
+    $(this).addClass("displayNone");
+})
+$(".hotelDetail").on("click",".moreMetro",function(){
+    Hotels.moreMetro();
+    $(this).addClass("displayNone");
+})
+$(".wrap_hotelDetail .iconRight").click(function(){
+    return false;
+})
+$(".wrap_hotelDetail .iconLeft").click(function(){
+    return false;
+})
+$(".hotelDetail").click(function(){
+    return false;
 })

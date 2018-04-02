@@ -505,20 +505,23 @@ let Hotels = {
 
             }
         }
+        let moreFootCount = 0;
+        footTxt+='<div class="spotCardWrapper moreFoot displayNone"><p class="moreCount"></p><p>선택 안한 카드 더 보기</p></div>'
         if(hotel.spots.foot){
             for (var i = 0; i < hotel.spots.foot.length; i++) {
                 let sid = hotel.spots.foot[i].id;
                 let distance = hotel.spots.foot[i].distance;
                 if(!footArray.includes(sid)){
                     let data = Spots.list[sid]
-
-                    footTxt += '<div class="spotCardWrapper unSelected"><div class="spotCard"><div class="imgSizer"><img class="imgOut" src="./assets/image-out.png">';
+                    moreFootCount++
+                    footTxt += '<div class="spotCardWrapper unSelected displayNone"><div class="spotCard"><div class="imgSizer"><img class="imgOut" src="./assets/image-out.png">';
                     footTxt += '<div class="infoImage ny_'+sid+'"></div></div><p class="rank">'+(data.rank+1)+'위</p><div class="contents">';
                     footTxt += '<p class="name_ko ko">'+data.name+'</p><p class="name_en">'+data.name+'</p><p class="description">'+data.description+'</p></div>'
                     footTxt += '<div class="footer"><p>숙소로부터 '+distance+'m</p></div></div></div>'
                 }
             }
         }
+
 
         if(transitArray.length>0){
             for (var j = 0; j < transitArray.length; j++) {
@@ -571,6 +574,9 @@ let Hotels = {
 
             }
         }
+        metroTxt+='<div class="spotCardWrapper moreMetro displayNone"><p class="moreCount"></p><p>선택 안한 카드 더 보기</p></div>'
+        let moreMetroCount = 0;
+
         if(hotel.spots.transport){
             for (var j = 0; j < Object.keys(hotel.spots.transport).length; j++) {
                 let sid =  Object.keys(hotel.spots.transport)[j]*1
@@ -611,12 +617,14 @@ let Hotels = {
                     let timeFromSpot = Math.round(howFarFromSpot/70)
                     let totalTime = timeFromSpot + metrotime + timeFromHotel;
 
+                    moreMetroCount++
+
                     howToGo+='<p>숙소에서 <span class="lineName ln_'+lineName+'">'+lineName+'</span> '+nearMetroFromHotel+'까지 도보이동(약 '+timeFromHotel+'분, '+howFarFromHotel+'m)'+'</p>'
                     howToGo+='<p><span class="lineName ln_'+lineName+'">'+lineName+'</span> '+nearMetroFromSpot+'에서 하차 (약 '+metrotime+'분)'+'</p>'
                     howToGo+='<p>'+data.name+'까지 도보이동(약 '+timeFromSpot+'분, '+howFarFromSpot+'m)'+'</p>'
 
 
-                    metroTxt += '<div class="spotCardWrapper unSelected"><div class="spotCard"><div class="imgSizer"><img class="imgOut" src="./assets/image-out.png">';
+                    metroTxt += '<div class="spotCardWrapper unSelected displayNone"><div class="spotCard"><div class="imgSizer"><img class="imgOut" src="./assets/image-out.png">';
                     metroTxt += '<div class="infoImage ny_'+sid+'"></div></div><p class="rank">'+(data.rank+1)+'위</p><div class="contents">';
                     metroTxt += '<p class="name_ko ko">'+data.name+'</p><p class="name_en">'+data.name+'</p><div class="description">'+howToGo+'</div></div>'
                     metroTxt += '<div class="footer"><p>약 '+totalTime+'분 소요</p></div></div></div>'
@@ -627,8 +635,25 @@ let Hotels = {
         $(".hotel_foot").html(footTxt);
         $(".hotel_metro").html(metroTxt);
 
-        $(".goReservation>a").attr("href",'https://www.agoda.com/partners/partnersearch.aspx?cid=1799898&pcs=1&hid='+hid+'&checkin='+checkIn+'&checkout='+checkOut+'&h1=ko&adults='+this.peopleNo)
+        if(moreFootCount>0){
+            $(".moreFoot").removeClass("displayNone");
+            $(".moreFoot .moreCount").html("+ "+moreFootCount);
+        }
+        if(moreMetroCount>0){
+            $(".moreMetro").removeClass("displayNone")
+            $(".moreMetro .moreCount").html("+ "+moreMetroCount);
+        }
 
+        $(".goReservation>a").attr("href",'https://www.agoda.com/partners/partnersearch.aspx?cid=1799898&pcs=1&hid='+hid+'&checkin='+checkIn+'&checkout='+checkOut+'&h1=ko&adults='+this.peopleNo)
+    },
+
+
+    moreFoot: function(){
+        $(".hotel_foot .unSelected").removeClass("displayNone")
+    },
+
+    moreMetro: function(){
+        $(".hotel_metro .unSelected").removeClass("displayNone")
     }
 
 

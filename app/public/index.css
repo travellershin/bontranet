@@ -2392,7 +2392,8 @@ header .setter .peopleWrap .icon{
         float: left;
         width: calc(100% - 320px);
         height: 100%;
-        overflow-y: scroll;
+        position: relative;
+        overflow: hidden;
     }
 .hotelDetail .hd_contents .hotelName{
             height: 68px;
@@ -2401,6 +2402,8 @@ header .setter .peopleWrap .icon{
             -webkit-box-sizing: border-box;
                     box-sizing: border-box;
             border-bottom: 1px solid #e8e8e8;
+            background-color: white;
+            box-sizing: border-box;
         }
 .hotelDetail .hd_contents .hotelName .hotelName_ko{
                 height: 24px;
@@ -2421,6 +2424,8 @@ header .setter .peopleWrap .icon{
                     box-sizing: border-box;
             padding: 32px 22px;
             background-color: #fafafa;
+            height: calc(100% - 68px);
+            overflow-y: scroll;
         }
 .hotelDetail .hd_contents .wrap .subTitle{
                 margin-bottom: 16px;
@@ -2517,6 +2522,9 @@ header .setter .peopleWrap .icon{
                         font-size: 12px;
                         color: #777;
                     }
+.hotelDetail .hd_contents .wrap .hotel_foot .unSelected,.hotelDetail .hd_contents .wrap .hotel_metro .unSelected{
+                    opacity: 0.8;
+                }
 .hotelDetail .hd_contents .wrap .hotel_metro .description>p{
                     line-height: 20px;
                 }
@@ -2524,7 +2532,6 @@ header .setter .peopleWrap .icon{
         height: 16px;
         width: 16px;
         border-radius: 20px;
-        background-color: red;
         line-height: 16px;
         text-align: center;
         color:white;
@@ -2540,6 +2547,19 @@ header .setter .peopleWrap .icon{
 .hotelDetail .ln_G{background-color: #6cbe45;}
 .hotelDetail .ln_J{background-color: #996633;}
 .hotelDetail .ln_Z{background-color: #996633;}
+.hotelDetail .ln_L{background-color: #a7a9ac;}
+.hotelDetail .ln_N{background-color: #fccc0a;}
+.hotelDetail .ln_Q{background-color: #fccc0a;}
+.hotelDetail .ln_R{background-color: #fccc0a;}
+.hotelDetail .ln_W{background-color: #fccc0a;}
+.hotelDetail .ln_S{background-color: #808183;}
+.hotelDetail .ln_1{background-color: #ee352e;}
+.hotelDetail .ln_2{background-color: #ee352e;}
+.hotelDetail .ln_3{background-color: #ee352e;}
+.hotelDetail .ln_4{background-color: #00933c;}
+.hotelDetail .ln_5{background-color: #00933c;}
+.hotelDetail .ln_6{background-color: #00933c;}
+.hotelDetail .ln_7{background-color: #b933ad;}
 .hotel_foot .spotCard,.hotel_metro .spotCard{
         border-radius: 3px;
         -webkit-box-shadow: 0 1px 2px 0 rgba(25, 25, 25, 0.2);
@@ -2560,6 +2580,45 @@ header .setter .peopleWrap .icon{
 .hotel_metro .spotCardWrapper .spotCard .description>p{
                     margin-bottom: 8px;
                 }
+.moreFoot,.moreMetro{
+    border: 3px dashed #e1e7ed;
+    height: 338px;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    background-color: white;
+    cursor: pointer;
+}
+.moreFoot .moreCount,.moreMetro .moreCount{
+        margin-top: 115px;
+        font-size: 40px;
+        width: 100%;
+        text-align: center;
+        height: 50px;
+        line-height: 50px;
+        color: #777;
+    }
+.moreFoot>p:last-child,.moreMetro>p:last-child{
+        margin-top: 20px;
+        width: 152px;
+        margin-left: 24px;
+        border: 1px solid #999;
+        border-radius: 24px;
+        font-size: 12px;
+        color: #666;
+        text-align: center;
+        height: 24px;
+        line-height: 24px;
+    }
+.moreFoot:hover,.moreMetro:hover{
+        border: 3px dashed #bedcc7;
+    }
+.moreFoot:hover .moreCount,.moreMetro:hover .moreCount{
+            color: #444;
+        }
+.moreFoot:hover>p:last-child,.moreMetro:hover>p:last-child{
+            border: 1px solid #444;
+            color: #444;
+        }
 .hotelCard_map{
     width: 200px;
     height: 240px;
