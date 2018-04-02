@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="./hotel.css">
+    <link rel="stylesheet" href="./libraries/jquery-ui.min.css">
+
+</head>
+
+<body>
+    <!-- modules/header.css -->
+    <header>
+        <div class="lns">
+            <h1><span class="icon icon--logo">트리픽</span></h1>
+            <div class="citySelector clearfix">
+                <h2 class="cityName">NEW YORK</h2>
+                <span class="icon icon--drop">도시 선택 드롭다운</span>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li class="selected ko">최적의 숙소 추천</li>
+                <li class="ko">예상경비 계산기</li>
+                <li class="ko">Comming Soon..</li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="hotel_wrap">
+        <!-- hotelSideBar.css -->
+        <div class="hsb">
+            <div class="counter">
+                <span class="icon icon--pin-small"></span>
+                <span class="number">23</span>
+                <p class="ko">개의 관광지 경로를 분석한 최적의 숙소</p>
+            </div>
+        </div>
+        <div class="m" id="map"></div>
+    </div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB14yPdQPLZ-jh7gL-PmJF0vkvTSHTt8Aw&libraries=geometry"></script>
+    <script src="./scripts/map.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCYaUa2NFgNbOcw3jKuckB-0XYyQF_fOyw",
+            authDomain: "tripic-fb74f.firebaseapp.com",
+            databaseURL: "https://tripic-fb74f.firebaseio.com",
+            projectId: "tripic-fb74f",
+            storageBucket: "tripic-fb74f.appspot.com",
+            messagingSenderId: "618311237529"
+        };
+        firebase.initializeApp(config);
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="./libraries/jquery-ui.min.js"></script>
+    <script src="./scripts/app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,300 @@
+
+.wrapper{
+    width: 100%;
+    height: calc(100% - 100px);
+    overflow:hidden;
+}
+
+header{
+    width: 100%;
+    height: 100px;
+
+    & .lns{
+        width: 100%;
+        height: 52px;
+
+        & h1{
+            height: 100%;
+            float: left;
+            margin-left: 24px;
+
+            & .icon{
+                transform: scale(1.05,1.05);
+                margin-top: 1px;
+            }
+        }
+
+        & nav{
+            float: left;
+
+            & li{
+                line-height: 52px;
+                font-size: 14px;
+                color: #aeaeae;
+                margin-left: 54px;
+                cursor: pointer;
+                &:hover{
+                    color: #444444;
+                }
+                &:last-child:hover{
+                    color: #aeaeae;
+                }
+            }
+
+            & .selected{
+                color: #444444;
+                font-weight:bold;
+            }
+        }
+
+        &>.share_div,a{
+            float: right;
+        }
+
+        &>.share_div{
+            width: 140px;
+            height: 100%;
+            box-sizing: border-box;
+            padding: 10px 20px 0 0;
+            position: relative;
+
+            & .share{
+                height: 32px;
+                border-radius: 3px;
+                border: solid 1px #999;
+                overflow: hidden;
+                box-sizing: border-box;
+                padding: 6px 13px;
+                &>span{
+                    float: left;
+                }
+                &>p{
+                    float: left;
+                    line-height: 20px;
+                    height: 20px;
+                    font-size: 13px;
+                    color: #444;
+                }
+                &:hover{
+                    &>p{
+                        color: #666;
+                    }
+                    &>.icon{
+                        opacity: 0.7;
+                    }
+                }
+            }
+
+            & .shareBox{
+                position: absolute;
+                right: 20px;
+                top: 48px;
+                z-index: 300;
+                background-color: white;
+                width: 420px;
+                border-radius: 5px;
+                box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.16), 0 0 6px 0 rgba(0, 0, 0, 0.08);
+                background-color: #ffffff;
+                border: solid 1px #e0e0e0;
+                box-sizing: border-box;
+                padding: 24px 20px;
+
+                & .shareIcon{
+                    width: 36px;
+                    height: 36px;
+                    border: solid 1px #e0e0e0;
+                    border-radius: 40px;
+                    margin-right: 10px;
+                    &>span{
+                        margin: 8px;
+                    }
+                }
+
+                & .s_insta:hover{
+                    border: solid 1px #444444;
+                }
+                & .s_twitter:hover{
+                    border: solid 1px #4099ff;
+                }
+                & .s_facebook:hover{
+                    border: solid 1px #3b5998;
+                }
+                & .s_kakao:hover{
+                    border: solid 1px #fcc200;
+                }
+
+                & .shareUrl{
+                    margin-top: 24px;
+                    height: 24px;
+                    width: 100%;
+                    border-bottom: solid 1px #e0e0e0;
+                    color: #4285f4;
+                    font-size: 14px;
+                    line-height: 16px;
+                    font-weight: bold;
+                    margin-bottom: 16px;
+                }
+                & .shareHint{
+                    color: #666666;
+                    font-size: 13px;
+                    line-height: 20px;
+                }
+            }
+        }
+        & .signUp,.signIn{
+            line-height: 52px;
+            margin-right: 16px;
+            font-size: 14px;
+            &>p{
+                font-weight: bold;
+                color: #888888;
+            }
+        }
+        & .signUp>p{
+            color: #4285f4;
+            text-decoration: underline;
+        }
+    }
+
+    & .setter{
+        width: 100%;
+        height: 48px;
+        box-sizing: border-box;
+        box-shadow: inset 0 -1px 0 0 #e8e8e8;
+        background-color: rgba(244, 244, 244, 0.8);
+
+        & .title{
+            float: left;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 48px;
+            color: #444444;
+            margin-right: 16px;
+            font-weight: bold;
+            height: 48px;
+        }
+
+        & .citySelector{
+            float: left;
+            margin-top: 9px;
+            height: 32px;
+            box-sizing: border-box;
+            padding: 0 10px 0 20px;
+            border-radius: 2px;
+            border: solid 1px #e6e6e6;
+            cursor: pointer;
+            margin-right: 36px;
+            background-color: white;
+
+            & .cityName{
+                font-size: 14px;
+                line-height: 30px;
+                color: #444444;
+                float: left;
+                font-weight: bold;
+            }
+
+            & .icon{
+                margin: 10px 0 0 16px;
+                float: right;
+            }
+        }
+
+        & .dateWrap{
+            float: left;
+            width: 232px;
+            height: 100%;
+            position: relative;
+            margin-right: 8px;
+
+            & .datePicker{
+                position: absolute;
+                width: 232px;
+                height: 32px;
+                border-radius: 3px;
+                font-size: 1px;
+                line-height: 36px;
+                opacity: 0;
+                box-sizing: border-box;
+                z-index: 200;
+                top: 9px;
+                cursor: pointer;
+            }
+
+            & .dateShower{
+                position: absolute;
+                width: 232px;
+                height: 32px;
+                border-radius: 3px;
+                background-color: #ffffff;
+                border: solid 1px #dbdbdb;
+                font-size: 14px;
+                line-height: 32px;
+                color: #444444;
+                left: 0;
+                box-sizing: border-box;
+                padding-left: 14px;
+                top: 9px;
+                z-index: 100;
+            }
+
+            & .icon{
+                position: absolute;
+                top: 21px;
+                right: 12px;
+                z-index: 201;
+            }
+        }
+        & .dateRange{
+            float: left;
+            font-size: 13px;
+            font-weight: bold;
+            line-height: 48px;
+            color: #666666;
+            margin-right: 40px;
+        }
+
+        & .peopleWrap{
+            float: left;
+            width: 80px;
+            height: 100%;
+            position: relative;
+
+            & .dropBox{
+                margin-top: 9px;
+                width: 76px;
+                height: 32px;
+                border-radius: 3px;
+                background-color: #ffffff;
+                border: solid 1px #dbdbdb;
+                font-size: 14px;
+                color: #444444;
+                padding-left: 16px;
+                line-height: 32px;
+                appearance: none;
+                cursor: pointer;
+            }
+
+            & .icon{
+                position: absolute;
+                top: 21px;
+                left: 55px;
+            }
+        }
+    }
+}
+
+.ui-state-default{
+    background-color: white !important;
+    border: solid 1px white !important;
+    text-align: center !important;
+}
+.ui-state-active{
+    color: white !important;
+    background-color: #444 !important;
+    border-radius: 90px;
+}
+.ui-datepicker-header{
+    border: none !important;
+    background-color: white !important;
+}

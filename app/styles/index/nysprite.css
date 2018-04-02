@@ -1,5 +1,5 @@
-.infoImage{ display: inline-block; background: url('./assets/ny.jpg') no-repeat; overflow: hidden; text-indent: -9999px; text-align: left;  width: 240px; height: 160px; }
- 
+.infoImage{ display: inline-block; background: url('./assets/ny.jpg') no-repeat; overflow: hidden; text-indent: 101%; text-align: left; width: 240px; height: 160px; transform: scale(0.84,0.84); transform-origin: left top}
+
 .ny_0 { background-position: -0px -0px;}
 .ny_1 { background-position: -240px -0px;}
 .ny_10 { background-position: -480px -0px;}
@@ -54,10 +54,8 @@
 .ny_55 { background-position: -480px -1120px;}
 .ny_56 { background-position: -720px -1120px;}
 .ny_57 { background-position: -960px -1120px;}
-.ny_6 { background-position: -1200px -1120px;}
-.ny_7 { background-position: -1440px -1120px;}
-.ny_8 { background-position: -0px -1280px;}
-.ny_9 { background-position: -240px -1280px;}
-
-
-
+.ny_58 { background-position: -1200px -1120px;}
+.ny_6 { background-position: -1440px -1120px;}
+.ny_7 { background-position: -0px -1280px;}
+.ny_8 { background-position: -240px -1280px;}
+.ny_9 { background-position: -480px -1280px;}

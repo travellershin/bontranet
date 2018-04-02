@@ -1,83 +1,414 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
     <meta charset="utf-8">
     <title></title>
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./libraries/jquery-ui.min.css">
+    <link rel="stylesheet" href="./index.css">
 
     <!-- 폰트는 helvetica-neu, ariel로 적용해보기 -->
 </head>
 
 <body>
-    <!--modules/init.css-->
-    <div class="wrapper">
+    <!-- modules/header.css -->
+    <header class="clearfix">
+
+        <div class="lns clearfix">
+            <h1><span class="icon icon--logo">트리픽</span></h1>
+            <nav>
+                <ul>
+                    <li class="selected ko">최적의 숙소 추천</li>
+                    <li class="ko" title="4월 중 오픈예정!">예상경비 계산기</li>
+                    <li class="ko">Comming Soon..</li>
+                </ul>
+            </nav>
+            <div class="share_div">
+                <a href="#" onclick="event.preventDefault()">
+                    <div class="share">
+                        <span class="icon icon--share"></span>
+                        <p>공유하기</p>
+                    </div>
+                </a>
+
+                <div class="shareBox displayNone closeWhenBodyClick">
+                    <ul>
+                        <li>
+                            <a href="#" onclick="event.preventDefault()">
+                                <div class="shareIcon s_insta">
+                                    <span class="icon icon--share-insta"></span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="event.preventDefault()">
+                                <div class="shareIcon s_twitter">
+                                    <span class="icon icon--share-twitter"></span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="event.preventDefault()">
+                                <div class="shareIcon s_facebook">
+                                    <span class="icon icon--share-facebook"></span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="event.preventDefault()">
+                                <div class="shareIcon s_kakao">
+                                    <span class="icon icon--share-kakao"></span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                    <input type="text" class="shareUrl" value="">
+                    <p class="shareHint">*현재 화면, 현재 선택한 내용이 그대로 공유됩니다!<br>(로그인을 하지 않아도 저장 기능처럼 사용할 수 있어요)</p>
+                </div>
+            </div>
+            <a class="signUp" href="#" onclick="event.preventDefault()"><p>회원가입</p></a>
+            <a class="signIn" href="#" onclick="event.preventDefault()"><p>로그인</p></a>
+        </div>
+
+        <div class="setter clearfix">
+            <div class="centerer">
+                <p class="title ko">도시 선택</p>
+                <div class="citySelector clearfix">
+                    <h2 class="cityName">NEW YORK</h2>
+                    <span class="icon icon--drop">도시 선택 드롭다운</span>
+                </div>
+                <p class="title ko">날짜 선택</p>
+                <div class="dateWrap">
+                    <input class="datePicker ko clearfix" placeholder="여행 기간을 설정해주세요" readonly>
+                    <p class="dateShower"></p>
+                    <span class="icon icon--drop-small"></span>
+                </div>
+                <p class="dateRange ko">1박 2일</p>
+                <p class="title ko">인원 선택</p>
+                <div class="peopleWrap">
+                    <select class="dropBox">
+                        <option value="1">1명</option>
+                        <option value="2">2명</option>
+                        <option value="3">3명</option>
+                        <option value="4">4명</option>
+                        <option value="5">5명</option>
+                        <option value="6">6명</option>
+                        <option value="7">7명</option>
+                        <option value="8">8명</option>
+                    </select>
+                    <span class="icon icon--drop-small"></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!--modules/header.css에 wrapper까지 있음-->
+    <div class="wrapper spot">
         <!--modules/sidebar.css-->
-        <div class="sb">
-            <h1 class="logoDiv">
-                <span class="icon icon--logo"></span>
-            </h1>
-            <div class="header">
-                <div class="citySelectorBox">
-                    <h2 id="cityName">NEW YORK</h2>
-                    <h3 id="countryName">The United States</h3>
-                    <span class="icon icon--drop"></span>
+        <div class="sb clearfix">
+            <!-- index/spotSideBar.css -->
+            <div class="spot_wrap clearfix">
+                <div class="general">
+                    <p class="title ko">최적의 숙소 추천을 위한</p>
+                    <p class="title ko"><span class="cityName_ko">뉴욕</span> 베스트 관광지 <span class="citySpot_total">0</span><span class="icon icon--info"></span></p>
+                    <div class="spot_hint closeWhenBodyClick displayNone">
+                        <h3 class="ko">뉴욕에서 꼭 가봐야 할 관광지 리스트</h3>
+                        <p class="ko">여행자들의 실제 뉴욕 여행 데이터를 바탕으로 분석된 뉴욕에서 가장 인기있는 명소 순위입니다.</p>
+                    </div>
+
+                    <p class="sub ko">선택한 관광지</p>
+                    <div class="counter">
+                        <div class="pinDiv ab_select">
+                            <span class="pincenter off"></span>
+                            <span class="pin"></span>
+                        </div>
+                        <p class="count_selected">0</p>
+                        <p class="total"> / 0</p>
+                    </div>
                 </div>
+                <div class="setter">
+                    <div class="filter clearfix">
+                        <div class="centerer">
+                            <p class="filterName ko">모두보기</p>
+                            <span class="icon icon--drop-small"></span>
+                        </div>
+                        <div class="drop_filter closeWhenBodyClick displayNone">
+                            <p class="ko view_all">모두보기</p>
+                            <p class="ko view_select">선택 한 것만 보기</p>
+                            <p class="ko view_unSelect">선택 안 한 것만 보기</p>
+                        </div>
+                    </div>
+                    <div class="order clearfix">
+                        <div class="centerer">
+                            <p class="orderName ko">인기순</p>
+                            <span class="icon icon--drop-small"></span>
+                        </div>
+                        <div class="drop_order closeWhenBodyClick displayNone">
+                            <p class="ko ob_rank">인기순</p>
+                            <p class="ko ob_name">가나다순</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="spots">
+                    <!-- htmls/spots.html -->
+                    <div class="lds-css ng-scope">
+                        <div class="lds-spin"><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div></div>
+                    </div>
+                    <p class="loadingWord ko">뉴욕 최고의 관광지들을 불러오는 중</p>
+                </div>
+                <div class="noResult displayNone">
+                    <img src="./assets/cat.gif" alt="조건에 맞는 관광지가 없음을 표시하는 그림">
+                    <p>선택 안 한 관광지가 없습니다</p>
+                </div>
+                <div class="showAcco ko displayNone">
+                    <p><span class="spotSelected"></span>개의 관광지를 분석한</p>
+                    <p>최적의 숙소 추천받기</p>
+                </div>
+            </div>
+
+            <!-- index/hotelSideBar.css -->
+            <div class="hotel_wrap">
                 <div class="counter">
-                    <span class="icon icon--pin-on"></span>
-                    <p class="text">
-                        <span class="selected">23</span>
-                        <span class="slash">/</span>
-                        <span class="total">57</span>
-                    </p>
+                    <span class="icon icon--pin-small"></span>
+                    <span class="number">23</span>
+                    <p class="ko">개의 관광지 경로를 분석한 최적의 숙소</p>
                 </div>
-            </div>
-            <div class="setter">
-                <a href="#" onclick="event.preventDefault()" class="filter">
-                    <div class="centerer">
-                        <p id="filter" class="ko">모두보기</p>
-                        <span class="icon icon--drop-small"></span>
+
+                <div class="hotels">
+                    <div class="hotels_setter clearfix">
+                        <p>최적의 숙소 리스트 <span class="noOfHotel">0</span></p>
+                        <div class="setPriceRange ko">
+                            <span class="icon icon--filter"></span>가격대 설정
+                        </div>
                     </div>
-                </a>
-                <a href="#" onclick="event.preventDefault()" class="order">
-                    <div class="centerer">
-                        <p id="order" class="ko">인기순</p>
-                        <span class="icon icon--drop-small"></span>
+
+                    <div class="hotelsDiv displayNone">
+                        <!-- index/hotelCard.css -->
+                        <!-- htmls/hotelCard.html -->
                     </div>
-                </a>
-            </div>
-            <div class="spots">
-                <!-- <div class="spotBox">
-                    <div class="pinDiv">
-                        <- modules/pin.css ->
-                        <span class="pincenter"></span>
-                        <span class="pin"></span>
+
+                    <!-- index/hotelSideBar.css -->
+                    <div class="hotelsLoader">
+                        <div class="lds-css ng-scope">
+                            <div class="lds-spin"><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div></div>
+                        </div>
+                        <p class="hotelLoadingWord ko"><span class="icon icon--score-spot"></span> 선택한 관광지에 대한 경로 분석중</p>
                     </div>
-                    <div class="info">
-                        <p class="rank">1위</p>
-                        <p class="name_ko ko">센트럴 파크</p>
-                        <p class="name_en">Central Park</p>
-                    </div>
-                </div>
-                <div class="spotBox selected">
-                    <div class="pinDiv">
-                        <span class="pincenter"></span>
-                        <span class="pin"></span>
-                    </div>
-                    <div class="info">
-                        <p class="rank">1위</p>
-                        <p class="name_ko ko">인트레피드 해양항공우주박물관</p>
-                        <p class="name_en">Central Park</p>
-                    </div>
-                </div> -->
-            </div>
-            <input class="showAcco ko" type="button" value="최적의 숙소 보기">
 
 
+
+                </div>
+
+                <div class="showSpot displayNone ko">
+                    <span class="icon icon--arrow-left"></span>
+                    <p>관광지 선택으로 돌아가기</p>
+                </div>
+            </div>
         </div>
 
         <!--modules/map.css-->
         <div class="m" id="map"></div>
+        <button type="button" name="button" class="showCard displayNone ko"><span class="icon icon--cardview"></span>관광지 카드뷰로 보기</button>
+
+        <!-- modules/cardView.css -->
+        <div class="cv displayNone">
+            <div class="header clearfix">
+                <div class="filter clearfix">
+                    <div>
+                        <p class="filterName ko">모두보기</p>
+                        <span class="icon icon--drop-small"></span>
+                    </div>
+                    <div class="drop_filter">
+                        <p class="ko view_all">모두보기</p>
+                        <p class="ko view_select">선택 한 것만 보기</p>
+                        <p class="ko view_unSelect">선택 안 한 것만 보기</p>
+                    </div>
+                </div>
+                <div class="order clearfix">
+                    <div>
+                        <p class="orderName ko">인기순</p>
+                        <span class="icon icon--drop-small"></span>
+                    </div>
+                    <div class="drop_order">
+                        <p class="ko ob_rank">인기순</p>
+                        <p class="ko ob_name">가나다순</p>
+                    </div>
+                </div>
+                <button type="button" name="button" class="showMap"><span class="icon icon--mapview"></span>관광지 지도에서 보기</button>
+            </div>
+            <div class="cardBox">
+                <!-- <div class="spotCard">
+                    <div class="image"></div>
+                    <p class="rank">1위</p>
+                    <div class="contents">
+                        <p class="name_ko ko">메트로폴리탄 미술관</p>
+                        <p class="name_en">The Metropolitan Museum of Art</p>
+                        <p class="description">반 고흐, 앤디 워 작가들의</p>
+                    </div>
+                    <div class="footer">
+                        <span class="pin"></span>
+                    </div>
+                </div> -->
+            </div>
+
+            <div class="noResult displayNone">NO RESULT</div>
+        </div>
     </div>
+
+    <section class="wrap_hotelDetail displayNone">
+        <a class="closeHotelDetail" href="#" onclick="event.preventDefault()"><span class="icon icon--close">호텔 정보창 닫기</span> </a>
+        <div class="pre">
+            <a class="iconWrap iconLeft" href="#" onclick="event.preventDefault()"><span class="icon icon--black-left">이전 숙소 보기</span></a>
+        </div>
+        <article class="hotelDetail">
+            <div class="wrap">
+                <div class="hd_sidebar">
+                    <div class="cityName_en">NEW YORK</div>
+                    <div class="counter">
+                        <p class="ko"><span class="number">23</span>개의 선택한 관광지 경로, 주변 편의시설, 치안 등을 분석한 최적의 숙소</p>
+                    </div>
+                    <div class="rankAndName">
+                        <div class="rankDiv">
+                            <img src="./assets/label.svg">
+                            <p class="info rank">1위</p>
+                        </div>
+                        <div class="nameDiv">
+                            <p class="info hotelName_ko">파크 센트럴 호텔</p>
+                            <p class="info hotelName_en">Park Central Hotel</p>
+                        </div>
+                    </div>
+                    <div class="starAndRating">
+                        <p class="subTitle ko">성급</p>
+                        <span class="icon icon--stars-full"></span>
+                        <span class="icon icon--stars-full"></span>
+                        <span class="icon icon--stars-full"></span>
+                        <span class="icon icon--stars-full"></span>
+                        <span class="icon icon--stars-full"></span>
+                        <p class="subTitle ko">평점</p>
+                        <p class="ratingScore">8.3</p>
+                    </div>
+                    <div class="imgFrame">
+                        <img class="hotelImg" src="http://pix2.agoda.net/hotelimages/964/964447/964447_16040504330041296426.jpg?s=312x" alt="숙소 사진">
+                    </div>
+                    <p class="std"><span>3월 28일(수) - 4월 2일(월)</span> <span>2박 3일</span> / <span>1</span>인 기준</p>
+                    <div class="hotel_price">
+                        <p class="current info">&#8361;147,806</p>
+                        <p class="crossedOut info">&#8361;199,800</p>
+                    </div>
+                    <div class="goReservation">
+                        <a target="_blank"  href="#">
+                            <p>AGODA에서 숙소 예약하기</p>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="hd_contents">
+                    <div class="hotelName">
+                        <h1 class="hotelName_ko ko info">파크 센트럴 호텔</h1>
+                        <p class="hotelName_en info">Park Central Hotel</p>
+                    </div>
+                    <div class="wrap">
+                        <p class="subTitle ko">숙소 추천 이유</p>
+                        <div class="scoreCard">
+                            <div class="iconDiv">
+                                <div class="iconCircle">
+                                    <span class="icon icon--score-spot"></span>
+                                </div>
+                            </div>
+                            <div class="infoDiv">
+                                <div class="topper spot">
+                                    <p class="criteria ko">관광지 접근성</p>
+                                    <div class="scoreOval so_full"></div>
+                                    <div class="scoreOval so_full"></div>
+                                    <div class="scoreOval so_full"></div>
+                                    <div class="scoreOval so_full"></div>
+                                    <div class="scoreOval so_half"></div>
+                                    <p class="score score_spot info">4.5</p>
+                                </div>
+                                <p class="infoTxt info ko">여기진심완전짱이야훌륭한프로그래머되는법 읽기 좋은 자바스크립트 코딩 기법 자바스크립트 패턴 비즈니스 글쓰기의 모든 것 러닝 자바스크립트 플랫폼 레볼루션</p>
+
+                            </div>
+                        </div>
+                        <div class="scoreCard">
+                            <div class="iconDiv">
+                                <div class="iconCircle">
+                                    <span class="icon icon--score-transit"></span>
+                                </div>
+                            </div>
+                            <div class="infoDiv">
+                                <div class="topper transit">
+                                    <p class="criteria ko">주변 지하철</p>
+                                    <div class="scoreOval so_full"></div>
+                                    <div class="scoreOval so_full"></div>
+                                    <div class="scoreOval so_full"></div>
+                                    <div class="scoreOval so_half"></div>
+                                    <div class="scoreOval"></div>
+                                    <p class="score score_transit info">4.5</p>
+                                </div>
+                                <p class="infoTxt info ko">여기진심완전짱이야훌륭한프로그래머되는법 읽기 좋은 자바스크립트 코딩 기법 자바스크립트 패턴 비즈니스 글쓰기의 모든 것 러닝 자바스크립트 플랫폼 레볼루션</p>
+                            </div>
+                        </div>
+
+                        <div class="scoreCard">
+                            <div class="iconDiv">
+                                <div class="iconCircle">
+                                    <span class="icon icon--score-safety"></span>
+                                </div>
+                            </div>
+                            <div class="infoDiv">
+                                <div class="topper safety">
+                                    <p class="criteria ko">치안</p>
+                                    <div class="scoreOval so_full"></div>
+                                    <div class="scoreOval so_full"></div>
+                                    <div class="scoreOval so_full"></div>
+                                    <div class="scoreOval so_full"></div>
+                                    <div class="scoreOval so_half"></div>
+                                    <p class="score score_safety info">4.5</p>
+                                </div>
+                                <p class="infoTxt info ko">여기진심완전짱이야훌륭한프로그래머되는법 읽기 좋은 자바스크립트 코딩 기법 자바스크립트 패턴 비즈니스 글쓰기의 모든 것 러닝 자바스크립트 플랫폼 레볼루션</p>
+                            </div>
+                        </div>
+
+                        <div class="scoreCard">
+                            <div class="iconDiv">
+                                <div class="iconCircle">
+                                    <span class="icon icon--score-facility"></span>
+                                </div>
+                            </div>
+                            <div class="infoDiv">
+                                <div class="topper facility">
+                                    <p class="criteria ko">주변 편의시설</p>
+                                    <div class="scoreOval so_full"></div>
+                                    <div class="scoreOval so_full"></div>
+                                    <div class="scoreOval so_full"></div>
+                                    <div class="scoreOval so_full"></div>
+                                    <div class="scoreOval so_half"></div>
+                                    <p class="score score_facility info">4.5</p>
+                                </div>
+                                <p class="infoTxt info ko">여기진심완전짱이야훌륭한프로그래머되는법 읽기 좋은 자바스크립트 코딩 기법 자바스크립트 패턴 비즈니스 글쓰기의 모든 것 러닝 자바스크립트 플랫폼 레볼루션</p>
+
+                            </div>
+                        </div>
+
+                        <p class="mt70 subTitle ko">숙소에서 도보로 갈 만한 관광지</p>
+                        <div class="hotel_foot">
+
+                        </div>
+                        <div class="hotel_metro_header mt70">
+                            <p class="subTitle ko">숙소에서 지하철 환승 없이 갈 수 있는 관광지</p>
+                        </div>
+                        <div class="hotel_metro">
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </article>
+        <div class="next">
+            <a class="iconWrap iconRight" href="#" onclick="event.preventDefault()"><span class="icon icon--black-right">다음 숙소 보기</span></a>
+        </div>
+    </section>
+
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB14yPdQPLZ-jh7gL-PmJF0vkvTSHTt8Aw&libraries=geometry"></script>
     <script src="./scripts/map.js"></script>
@@ -94,7 +425,8 @@
         };
         firebase.initializeApp(config);
     </script>
-    <script src="./scripts/libraries/jquery.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="./libraries/jquery-ui.min.js"></script>
     <script src="./scripts/app.js"></script>
 </body>
 

@@ -5,7 +5,8 @@ function initMap() {
         center: { lat: 40.74844, lng: -73.98566 },
         zoom: 13,
         mapTypeControl: false,
-        scaleControl: true
+        scaleControl: true,
+        fullscreenControl: false
     });
     var sc = document.createElement('script'); sc.id = 'vxscript'; sc.type = 'text/javascript'; sc.async = 'async'; sc.src = 'https://m.avuxiapis.com/v1/s/72b5ee5385014?callback=avapil&ln=en'; document.body.appendChild(sc);
 }

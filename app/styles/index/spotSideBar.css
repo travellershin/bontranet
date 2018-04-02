@@ -1,0 +1,319 @@
+.spot_wrap{
+    .general{
+        position: relative;
+        width: 100%;
+        height: 172px;
+        box-sizing: border-box;
+        padding: 22px 0 16px 24px;
+        background-image: url("./assets/city/ny.png");
+        background-size: cover;
+        background-position:left -10px;
+
+        & .title{
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 28px;
+            color: #444444;
+            height: 28px;
+            letter-spacing: -1.4px;
+
+            & .icon--info{
+                cursor: pointer;
+                margin-left: 8px;
+                box-sizing: border-box;
+                transform: translateY(4px);
+                opacity: 0.8;
+
+                &:hover{
+                    opacity:1;
+                }
+            }
+        }
+
+        & .spot_hint{
+            position: absolute;
+            top: 11px;
+            left: 250px;
+            width: 300px;
+            background-color: white;
+            z-index: 20;
+            border-radius: 5px;
+            box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.16), 0 0 6px 0 rgba(0, 0, 0, 0.08);
+            background-color: #ffffff;
+            border: solid 1px #e0e0e0;
+            padding: 24px 20px;
+            box-sizing: border-box;
+
+            &>h3{
+                height: 20px;
+                font-size: 15px;
+                font-weight: bold;
+                line-height: 20px;
+                color: #444444;
+                letter-spacing: -0.5px;
+                margin-bottom: 20px;
+            }
+
+            &>p{
+                font-size: 14px;
+                line-height: 20px;
+                color: #555555;
+                font-weight: bold;
+            }
+
+        }
+
+        & .sub{
+            margin-top: 16px;
+            font-size: 13px;
+            height: 20px;
+            height: 20px;
+            line-height: 20px;
+            color: #444444;
+            font-weight: bold;
+        }
+
+        & .counter{
+            margin-top: 4px;
+            overflow: hidden;
+
+            & .pinDiv{
+                position: relative;
+                float: left;
+
+                & .pincenter.off{
+                    background-image: url("./assets/pin-list-off.svg") !important;
+                }
+            }
+
+            & .count_selected{
+                float: left;
+                margin-left: 6px;
+                font-size: 32px;
+                font-weight: bold;
+                line-height: 40px;
+                color: #444444;
+            }
+
+            & .total{
+                float: left;
+                margin-left: 6px;
+                font-size: 32px;
+                font-weight: bold;
+                line-height: 40px;
+                color: rgba(44,44,44,0.3);
+            }
+
+        }
+
+    }
+
+    & .setter{
+        height: 40px;
+        width: 100%;
+        background-color: white;
+        box-shadow: inset 0 -1px 0 0 #e9e9e9;
+
+        & .filter{
+            border-right: 1px solid #e0e0e0;
+        }
+
+        & .filter, .order{
+            width: 170px;
+            box-sizing: border-box;
+            height: 40px;
+            padding-top: 10px;
+            float: left;
+            cursor: pointer;
+            position: relative;
+
+
+            & .filterName, .orderName{
+                float: left;
+                font-size: 14px;
+                line-height: 20px;
+                color: #666666;
+                margin-right: 8px;
+            }
+
+
+            &:hover{
+                background-color: #fafafa;
+                & .filterName, .orderName{
+                    color:#444444;
+                }
+            }
+
+            & .icon{
+                float: left;
+                margin-top: 6px;
+            }
+
+            & .drop_filter, .drop_order{
+                width: 168px;
+                padding: 12px 0;
+                line-height: 36px;
+                top: 38px;
+                position: absolute;
+                z-index: 3;
+                background-color: white;
+                border-radius: 3px;
+                box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.16), 0 0 6px 0 rgba(0, 0, 0, 0.08);
+                border: solid 1px #e0e0e0;
+
+                &>p{
+                    font-weight: 500;
+                    line-height: 36px;
+                    text-align: center;
+                    color: #5c5c5c;
+                    font-size: 14px;
+
+                    &:hover{
+                        background-color: #f8f8f8;
+                    }
+                }
+            }
+
+            & .drop_order{
+                width: 120px;
+                left: 16px;
+            }
+        }
+    }
+
+    & .spots{
+        height: calc(100% - 292px);
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        position: relative;
+        z-index: 2;
+
+        & .spotBox{
+            width: 100%;
+            height: 100px;
+            box-shadow: inset 0 -1px 0 0 #f3f4f5;
+            background-color: white;
+            overflow: hidden;
+            cursor: pointer;
+
+            &:hover{
+                background-color:#CFDDEC;
+                box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.12), 0 0 10px 0 rgba(0, 0, 0, 0.04);
+                z-index: 4;
+                position: relative;
+            }
+
+            & .pinDiv{
+                float: left;
+                margin: 28px 10px 0 20px;
+                position: relative;
+                pointer-events: none;
+            }
+
+            & .info{
+                float: left;
+                pointer-events: none;
+
+                & .rank{
+                    width: 40px;
+                    height: 16px;
+                    border-radius: 39px;
+                    background-color: #ffffff;
+                    border: solid 1px #ebebeb;
+                    color: #888888;
+                    font-size: 11px;
+                    line-height: 16px;
+                    text-align: center;
+                    margin-top: 18px;
+                }
+
+                & .name_ko{
+                    height: 24px;
+                    font-size: 16px;
+                    line-height: 24px;
+                    color:#666666;
+                    font-weight: bold;
+                    margin-top: 4px;
+                }
+
+                & .name_en{
+                    font-size: 13px;
+                    line-height: 20px;
+                    height: 20px;
+                    color: #aaaaaa;
+                }
+            }
+        }
+
+        & .selected{
+            background-color: #f6f9fc;
+            box-shadow: inset 0 -1px 0 0 #e8eef4;
+
+            & .rank{
+                color: #777777 !important;
+            }
+            & .name_ko{
+                color:#444444 !important;
+            }
+
+            & .name_en{
+                color: #999999 !important;
+            }
+        }
+    }
+
+    & .noResult{
+        position: absolute;
+        top: 330px;
+        width: 100%;
+
+        & img{
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90px;
+            height: 150px;
+        }
+        & p{
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            color: #888888;
+            font-weight: bold;
+        }
+    }
+
+    & .showAcco{
+        width: 100%;
+        height: 80px;
+        box-shadow: 0 -1px 4px 0 rgba(0, 0, 0, 0.12), 0 0 2px 0 rgba(0, 0, 0, 0.12);
+        background-color: #333333;
+        font-size: 16px;
+        color: white;
+        z-index: 3;
+        position: relative;
+        cursor: pointer;
+        box-sizing: border-box;
+        padding: 16px 0;
+        letter-spacing: 0;
+
+        &>p{
+            line-height: 24px;
+            text-align: center;
+            color: #fafafa;
+        }
+        & .spotSelected{
+            font-weight: bold;
+            font-size: 17px;
+        }
+
+        &:hover{
+            background-color: #353535;
+            &>p{
+                color: #dddddd;
+            }
+
+        }
+    }
+}
