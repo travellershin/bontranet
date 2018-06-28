@@ -1,0 +1,12 @@
+.wrap{
+    height: 100%;
+    width: 100%;
+}
+
+
+
+.contents{
+    height: calc(100% - 61px);
+    width: 100%;
+    overflow: hidden;
+}

@@ -1,0 +1,61 @@
+.top, .result_box{
+    overflow: hidden;
+    width: 1681px;
+    &>*{
+        float: left;
+        text-align: center;
+        border-right: 1px solid #aaa;
+        height: 50px;
+        line-height: 50px;
+        width: 70px;
+        font-size: 16px;
+    }
+
+    & .result{
+        &_name{
+            width: 722px;
+        }
+        &_url{
+            width: 400px;
+        }
+        &_remove{
+            width: 100px;
+        }
+        &_save{
+            width: 100px;
+        }
+    }
+}
+.top{
+    border-bottom: 1px solid #777;
+    border-top: 1px solid #777;
+    & p{
+        font-weight: bold;
+        font-size: 17px;
+    }
+}
+.result_box{
+    border-bottom: 1px solid #ccc;
+    &:hover{
+        background-color: #fbfbfb;
+        & input{
+            background-color: #fbfbfb;
+        }
+    }
+    & .result_remove{
+        &:hover{
+            background-color:#F8A1BE;
+            color:white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    }
+    & .result_save{
+        &:hover{
+            background-color:#8ABAD1;
+            color:white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    }
+}

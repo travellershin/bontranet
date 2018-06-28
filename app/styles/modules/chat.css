@@ -1,0 +1,15 @@
+.alert{
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 120px;
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+    border-radius: 2px;
+    background-color: #E72C33;
+    color: #FBF5F9;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 24px;
+}

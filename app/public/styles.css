@@ -1,0 +1,481 @@
+html{
+    /*-ms-overflow-style: none;*/
+    width:100%;
+    height:100%;
+}
+body{
+    width:100%;
+    height:100%;
+    font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
+    position: relative;
+}
+input{
+    border-style:none;
+}
+input,button:focus {
+  outline: none;
+}
+h1,h2,h3,h4,h5,h6,p,ul,li,div,html,body,img,a,input,button{
+  margin:0;
+  padding:0;
+  border: none;
+  vertical-align: baseline;
+  font-weight: normal;
+}
+a{
+    text-decoration: none;
+}
+textarea{
+    resize: none;
+    font-family: sans-serif;
+}
+ul,li{
+  list-style:none;
+}
+p,h1 {
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+}
+a,span{
+    display: inline-block;
+}
+.centerer{
+    position: relative;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+    overflow: auto;
+    display: inline-block;
+    height: 100%;
+}
+.centerer::after{
+    display: table;
+    content:"";
+    clear: both;
+}
+.ko{
+    letter-spacing: -0.2px;
+    font-family: "Apple SD Gothic Neo", "Malgun Gothic";
+}
+.displayNone{
+    display: none !important;
+}
+.clearfix::after{
+    content: "";
+    display: table;
+    clear: both;
+}
+li{
+    display: inline-block;
+}
+/* The snackbar - position it at the bottom and in the middle of the screen */
+.snackbar {
+    visibility: hidden; /* Hidden by default. Visible on click */
+    min-width: 250px; /* Set a default minimum width */
+    margin-left: -125px; /* Divide value of min-width by 2 */
+    background-color: #333; /* Black background color */
+    color: #fff; /* White text color */
+    text-align: center; /* Centered text */
+    border-radius: 2px; /* Rounded borders */
+    padding: 16px; /* Padding */
+    position: fixed; /* Sit on top of the screen */
+    z-index: 1; /* Add a z-index if needed */
+    left: 50%; /* Center the snackbar */
+    bottom: 30px; /* 30px from the bottom */
+}
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+.snackbar.show {
+    visibility: visible; /* Show the snackbar */
+
+/* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+However, delay the fade out process for 2.5 seconds */
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+@-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+.wrap{
+    height: 100%;
+    width: 100%;
+}
+header{
+    width: 100%;
+    height: 60px;
+    border-bottom: 1px solid #e0e0e0;
+}
+header .hint{
+        float: left;
+        line-height: 60px;
+        height: 60px;
+        margin-left: 20px;
+        font-size: 15px;
+        color: #666;
+    }
+header>input{
+        float: left;
+        height: 30px;
+        margin-top: 14px;
+        border: 1px solid #555;
+        border-radius: 3px;
+        margin-left: 12px;
+        width: 60px;
+        -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+        text-align: center;
+        line-height: 30px;
+        font-size: 16px;
+    }
+header>button{
+        float: left;
+        height: 30px;
+        width: 60px;
+        margin-top: 13px;
+        margin-left: 8px;
+        border-radius: 3px;
+        -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+        background-color: #555;
+        color: white;
+        -webkit-box-shadow: 0 1px 2px grey;
+                box-shadow: 0 1px 2px grey;
+        cursor: pointer;
+    }
+header>button:active{
+            margin-top: 14px;
+            -webkit-box-shadow: none;
+                    box-shadow: none;
+        }
+header>.cityName{
+        float: left;
+        line-height: 60px;
+        font-size: 22px;
+        margin-left: 30px;
+        font-weight: bold;
+        width: 400px;
+        border-right: 1px solid #e0e0e0;
+    }
+header>.nav{
+        float: left;
+        margin-left: 20px;
+    }
+header>.nav>p{
+            float: left;
+            line-height: 60px;
+            margin-left: 30px;
+            color: #888;
+            cursor: pointer;
+        }
+header>.nav>p:hover{
+                color:#666;
+            }
+header>.nav>p.selected{
+                color:#555;
+                font-weight: bold;
+            }
+header>.set_cityCode{
+        float: right;
+        margin-right: 20px;
+        line-height: 60px;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+.contents{
+    height: calc(100% - 61px);
+    width: 100%;
+    overflow: hidden;
+}
+.header{
+    width: 100%;
+    height: 30px;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 10px;
+}
+.header .cityCode{
+        margin-left: 20px;
+        height: 30px;
+        width: 110px;
+        -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+        line-height: 30px;
+        border: 1px solid grey;
+        padding-left: 12px;
+        font-size: 16px;
+    }
+.header .check{
+        margin-left: 20px;
+        height: 30px;
+        width: 80px;
+        background-color: white;
+        border: 1px solid darkgrey;
+        cursor: pointer;
+    }
+.header .check:hover{
+            background-color: #fafafa;
+        }
+.yolo{
+    margin-top: 20px;
+    padding: 12px;
+    float: left;
+}
+.spotCombineWrap{
+    border-radius: 5px;
+    width: 950px;
+    overflow: hidden;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    margin: 12px;
+    padding: 12px;
+    border: 1px solid grey;
+}
+.spotCombineWrap>.clearfix{
+        margin-bottom: 20px;
+    }
+.spotLeft,.spotRight{
+    float: left;
+    width: 450px;
+    font-weight: bold;
+}
+.spotLeft span,.spotRight span{
+        font-weight: normal;
+        font-size: 15px;
+        margin-left: 4px;
+    }
+.spotLeft{
+    width: 400px;
+    margin-right: 50px;
+    font-size: 17px;
+    padding-left: 16px;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    line-height: 38px;
+    height: 80px;
+}
+.spotRight input{
+        float: left;
+        height: 20px;
+        width: 20px;
+        margin-top: 6px;
+    }
+.spotRight p{
+        width: 400px;
+        overflow: hidden;
+        margin-left: 12px;
+        float: left;
+        line-height: 28px;
+        height: 28px;
+        font-weight: bold;
+        font-size: 16px;
+    }
+.korName, .enName, .centerPosition{
+    width: 250px;
+    height: 36px;
+    border: 1px solid #777777;
+    padding-left: 12px;
+    margin-left: 12px;
+    border-radius: 8px;
+    line-height: 38px;
+    font-size: 15px;
+}
+.centerPosition{
+    width: 30px;
+    padding-left: 0;
+    text-align: center;
+}
+.spotNameWrap{
+    margin-top: 30px;
+}
+.korNameTxt{
+    margin-left: 10px;
+    font-weight: bold;
+}
+.engNameTxt{
+    margin-left: 24px;
+    font-weight: bold;
+}
+.apply{
+    margin-left: 30px;
+    width: 60px;
+    height: 36px;
+    background-color: #da291c;
+    color:white;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    line-height: 36px;
+}
+.map{
+    position: fixed;
+    width: 400px;
+    height: 400px;
+    top: 100px;
+    right: 20px;
+}
+.mapSize{
+    position: fixed;
+    width: 400px;
+    height: 40px;
+    top: 520px;
+    right: 20px;
+    overflow: hidden;
+    padding-left: 65px;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+}
+.mapSize>p{
+        float: left;
+        margin-left: 15px;
+        font-size: 20px;
+        cursor: pointer;
+    }
+.mapSize>p.selected{
+            font-weight: bold;
+        }
+.confirm_wrap{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0,0,0.75);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+}
+.postAction{
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    padding: 40px;
+}
+.postAction div .mainTxt{
+        height: 30px;
+        line-height: 30px;
+        color: #333;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 60px;
+        margin-bottom: 12px;
+    }
+.postAction div .hintTxt{
+        height: 20px;
+        line-height: 20px;
+        font-size: 17px;
+        color:#777;
+        margin-bottom: 60px;
+        margin-left: 20px;
+        font-weight: bold;
+    }
+.postAction>.googleAction, .postAction .naverAction{
+        overflow: hidden;
+    }
+.postAction>.googleAction>.left,.postAction .naverAction>.left{
+            width: 800px;
+            float: left;
+        }
+.postAction>.googleAction>.right,.postAction .naverAction>.right{
+            float: left;
+            margin-left: 50px;
+        }
+.postAction>.googleAction>.right>p,.postAction .naverAction>.right>p{
+                width: 100px;
+                height: 50px;
+                background-color: #333;
+                color:white;
+                line-height: 50px;
+                text-align: center;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+.postAction>.googleAction>.right>p:hover,.postAction .naverAction>.right>p:hover{
+                    background-color: #373737;
+                }
+.postAction .coor_spot{
+        overflow: hidden;
+        width: 740px;
+        float: left;
+        height: 60px;
+        border: 1px solid #333;
+        -webkit-box-shadow: 1px 1px 1px #ddd;
+                box-shadow: 1px 1px 1px #ddd;
+        border-radius: 3px;
+        margin: 0 20px 20px 20px;
+
+
+    }
+.postAction .coor_spot>*{
+            float: left;
+        }
+.postAction .coor_spot>.coor_spotName{
+            margin-top: 20px;
+            line-height: 20px;
+            margin-left: 20px;
+            font-size: 17px;
+            width: 260px;
+            cursor: pointer;
+        }
+.postAction .coor_spot>.coor_spotName:hover{
+                text-decoration: underline;
+                color:blue;
+            }
+.postAction .coor_spot>.coord{
+            margin-top: 12px;
+            height: 36px;
+            -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+            border: 1px solid #999;
+            width: 260px;
+            padding-left: 12px;
+            line-height: 30px;
+            margin-right: 30px;
+        }
+.postAction .coor_spot>.input,.postAction .coor_spot .remove{
+            width: 60px;
+            height: 36px;
+            line-height: 36px;
+            color: white;
+            background-color: #233B5D;
+            margin:12px 8px 0 0;
+            border-radius: 5px;
+            line-height: 36px;
+            text-align: center;
+            cursor: pointer;
+        }
+.postAction .coor_spot>.input:hover,.postAction .coor_spot .remove:hover{
+                background-color: #283f61;
+            }
+.postAction .coor_spot>.remove{
+            background-color: #DE413A;
+        }
+.postAction .coor_spot>.remove:hover{
+                background-color: #e1463f;
+            }
+.combine{
+
+
+
+}

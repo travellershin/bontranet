@@ -19,36 +19,18 @@ gulp.task('watch', function(){
       gulp.start('scriptsRefresh');
   });
 
-  watch('./app/styles/index/**/*.css', function(){
-    gulp.start('cssInject_index');
-  });
-  watch('./app/styles/index.css', function(){
-    gulp.start('cssInject_index');
+  watch('./app/styles/**/*.css', function(){
+    gulp.start('cssInject');
   });
 
-  watch('./app/styles/hotel/**/*.css', function(){
-    gulp.start('cssInject_hotel');
-  });
-  watch('./app/styles/hotel.css', function(){
-    gulp.start('cssInject_hotel');
-  });
-
-  watch('./app/icons/**/*.svg', function(){
-      gulp.start('icons');
-  })
 
 
 })
 
-gulp.task('cssInject_index', ['styles_index'], function(){
+gulp.task('cssInject', ['styles'], function(){
   return gulp.src('./app/public/index.css')
     .pipe(browserSync.stream());
 });
-gulp.task('cssInject_hotel', ['styles_hotel'], function(){
-  return gulp.src('./app/public/hotel.css')
-    .pipe(browserSync.stream());
-});
-
 gulp.task('scriptsRefresh', ['scripts'], function(){
     browserSync.reload();
 })

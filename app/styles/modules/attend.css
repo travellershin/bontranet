@@ -1,0 +1,12 @@
+.attend{
+    box-sizing: border-box;
+    width: 900px;
+    margin: 0 auto;
+    padding-top: 40px;
+    
+
+    #calendar{
+        margin-top: 60px;
+        width: 750px;
+    }
+}

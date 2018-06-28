@@ -1,10 +1,10 @@
 var path = require("path")
 
 module.exports = {
-    entry: "./app/scripts/app.js",
+    entry: "./app/scripts/index.js",
     output: {
         path: path.resolve(__dirname, "./app/public/scripts") ,
-        filename: "app.js"
+        filename: "index.js"
     },
     devtool: '#inline-source-map',
     module: {
