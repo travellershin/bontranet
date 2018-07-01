@@ -1,7 +1,13 @@
+.helloWorld{
+    float: right;
+    line-height: 60px;
+    padding-right: 30px;
+    color: #fafafa;
+    letter-spacing: 0.5px;
+    cursor: default;
+}
 .alert{
-    position: absolute;
-    right: 0;
-    top: 0;
+    float: right;
     width: 120px;
     height: 60px;
     text-align: center;

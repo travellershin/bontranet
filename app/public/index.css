@@ -93,6 +93,133 @@ header nav ul .nav_selected{
     height: calc(100% - 60px);
     overflow-y: auto;
 }
+.selector{
+
+    width: 180px;
+    height: 50px;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    border: 2px solid #777;
+    padding: 2px;
+    border-radius: 2px;
+}
+.selector .case{
+        float: left;
+        height: 42px;
+        width: 86px;
+        line-height: 42px;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 2px;
+    }
+.selector .selected{
+        background-color: #777;
+        color: white;
+    }
+.selector::after{
+        content:"";
+        clear: both;
+        display: table;
+    }
+.blackScreen{
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    position: fixed;
+    background-color: rgba(0,0,0,0.6);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+}
+/* ----------------------------------------------------------------------------- 
+
+  AnyPicker - Customizable Picker for Mobile OS
+  Version 2.0.9
+  Copyright (c)2017 Lajpat Shah
+  Contributors : https://github.com/nehakadam/AnyPicker/contributors
+  Repository : https://github.com/nehakadam/AnyPicker
+  Homepage : https://nehakadam.github.io/AnyPicker
+
+ ----------------------------------------------------------------------------- */
+body.noscroll{overflow:hidden}
+.ap-overlay{display:none;z-index:2000;min-width:250px;-webkit-touch-callout:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-backface-visibility:hidden;backface-visibility:hidden;-webkit-transform-style:preserve-3d;transform-style:preserve-3d;-webkit-perspective:1000px;perspective:1000px}
+.ap-layout-popup{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5)}
+.ap-layout-fixed,.ap-layout-popover{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5)}
+.ap-layout-relative,.ap-layout-inline{position:fixed;top:0;left:0;width:100%;height:100%}
+.ap-overlay *{-webkit-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;-webkit-tap-highlight-color:rgba(0,0,0,0)}
+.ap-bg{width:100%;height:100%;font-family:sans-serif;font-size:22px}
+.ap-cont{margin:0 auto;background:#FFF}
+.ap-theme-default:not(.ap-layout-inline):not(.ap-layout-relative) .ap-cont{-webkit-box-shadow:0 16px 28px 0 rgba(0,0,0,.22),0 25px 55px 0 rgba(0,0,0,.21);box-shadow:0 16px 28px 0 rgba(0,0,0,.22),0 25px 55px 0 rgba(0,0,0,.21)}
+.ap-layout-popup .ap-cont{position:relative;top:50%;max-width:500px;width:95%;-webkit-transform:translateY(-50%);transform:translateY(-50%)}
+.ap-layout-relative .ap-cont{max-width:500px;width:97%;border:1px solid #ECF0F1}
+.ap-layout-inline .ap-cont{border:1px solid #ECF0F1}
+.ap-layout-fixed .ap-cont{width:100%;position:fixed}
+.ap-header{height:50px;line-height:50px;text-align:left;font-size:.9em;padding:0 16px}
+.ap-dir-rtl .ap-header{text-align:right}
+.ap-theme-default .ap-header{height:60px;line-height:60px}
+.ap-content{max-width:320px;margin:0 auto}
+.ap-content-top{height:50px;padding:8px 16px;color:#555;text-align:center}
+.ap-content-switch{margin-top:8px;margin-bottom:8px;text-align:center}
+.ap-content-switch-tab{border:1px solid #009688;padding:5px 16px;cursor:pointer;font-size:.6em;color:#009688}
+.ap-dir-ltr .ap-content-switch-date{border-top-left-radius:2px;border-bottom-left-radius:2px}
+.ap-dir-rtl .ap-content-switch-date{border-top-right-radius:2px;border-bottom-right-radius:2px;margin-left:-1px}
+.ap-dir-ltr .ap-content-switch-time{border-top-right-radius:2px;border-bottom-right-radius:2px;margin-left:-1px}
+.ap-dir-rtl .ap-content-switch-time{border-top-left-radius:2px;border-bottom-left-radius:2px}
+.ap-content-switch-selected{background:#009688;color:#FFF}
+.ap-content-middle{min-height:120px;padding-top:20px;padding-bottom:20px}
+.ap-content-bottom{height:50px;padding:8px 16px;color:#555;text-align:center}
+.ap-theme-default .ap-content-top,.ap-theme-default .ap-content-bottom{font-size:.7em}
+.ap-footer{display:table;table-layout:fixed;width:100%;height:50px;text-align:center}
+.ap-theme-default .ap-footer{padding:0 16px}
+.ap-theme-default .ap-footer-top{line-height:55px}
+.ap-theme-default .ap-footer-bottom{line-height:45px}
+.ap-header__title{color:#000;font-size:1.2em}
+.ap-theme-default .ap-button{cursor:pointer;letter-spacing:0;text-align:center;font-size:.8em;padding:8px 12px;margin:8px;color:#009688;background:rgba(255,255,255,1);text-transform:uppercase}
+.ap-theme-default .ap-button-cont{float:right}
+.ap-theme-default.ap-dir-rtl .ap-button-cont{float:left}
+.ap-show{opacity:0;animation:ap-anim-show ease .5s;animation-iteration-count:1;-webkit-animation:ap-anim-show ease .5s;-webkit-animation-iteration-count:1;-moz-animation:ap-anim-show ease .5s;-moz-animation-iteration-count:1;-o-animation:ap-anim-show ease .5s;-o-animation-iteration-count:1;-ms-animation:ap-anim-show ease .5s;-ms-animation-iteration-count:1;-webkit-animation-fill-mode:forwards;animation-fill-mode:forwards}
+@keyframes ap-anim-show{0%{opacity:0}100%{opacity:1}}
+@-webkit-keyframes ap-anim-show{0%{opacity:0}100%{opacity:1}}
+.ap-hide{animation:ap-anim-hide ease .5s;animation-iteration-count:1;-webkit-animation-fill-mode:forwards;animation-fill-mode:forwards;-webkit-animation:ap-anim-hide ease .5s;-webkit-animation-iteration-count:1;-moz-animation:ap-anim-hide ease .5s;-moz-animation-iteration-count:1;-o-animation:ap-anim-hide ease .5s;-o-animation-iteration-count:1;-ms-animation:ap-anim-hide ease .5s;-ms-animation-iteration-count:1}
+@keyframes ap-anim-hide{0%{opacity:1}100%{opacity:0}}
+@-webkit-keyframes ap-anim-hide{0%{opacity:1}100%{opacity:0}}
+.ap-bottom-slide-up{opacity:0;animation:ap-anim-bottom-slide-up ease .5s;animation-iteration-count:1;-webkit-animation:ap-anim-bottom-slide-up ease .5s;-webkit-animation-iteration-count:1;-moz-animation:ap-anim-bottom-slide-up ease .5s;-moz-animation-iteration-count:1;-o-animation:ap-anim-bottom-slide-up ease .5s;-o-animation-iteration-count:1;-ms-animation:ap-anim-bottom-slide-up ease .5s;-ms-animation-iteration-count:1;-webkit-animation-fill-mode:forwards;animation-fill-mode:forwards}
+@keyframes ap-anim-bottom-slide-up{100%{opacity:1;bottom:0}}
+@-webkit-keyframes ap-anim-bottom-slide-up{100%{opacity:1;bottom:0}}
+.ap-bottom-slide-down{opacity:1;animation:ap-anim-bottom-slide-down ease .5s;animation-iteration-count:1;-webkit-animation:ap-anim-bottom-slide-down ease .5s;-webkit-animation-iteration-count:1;-moz-animation:ap-anim-bottom-slide-down ease .5s;-moz-animation-iteration-count:1;-o-animation:ap-anim-bottom-slide-down ease .5s;-o-animation-iteration-count:1;-ms-animation:ap-anim-bottom-slide-down ease .5s;-ms-animation-iteration-count:1;-webkit-animation-fill-mode:forwards;animation-fill-mode:forwards}
+@keyframes ap-anim-bottom-slide-down{100%{opacity:0;bottom:-1000px}}
+@-webkit-keyframes ap-anim-bottom-slide-down{100%{opacity:0;bottom:-1000px}}
+.ap-top-slide-down{opacity:0;animation:ap-anim-top-slide-down ease .5s;animation-iteration-count:1;-webkit-animation:ap-anim-top-slide-down ease .5s;-webkit-animation-iteration-count:1;-moz-animation:ap-anim-top-slide-down ease .5s;-moz-animation-iteration-count:1;-o-animation:ap-anim-top-slide-down ease .5s;-o-animation-iteration-count:1;-ms-animation:ap-anim-top-slide-down ease .5s;-ms-animation-iteration-count:1;-webkit-animation-fill-mode:forwards;animation-fill-mode:forwards}
+@keyframes ap-anim-top-slide-down{100%{opacity:1;top:0}}
+@-webkit-keyframes ap-anim-top-slide-down{100%{opacity:1;top:0}}
+.ap-top-slide-up{opacity:1;animation:ap-anim-top-slide-up ease .5s;animation-iteration-count:1;-webkit-animation:ap-anim-top-slide-up ease .5s;-webkit-animation-iteration-count:1;-moz-animation:ap-anim-top-slide-up ease .5s;-moz-animation-iteration-count:1;-o-animation:ap-anim-top-slide-up ease .5s;-o-animation-iteration-count:1;-ms-animation:ap-anim-top-slide-up ease .5s;-ms-animation-iteration-count:1;-webkit-animation-fill-mode:forwards;animation-fill-mode:forwards}
+@keyframes ap-anim-top-slide-up{100%{opacity:0;top:-1000px}}
+@-webkit-keyframes ap-anim-top-slide-up{100%{opacity:0;top:-1000px}}
+.ap-theme-default .ap-button-active{animation:ap-anim-default-button-active ease .5s;animation-iteration-count:1;animation-fill-mode:forwards;-webkit-animation:ap-anim-default-button-active ease .5s;-webkit-animation-iteration-count:1;-webkit-animation-fill-mode:forwards;-moz-animation:ap-anim-default-button-active ease .5s;-moz-animation-iteration-count:1;-moz-animation-fill-mode:forwards;-o-animation:ap-anim-default-button-active ease .5s;-o-animation-iteration-count:1;-o-animation-fill-mode:forwards;-ms-animation:ap-anim-default-button-active ease .5s;-ms-animation-iteration-count:1;-ms-animation-fill-mode:forwards}
+@keyframes ap-anim-default-button-active{100%{background:#E0F2F1}}
+@-webkit-keyframes ap-anim-default-button-active{100%{background:#E0F2F1}}
+.ap-component-section{display:table;table-layout:fixed;width:100%;background:#FFF}
+.ap-loading{width:100%;height:100%;z-index:2;background:#FFF}
+.ap-component-section,ap-component-section *{-webkit-box-sizing:border-box;box-sizing:border-box;-webkit-touch-callout:none;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-ms-touch-select:none;-ms-touch-action:none;touch-action:none}
+.ap-component{display:table-cell}
+.ap-component-label{text-align:center;font-size:.7em}
+.ap-theme-default{color:#009688}
+.ap-component-plus,.ap-component-minus{background:#FFF;color:#BDBDBD;width:100%;height:40px;line-height:40px;text-align:center;font-size:15px;cursor:pointer}
+.ap-component-cont{position:relative;overflow:hidden}
+.ap-component-data{position:absolute;left:0;top:0;width:100%;-webkit-backface-visibility:hidden;backface-visibility:hidden;-webkit-transform-style:preserve-3d;transform-style:preserve-3d;-webkit-transform:translate3d(0,0,0);transform:translate3d(0,0,0);-webkit-perspective:1000px;perspective:1000px}
+.ap-row{height:40px;line-height:40px;text-align:center;overflow:hidden;text-overflow:clip;white-space:nowrap;cursor:pointer;color:#000}
+.ap-row-invalid{color:#FFCDD2}
+.ap-row-hidden{opacity:0}
+.ap-component-selector{position:absolute;left:0;top:50%;-webkit-transform:translateY(-50%);transform:translateY(-50%);width:100%;height:40px;border-top:1px solid #009688;border-bottom:1px solid #009688}
+.ap-theme-default .ap-component-selector{left:10%;width:80%}
+.ap-component-gradient{position:absolute;top:-1px;left:0;width:100%;height:102%;cursor:pointer;background:rgba(255,255,255,.8);background:-webkit-gradient(left top,left bottom,color-stop(0%,rgba(255,255,255,.8)),color-stop(30%,rgba(255,255,255,.8)),color-stop(45%,rgba(255,255,255,0)),color-stop(55%,rgba(255,255,255,0)),color-stop(70%,rgba(255,255,255,.8)),color-stop(100%,rgba(255,255,255,.8)));background:-webkit-gradient(linear,left top, left bottom,color-stop(0, rgba(255,255,255,.8)),color-stop(30%, rgba(255,255,255,.8)),color-stop(45%, rgba(255,255,255,0)),color-stop(55%, rgba(255,255,255,0)),color-stop(70%, rgba(255,255,255,.8)),to(rgba(255,255,255,.8)));background:linear-gradient(to bottom,rgba(255,255,255,.8) 0,rgba(255,255,255,.8) 30%,rgba(255,255,255,0) 45%,rgba(255,255,255,0) 55%,rgba(255,255,255,.8) 70%,rgba(255,255,255,.8) 100%);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ffffff', GradientType=0)}
 /*!
  * FullCalendar v3.9.0
  * Docs & License: https://fullcalendar.io/
@@ -314,18 +441,146 @@ a.fc-more:hover{text-decoration:underline}
 .attend{
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
-    width: 900px;
+    width: 1200px;
     margin: 0 auto;
     padding-top: 40px;
 }
+.attend .selector{
+        float: left;
+    }
+.attend .worker_selector{
+        float: left;
+        margin-left: 20px;
+        height: 50px;
+        width: 200px;
+        font-size: 15px;
+        padding-left: 12px;
+        cursor: pointer;
+    }
+.attend .fc-day{
+        text-align: center;
+        line-height: 80px;
+        height: 80px;
+        color: #555;
+        font-weight: bold;
+    }
+.attend .fc-other-month{
+        color:#bbb;
+        font-weight: normal;
+    }
+.attend .fc-week{
+        height: 80px;
+    }
+.attend .input .title{
+            margin-top: 32px;
+            font-size: 20px;
+            font-weight: bold;
+            color:#777;
+        }
+.attend .input .weekPlan{
+            margin-top: 12px;
+            margin-bottom: 50px;
+            width: 100%;
+            border: 2px solid #777;
+        }
+.attend .input .weekPlan .day{
+                float: left;
+                width: 170px;
+                text-align: center;
+                border-right: 1px solid #999;
+
+            }
+.attend .input .weekPlan .day:last-child{
+                    border-right: none;
+                }
+.attend .input .weekPlan .day .text{
+                    height: 32px;
+                    line-height: 32px;
+                }
+.attend .input .weekPlan .day .workHour{
+                    height: 80px;
+                    border-top: 1px solid #aaa;
+                    line-height: 40px;
+                    text-align: center;
+                    cursor: pointer;
+                    font-size: 17px;
+                }
+.attend .input .weekPlan .day .workHour p{
+                        font-weight: bold;
+                    }
 .attend #calendar{
         margin-top: 60px;
-        width: 750px;
+        width: 900px;
+        margin-left: 150px;
     }
+.attend #calendar .fc-day-number{
+            font-size: 14px;
+            color: #777;
+        }
+.inputWindow{
+    width: 370px;
+    height: 250px;
+    background-color: white;
+}
+.inputWindow .title{
+        height: 40px;
+        line-height: 60px;
+        margin-left: 24px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #777;
+    }
+.inputWindow .line{
+        height: 50px;
+        margin-top: 20px;
+        line-height: 50px;
+    }
+.inputWindow .line>*{
+            float: left;
+        }
+.inputWindow .line>input{
+            margin-top: 8px;
+            height: 36px;
+            width: 100px;
+            margin-left: 24px;
+            margin-right: 12px;
+            -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+            border: 1px solid #666;
+            box-sizing: border-box;
+            padding-left: 12px;
+            font-size: 16px;
+        }
+.inputWindow .bottom{
+        width: 100%;
+        overflow: hidden;
+        height: 50px;
+        margin-top: 20px;
+        line-height: 50px;
+    }
+.inputWindow .bottom .confirm, .inputWindow .bottom .close{
+            width: 185px;
+            float: left;
+            text-align: center;
+            font-size: 17px;
+            cursor: pointer;
+            -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+            border-top: 1px solid #555;
+        }
+.inputWindow .bottom .confirm{
+            border-right: 1px solid #555;
+        }
+.helloWorld{
+    float: right;
+    line-height: 60px;
+    padding-right: 30px;
+    color: #fafafa;
+    letter-spacing: 0.5px;
+    cursor: default;
+}
 .alert{
-    position: absolute;
-    right: 0;
-    top: 0;
+    float: right;
     width: 120px;
     height: 60px;
     text-align: center;

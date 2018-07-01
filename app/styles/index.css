@@ -1,6 +1,8 @@
 @import "global/init";
 @import "global/layout";
+@import "global/module";
 
+@import "modules/anypicker";
 @import "modules/calendar";
 @import "modules/attend";
 @import "modules/chat";

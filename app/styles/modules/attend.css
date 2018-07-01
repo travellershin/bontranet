@@ -1,12 +1,153 @@
 .attend{
     box-sizing: border-box;
-    width: 900px;
+    width: 1200px;
     margin: 0 auto;
     padding-top: 40px;
-    
+
+    .selector{
+        float: left;
+    }
+
+    & .worker_selector{
+        float: left;
+        margin-left: 20px;
+        height: 50px;
+        width: 200px;
+        font-size: 15px;
+        padding-left: 12px;
+        cursor: pointer;
+    }
+
+    & .fc-day{
+        text-align: center;
+        line-height: 80px;
+        height: 80px;
+        color: #555;
+        font-weight: bold;
+    }
+    & .fc-other-month{
+        color:#bbb;
+        font-weight: normal;
+    }
+    & .fc-week{
+        height: 80px;
+    }
+
+    & .input{
+        & .title{
+            margin-top: 32px;
+            font-size: 20px;
+            font-weight: bold;
+            color:#777;
+        }
+
+        & .weekPlan{
+            margin-top: 12px;
+            margin-bottom: 50px;
+            width: 100%;
+            border: 2px solid #777;
+
+            & .day{
+                float: left;
+                width: 170px;
+                text-align: center;
+                border-right: 1px solid #999;
+
+                &:last-child{
+                    border-right: none;
+                }
+                & .text{
+                    height: 32px;
+                    line-height: 32px;
+                }
+                & .workHour{
+                    height: 80px;
+                    border-top: 1px solid #aaa;
+                    line-height: 40px;
+                    text-align: center;
+                    cursor: pointer;
+                    font-size: 17px;
+
+                    & p{
+                        font-weight: bold;
+                    }
+                }
+
+            }
+        }
+    }
+
+
+
 
     #calendar{
         margin-top: 60px;
-        width: 750px;
+        width: 900px;
+        margin-left: 150px;
+
+        & .fc-day-number{
+            font-size: 14px;
+            color: #777;
+        }
+    }
+}
+
+
+.inputWindow{
+    width: 370px;
+    height: 250px;
+    background-color: white;
+
+    & .title{
+        height: 40px;
+        line-height: 60px;
+        margin-left: 24px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #777;
+    }
+
+    & .line{
+        height: 50px;
+        margin-top: 20px;
+        line-height: 50px;
+
+        &>*{
+            float: left;
+        }
+        &>input{
+            margin-top: 8px;
+            height: 36px;
+            width: 100px;
+            margin-left: 24px;
+            margin-right: 12px;
+            box-sizing: border-box;
+            border: 1px solid #666;
+            box-sizing: border-box;
+            padding-left: 12px;
+            font-size: 16px;
+        }
+    }
+
+    & .bottom{
+        width: 100%;
+        overflow: hidden;
+        height: 50px;
+        margin-top: 20px;
+        line-height: 50px;
+
+        & .confirm, .close{
+            width: 185px;
+            float: left;
+            text-align: center;
+            font-size: 17px;
+            cursor: pointer;
+            box-sizing: border-box;
+            border-top: 1px solid #555;
+        }
+
+        & .confirm{
+            border-right: 1px solid #555;
+        }
     }
 }

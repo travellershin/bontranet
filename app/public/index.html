@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="index.css">
+    <script src="https://www.gstatic.com/firebasejs/ui/3.1.1/firebase-ui-auth__ko.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/3.1.1/firebase-ui-auth.css" />
 </head>
 
 <body>
@@ -23,21 +25,25 @@
 
         <!-- modules/chat.css -->
         <div class="alert clearfix">M</div>
+        <p class="helloWorld"></p>
+
     </header>
 
     <!-- global/layout.css -->
     <div class="wrap">
         <!-- modules/attend.css -->
         <div class="attend">
-            <div class="line">
-                <p>근무시간</p>
-                <p><span class="data_totalHour">22</span>시간</p>
+
+            <!-- global/module.css -->
+            <div class="selector" id="selector_attendView">
+                <p class="case attendView_input selected">입력</p>
+                <p class="case attendView_Show">내역</p>
             </div>
-            <div class="line">
-                <p>예상 월급</p>
-                <p>874,000원</p>
-            </div>
-            <div id="calendar"></div>
+            <select class="worker_selector displayNone"></select>
+
+            <div class="input"></div> <!--근무일정을 입력하는 곳-->
+            <div id="calendar" class="calendarView displayNone"></div>
+            <div class="calendarView workSummary"></div>
         </div>
 
         <div class="city">
@@ -68,6 +74,7 @@
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="./modules/moment.min.js"></script>
+    <script src="./modules/anypicker.min.js"></script>
     <script src="./modules/fullcalendar.min.js"></script>
     <script src="/scripts/index.js"></script>
 </body>
