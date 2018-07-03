@@ -1,95 +1,134 @@
 .attend{
     box-sizing: border-box;
-    width: 1200px;
+    width: 100%;
     margin: 0 auto;
-    padding-top: 40px;
 
-    .selector{
-        float: left;
+    &__top{
+        overflow: hidden;
+        padding-top: 40px;
+        display: flex;
+        justify-content: center;
     }
-
-    & .worker_selector{
-        float: left;
-        margin-left: 20px;
-        height: 50px;
-        width: 200px;
-        font-size: 15px;
-        padding-left: 12px;
-        cursor: pointer;
-    }
-
-    & .fc-day{
-        text-align: center;
-        line-height: 80px;
-        height: 80px;
-        color: #555;
-        font-weight: bold;
-    }
-    & .fc-other-month{
-        color:#bbb;
-        font-weight: normal;
-    }
-    & .fc-week{
-        height: 80px;
-    }
-
-    & .input{
-        & .title{
-            margin-top: 32px;
-            font-size: 20px;
-            font-weight: bold;
-            color:#777;
-        }
-
-        & .weekPlan{
-            margin-top: 12px;
-            margin-bottom: 50px;
-            width: 100%;
-            border: 2px solid #777;
-
-            & .day{
-                float: left;
-                width: 170px;
-                text-align: center;
-                border-right: 1px solid #999;
-
-                &:last-child{
-                    border-right: none;
-                }
-                & .text{
-                    height: 32px;
-                    line-height: 32px;
-                }
-                & .workHour{
-                    height: 80px;
-                    border-top: 1px solid #aaa;
-                    line-height: 40px;
-                    text-align: center;
-                    cursor: pointer;
-                    font-size: 17px;
-
-                    & p{
-                        font-weight: bold;
-                    }
-                }
-
-            }
-        }
-    }
-
-
-
 
     #calendar{
-        margin-top: 60px;
-        width: 900px;
-        margin-left: 150px;
+        float: left;
+        width: 820px;
+
+        & .fc-header-toolbar{
+            margin-bottom: 14px;
+            height: 36px;
+        }
 
         & .fc-day-number{
             font-size: 14px;
-            color: #777;
+            color: #333;
+        }
+        & .fc-left{
+            overflow: hidden;
+        }
+
+        & h2{
+            float: left;
+            font-size: 24px;
+            line-height: 32px;
+            height: 32px;
+            margin-left: 10px;
+        }
+
+        & .fc-day{
+            text-align: center;
+            line-height: 72px;
+            height: 72px;
+            color: #666;
+            font-weight: bold;
+            padding:20px 0 12px 0;
+            box-sizing: border-box;
+            position: relative;
+            cursor: pointer;
+            font-size: 15px;
+
+            & p{
+                line-height: 25px;
+
+                &:last-child{
+                    font-weight: bold;
+                }
+            }
+        }
+        & .fc-other-month{
+            color:#dadada;
+            font-weight: normal;
+            background-color: white;
+        }
+        & .fc-other-month.fc-today{
+            background-color: #fffefa;
+        }
+
+        & .fc-week{
+            height: 82px;
         }
     }
+
+    &__week{
+        float: left;
+        width: 100px;
+        margin-left: 40px;
+        height: 496px;
+        margin-top: 68px;
+
+        &__hour{
+            height: 83px;
+            line-height: 83px;
+            font-size: 17px;
+        }
+    }
+
+    &__month{
+        width: 670px;
+        margin: 20px auto;
+
+        &__line{
+            overflow: hidden;
+            height: 32px;
+            line-height: 32px;
+
+            &>*{
+                float: left;
+            }
+
+            &--red{
+                &>.attend__month__value{
+                    color: #E72C33;
+                }
+            }
+            &--sum{
+                margin-top: 10px;
+                &>.attend__month__value, .attend__month__category{
+                    font-weight: bold;
+                    font-size: 17px;
+                }
+            }
+        }
+
+        &__category{
+            width: 120px;
+        }
+
+        &__value{
+            width: 110px;
+            text-align: right;
+            margin-right: 40px;
+        }
+
+        &__explain{
+            width: 400px;
+            color: #999;
+            font-size: 15px;
+        }
+
+
+    }
+
 }
 
 

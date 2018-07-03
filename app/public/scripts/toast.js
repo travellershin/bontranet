@@ -34,3 +34,7 @@ function calculateDif(coor1, coor2){
 function deg2rad(deg) {
   return deg * (Math.PI/180)
 }
+
+function comma(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}

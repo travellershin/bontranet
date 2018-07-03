@@ -28,6 +28,7 @@
                 <li>자기개발</li>
                 <li>링크모음</li>
             </ul>
+            <select class="worker_selector displayNone"></select>
         </nav>
 
 
@@ -40,18 +41,14 @@
     <!-- global/layout.css -->
     <div class="wrap">
         <!-- modules/attend.css -->
-        <div class="pages attend">
+        <div class="pages attend displayNone">
 
-            <!-- global/module.css -->
-            <div class="selector" id="selector_attendView">
-                <p class="case attendView_input selected">입력</p>
-                <p class="case attendView_Show">내역</p>
+            <div class="attend__top">
+                <div id="calendar" class="attend__calendar"></div>
+                <div class="attend__week"></div>
             </div>
-            <select class="worker_selector displayNone"></select>
+            <div class="attend__month"></div>
 
-            <div class="input"></div> <!--근무일정을 입력하는 곳-->
-            <div id="calendar" class="calendarView displayNone"></div>
-            <div class="calendarView workSummary"></div>
         </div>
 
 
@@ -86,8 +83,9 @@
 
     </div>
 
+    <div class="modal">
 
-
+    </div>
 
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB14yPdQPLZ-jh7gL-PmJF0vkvTSHTt8Aw&libraries=geometry"></script>

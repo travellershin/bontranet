@@ -27,17 +27,22 @@ var Attend = {
             firebase.database().ref("attend/"+this.id).on("value", snap => {
                 $(".loadingView").addClass("displayNone")
                 this.attendObj = snap.val();
+                that.inflate_calendar(that.attendObj)
+
+                $('#calendar').fullCalendar({
+                    height: 564,
+                    firstDay: 1,
+                    viewRender : function (view, element) {
+                        that.inflate_calendar(that.attendObj)
+                    },
+                    dayClick: function(date){
+                        console.log(date)
+                        that.inputWorkHour(date)
+                    }
+                });
             })
-            $('#calendar').fullCalendar({
-                height: 552,
-                firstDay: 1,
-                viewRender : function (view, element) {
-                    that.inflate_calendar(that.attendObj)
-                }
-            });
+
         }
-
-
 
         this.listener();
     },
@@ -46,30 +51,49 @@ var Attend = {
         let that = this;
 
         $(".attendView_input").click(function(){
-            that.inflate_input(that.attendObj);
+            that.inflate_input();
         })
         $(".attendView_Show").click(function(){
             that.inflate_calendar(that.attendObj);
         })
+
+        $("body").on("click", ".confirm", function(){
+            that.setWorkHour($(this).attr("did"));
+            $(".inputWindow input").val("");
+        })
+        $("body").on("click", ".close", function(){
+            $(".blackScreen").addClass("displayNone");
+            $(".inputWindow input").val("");
+        })
+        $("body").keyup(function(e){
+            if($(".modal .confirm").length){
+                var code = e.which; // recommended to use e.which, it's normalized across browsers
+                if(code==13){
+                    if($("#first_from").val().length>0){
+                        that.setWorkHour($(".modal .confirm").attr("did"));
+                    }
+                }
+            }
+        })
     },
 
     inflate_calendar: function(data){
-        $(".attendView_Show").addClass("selected");
-        $(".attendView_input").removeClass("selected");
-        $(".attend .input").addClass("displayNone");
-        $(".calendarView").removeClass("displayNone");
+        $(".attend").removeClass("displayNone");
 
         if(data.attend){
             data = data.attend
             for (var date in data) {
                 let dateID = date.slice(0,4)+"-"+date.slice(4,6)+"-"+date.slice(6,8);
                 let dif = 0
+                let txt = '<p>'+data[date][0].from+"~"+data[date][0].to+'</p>'
+                //두타임 나눠서 근무했어도 달력에 표시되는 것은 첫타임 근무시간만
+
                 for (var i = 0; i < data[date].length; i++) {
                     dif += data[date][i].dif
                 }
-                let hour = Math.floor(dif/60);
-                let min = dif%60;
-                $('.fc-day[data-date="'+dateID+'"]').html(hour+"시간 "+min+"분")
+
+                txt+='<p>' + Math.floor(dif/60) + "시간 "+ dif%60 +"분"+'</p>'
+                $('.fc-day[data-date="'+dateID+'"]').html(txt)
             }
             let durMon = 0;
 
@@ -85,127 +109,149 @@ var Attend = {
                     }
                 }
             }
-            let txt = $(".fc-left>h2").html();
-            if(durMon>0){
-                txt+=' ('+Math.floor(durMon/60)+'시간 '+durMon%60+'분)'
+            let txt = ''
+
+            if($(".fc-view-container").length){
+                for (var i = 0; i < 6; i++) {   //무조건 6주
+                    let weekDom = $(".fc-week").eq(i);
+                    let weekDur = 0;
+
+                    for (var j = 0; j < 7; j++) {
+                        let dayDom = weekDom.find(".fc-day").eq(j)
+                        let date = dayDom.attr("data-date").split("-")
+                        date = date[0]+date[1]+date[2];
+                        if(data[date]){
+                            for (var k = 0; k < data[date].length; k++) {
+                                weekDur += data[date][k].dif
+                            }
+                        }
+                    }
+                    if(weekDur>0){
+                        txt+='<p class="attend__week__hour">'+ Math.floor(weekDur/60)+'시간 '+weekDur%60+'분' +'</p>'
+                    }else{
+                        txt+='<p class="attend__week__hour"></p>'
+                    }
+                }
+
+                $(".attend__week").html(txt)
             }
-            $(".fc-left>h2").html(txt)
+
+            if($(".fc-left").children("h2.durMonth").length){
+                $("h2.durMonth").html(' ('+Math.floor(durMon/60)+'시간 '+durMon%60+'분)')
+            }else{
+                $(".fc-left").append('<h2 class="durMonth"> ('+Math.floor(durMon/60)+'시간 '+durMon%60+'분)</h2>')
+            }
+
+            txt = '';   //var 빼먹은거 아님. 위에서 선언 했음!
+
+            let fullMonthBonus = 30400;
+            let insuranceFee = 0;
+            let basic = Math.round(durMon/60*7600)
+            let fullWeekBunus = Math.round((durMon/60*7600)*0.2)
+
+            txt+='<div class="attend__month__line">'
+            txt+=   '<p class="attend__month__category">기본급</p>'
+            txt+=   '<p class="attend__month__value">'+ comma(basic)+ "원</p>"
+            txt+=   '<p class="attend__month__explain">근무시간 X 7,600원</p>'
+            txt+='</div>'
+
+            txt+='<div class="attend__month__line">'
+            txt+=   '<p class="attend__month__category">주휴수당</p>'
+            txt+=   '<p class="attend__month__value">'+ comma(fullWeekBunus) +"원</p>"
+            txt+=   '<p class="attend__month__explain">기본급의 20%</p>'
+            txt+='</div>'
+
+            txt+='<div class="attend__month__line">'
+            txt+=   '<p class="attend__month__category">연차수당</p>'
+            txt+=   '<p class="attend__month__value">'+ comma(fullMonthBonus) +"원</p>"
+            txt+=   '<p class="attend__month__explain">5시간 상당 기본급</p>'
+            txt+='</div>'
+
+            txt+='<div class="attend__month__line attend__month__line--red">'
+            txt+=   '<p class="attend__month__category">사회보험료</p>'
+            txt+=   '<p class="attend__month__value">'+ comma(insuranceFee) +"원</p>"
+            txt+=   '<p class="attend__month__explain">국민연금/고용보험/건강보험 청구액</p>'
+            txt+='</div>'
+
+            txt+='<div class="attend__month__line attend__month__line--sum">'
+            txt+=   '<p class="attend__month__category">합계</p>'
+            txt+=   '<p class="attend__month__value">'+ comma(basic + fullWeekBunus + fullMonthBonus - insuranceFee) +"원</p>"
+            txt+=   '<p class="attend__month__explain">기본급 + 주휴수당 + 연차수당 - 사회보험료</p>'
+            txt+='</div>'
+
+            $(".attend__month").html(txt);
         }
-
-
-
     },
 
-    inflate_input: function(data){
-        $(".attendView_Show").removeClass("selected");
-        $(".attendView_input").addClass("selected");
-        $(".attend .input").removeClass("displayNone");
-        $(".calendarView").addClass("displayNone");
+    inputWorkHour: function(dateObj){
+        // css: modules/attend.css
+        let dateShort = moment(dateObj).format("MM/DD");
+        let dateID = moment(dateObj).format("YYYYMMDD");
 
-        var m = moment().day(-8);
-
-        var pastWeek = '<p class="title pastTitle"></p><div class="weekPlan pastWeek clearfix">';
-        var thisWeek = '<p class="title thisTitle"></p><div class="weekPlan thisWeek clearfix">';
-        var nextWeek = '<p class="title nextTitle"></p><div class="weekPlan nextWeek clearfix">';
-
-        let durData = {}
-        let pastDur = 0;
-        let thisDur = 0;
-        let nextDur = 0;
-
-        if(data.attend){
-            durData = data.attend
+        let data = {}
+        if(this.attendObj.attend[dateID]){
+            data = this.attendObj.attend[dateID]
         }
 
-        for (var i = 0; i < 21; i++) {
-            let date =  m.add(1, "days").format("MM-DD");
-            let dateID = m.format("YYYYMMDD");
-            let txt = '<div class="day"><p class="text"><span class="monthDay">'+date+'</span>('+this.weekdays[i%7]+')</p><div class="workHour" id="d_'+dateID+'"></div></div>';
-            let dif = 0;
+        let txt = ''
 
-            if(durData[dateID]){
-                for (var j = 0; j < durData[dateID].length; j++) {
-                    dif = durData[dateID][j].dif
-                }
-            }
-
-            if(i<7){
-                pastWeek += txt;
-                pastDur += dif
-            }else if(i<14){
-                thisWeek += txt;
-                thisDur += dif
-            }else{
-                nextWeek += txt;
-                nextDur += dif
-            }
+        txt+='<div class="blackScreen">'
+        txt+=   '<div class="inputWindow">'
+        txt+=       '<p class="title">'+dateShort+' 근무시간</p>'
+        txt+=       '<div class="line clearfix">'
+        if(data[0]){
+            txt+=       '<input id="first_from" value="'+data[0].from+'"><p class="word">부터</p><input id="first_to" value="'+data[0].to+'"><p class="word">까지</p>'
+        }else{
+            txt+=       '<input id="first_from"><p class="word">부터</p><input id="first_to"><p class="word">까지</p>'
         }
-        pastWeek+= '</div>';
-        thisWeek+= '</div>';
-        nextWeek+= '</div>';
+        txt+=       '</div>'
+        txt+=       '<div class="line clearfix">'
+        if(data[1]){
+            txt+=       '<input id="second_from" value="'+data[1].from+'"><p class="word">부터</p><input id="second_to" value="'+data[1].to+'"><p class="word">까지</p>'
+        }else{
+            txt+=       '<input id="second_from"><p class="word">부터</p><input id="second_to"><p class="word">까지</p>'
+        }
+        txt+=       '</div>'
+        txt+=       '<div class="bottom">'
+        txt+=           '<p class="confirm" did="'+dateID+'">확인</p>'
+        txt+=           '<p class="close">취소</p>'
+        txt+=       '</div>'
+        txt+=   '</div>'
+        txt+='</div>'
 
-        $(".attend .input").html(pastWeek+thisWeek+nextWeek);
+        $(".modal").html(txt);
+
+        if(this.mobile){
+            $(".inputWindow input").AnyPicker({
+                dateTimeFormat:"HH:mm"
+            })
+        }
+
+        $("#first_from").focus();
 
         let that = this;
-        $(".attend .input").on("click", ".workHour", function(){
-            that.inputWorkHour($(this).attr("id"));
-        })
-        $(".pastTitle").html("지난주 근무 일정 ("+Math.floor(pastDur/60)+"시간 "+pastDur%60+"분)")
-        $(".thisTitle").html("이번주 근무 일정 ("+Math.floor(thisDur/60)+"시간 "+thisDur%60+"분)")
-        $(".nextTitle").html("다음주 근무 일정 ("+Math.floor(nextDur/60)+"시간 "+nextDur%60+"분)")
-
-
-        if(data.attend){
-            data = data.attend
-            for (var date in data) {
-                let txt = ''
-                for (var i = 0; i < data[date].length; i++) {
-                    let from = data[date][i].from;
-                    let to = data[date][i].to;
-
-                    txt += '<p>'+from+" ~ "+to+'</p>'
-                }
-                $("#d_"+date).html(txt)
-            }
-        }
-    },
-
-    inputWorkHour: function(date){
-        // css: modules/attend.css
-        if(!document.querySelector(".inputWindow")){
-            let inputWindow = '<div class="blackScreen"><div class="inputWindow">';
-            inputWindow+= '<p class="title">'+date.slice(6,8)+"/"+date.slice(8)+' 근무시간</p>'
-            inputWindow+= '<div class="line clearfix"><input id="first_from"><p class="word">부터</p><input id="first_to"><p class="word">까지</p></div>'
-            inputWindow+= '<div class="line clearfix"><input id="second_from"><p class="word">부터</p><input id="second_to"><p class="word">까지</p></div>'
-
-
-            inputWindow += '<div class="bottom"><p class="confirm" id="'+date+'">확인</p><p class="close">취소</p></div></div></div>';
-
-            $("body").append(inputWindow);
-
-            if(this.mobile){
-                $(".inputWindow input").AnyPicker({
-                    dateTimeFormat:"HH:mm"
-                })
-            }
-
-            let that = this;
-            $("body").on("click", ".confirm", function(){
-                that.setWorkHour($(this).attr("id"));
-                $(".inputWindow input").val("");
-            })
-            $("body").on("click", ".close", function(){
-                $(".blackScreen").addClass("displayNone");
-                $(".inputWindow input").val("");
-            })
-        }else{
-            $(".blackScreen").removeClass("displayNone");
-        }
-
     },
 
     setWorkHour: function(date){
-        let work = []
+
+        let work = [];
+
+        let allEmpty = true;
+        for (var i = 0; i < $(".inputWindow input").length; i++) {
+            if($(".inputWindow input").eq(i).val().length>1){
+                allEmpty = false;
+            }
+        }
+
+        if(allEmpty){
+            firebase.database().ref("attend/"+this.id+"/attend/"+date).remove();
+            $(".modal").html("");
+            let dateID = date.slice(0,4) + "-"+date.slice(4,6) + "-"+date.slice(6,8)
+            $('.fc-day[data-date="'+dateID+'"]').html("")
+            return false;
+        }
+
+
         if($("#first_from").val()<"23:59"&&$("#first_from").val()>"08:00"){
             //시작시간이 잘 입력되었나 확인
 
@@ -287,13 +333,8 @@ var Attend = {
             }
         }
 
-        firebase.database().ref("attend/"+this.id+"/attend/"+date.slice(2)).set(work);
-        $(".blackScreen").addClass("displayNone");
-
-    },
-
-    initInput: function(){
-        //근무시간 입력창을 초기화한다
+        firebase.database().ref("attend/"+this.id+"/attend/"+date).set(work);
+        $(".modal").html("");
     }
 }
 

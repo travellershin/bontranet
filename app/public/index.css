@@ -168,6 +168,7 @@ header nav ul .--selected{
     -webkit-box-align: center;
         -ms-flex-align: center;
             align-items: center;
+    z-index: 100;
 }
 /* ----------------------------------------------------------------------------- 
 
@@ -472,81 +473,120 @@ a.fc-more:hover{text-decoration:underline}
 .attend{
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
-    width: 1200px;
+    width: 100%;
     margin: 0 auto;
-    padding-top: 40px;
-}
-.attend .selector{
-        float: left;
-    }
-.attend .worker_selector{
-        float: left;
-        margin-left: 20px;
-        height: 50px;
-        width: 200px;
-        font-size: 15px;
-        padding-left: 12px;
-        cursor: pointer;
-    }
-.attend .fc-day{
-        text-align: center;
-        line-height: 80px;
-        height: 80px;
-        color: #555;
-        font-weight: bold;
-    }
-.attend .fc-other-month{
-        color:#bbb;
-        font-weight: normal;
-    }
-.attend .fc-week{
-        height: 80px;
-    }
-.attend .input .title{
-            margin-top: 32px;
-            font-size: 20px;
-            font-weight: bold;
-            color:#777;
-        }
-.attend .input .weekPlan{
-            margin-top: 12px;
-            margin-bottom: 50px;
-            width: 100%;
-            border: 2px solid #777;
-        }
-.attend .input .weekPlan .day{
-                float: left;
-                width: 170px;
-                text-align: center;
-                border-right: 1px solid #999;
 
-            }
-.attend .input .weekPlan .day:last-child{
-                    border-right: none;
-                }
-.attend .input .weekPlan .day .text{
-                    height: 32px;
-                    line-height: 32px;
-                }
-.attend .input .weekPlan .day .workHour{
-                    height: 80px;
-                    border-top: 1px solid #aaa;
-                    line-height: 40px;
-                    text-align: center;
-                    cursor: pointer;
-                    font-size: 17px;
-                }
-.attend .input .weekPlan .day .workHour p{
-                        font-weight: bold;
-                    }
-.attend #calendar{
-        margin-top: 60px;
-        width: 900px;
-        margin-left: 150px;
+}
+.attend__top{
+        overflow: hidden;
+        padding-top: 40px;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
     }
+.attend #calendar{
+        float: left;
+        width: 820px;
+    }
+.attend #calendar .fc-header-toolbar{
+            margin-bottom: 14px;
+            height: 36px;
+        }
 .attend #calendar .fc-day-number{
             font-size: 14px;
-            color: #777;
+            color: #333;
+        }
+.attend #calendar .fc-left{
+            overflow: hidden;
+        }
+.attend #calendar h2{
+            float: left;
+            font-size: 24px;
+            line-height: 32px;
+            height: 32px;
+            margin-left: 10px;
+        }
+.attend #calendar .fc-day{
+            text-align: center;
+            line-height: 72px;
+            height: 72px;
+            color: #666;
+            font-weight: bold;
+            padding:20px 0 12px 0;
+            -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+            position: relative;
+            cursor: pointer;
+            font-size: 15px;
+        }
+.attend #calendar .fc-day p{
+                line-height: 25px;
+            }
+.attend #calendar .fc-day p:last-child{
+                    font-weight: bold;
+                }
+.attend #calendar .fc-other-month{
+            color:#dadada;
+            font-weight: normal;
+            background-color: white;
+        }
+.attend #calendar .fc-other-month.fc-today{
+            background-color: #fffefa;
+        }
+.attend #calendar .fc-week{
+            height: 82px;
+        }
+.attend__week{
+        float: left;
+        width: 100px;
+        margin-left: 40px;
+        height: 496px;
+        margin-top: 68px;
+    }
+.attend__week__hour{
+            height: 83px;
+            line-height: 83px;
+            font-size: 17px;
+        }
+.attend__month{
+        width: 670px;
+        margin: 20px auto;
+
+
+    }
+.attend__month__line{
+            overflow: hidden;
+            height: 32px;
+            line-height: 32px;
+        }
+.attend__month__line>*{
+                float: left;
+            }
+.attend__month__line--red>.attend__month__value{
+                    color: #E72C33;
+                }
+.attend__month__line--sum{
+                margin-top: 10px;
+            }
+.attend__month__line--sum>.attend__month__value, .attend__month__line--sum .attend__month__category{
+                    font-weight: bold;
+                    font-size: 17px;
+                }
+.attend__month__category{
+            width: 120px;
+        }
+.attend__month__value{
+            width: 110px;
+            text-align: right;
+            margin-right: 40px;
+        }
+.attend__month__explain{
+            width: 400px;
+            color: #999;
+            font-size: 15px;
         }
 .inputWindow{
     width: 370px;
@@ -634,7 +674,7 @@ a.fc-more:hover{text-decoration:underline}
     border-radius: 2px; /* Rounded borders */
     padding: 16px; /* Padding */
     position: fixed; /* Sit on top of the screen */
-    z-index: 1; /* Add a z-index if needed */
+    z-index: 120; /* Add a z-index if needed */
     left: 50%; /* Center the snackbar */
     bottom: 30px; /* 30px from the bottom */
 }
