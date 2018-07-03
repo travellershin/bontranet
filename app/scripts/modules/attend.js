@@ -9,13 +9,13 @@ var Attend = {
 
     init: function(id, name, grade){
         let that = this;
-        $(".helloWorld").html(name[1]+"하!");
-        $(".helloWorld").attr("title",name+"님 안녕하세요!");
+
         this.id = id;
 
         if(grade === 5){
             $(".worker_selector").removeClass("displayNone");
             firebase.database().ref("users").once("value", snap =>{
+                $(".loadingView").addClass("displayNone")
                 let users = snap.val();
                 let txt = ''
                 for (var mailID in users) {
@@ -25,16 +25,18 @@ var Attend = {
             })
         }else{
             firebase.database().ref("attend/"+this.id).on("value", snap => {
+                $(".loadingView").addClass("displayNone")
                 this.attendObj = snap.val();
-                $('#calendar').fullCalendar({
-                    height: 552,
-                    firstDay: 1,
-                    viewRender : function (view, element) {
-                        that.inflate_calendar(that.attendObj)
-                    }
-                });
             })
+            $('#calendar').fullCalendar({
+                height: 552,
+                firstDay: 1,
+                viewRender : function (view, element) {
+                    that.inflate_calendar(that.attendObj)
+                }
+            });
         }
+
 
 
         this.listener();

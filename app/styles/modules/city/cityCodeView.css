@@ -1,0 +1,60 @@
+.cityCodeView{
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 30px;
+    position: relative;
+    padding-top: 80px;
+
+    .line{
+        overflow: hidden;
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+
+        p{
+            float: left;
+            text-align: center;
+            font-size: 17px;
+            width: 40px;
+            margin: 0 30px;
+
+            &:hover{
+                cursor: pointer;
+                text-decoration: underline;
+            }
+        }
+
+        .name{
+            width: 180px;
+            margin: 0 40px;
+            &:hover{
+                cursor: default;
+                text-decoration: none;
+            }
+        }
+        .nodata{
+            color:red;
+        }
+        .spots{
+            width: 230px;
+        }
+    }
+    .line.top{
+        height: 50px;
+        border-bottom: 2px solid #777;
+        line-height: 50px;
+        position: fixed;
+        top: 60px;
+        padding-top: 20px;
+        left: 30px;
+        width: calc(100% - 60px);
+        background-color: white;
+        p{
+            &:hover{
+                cursor: default;
+                text-decoration: none;
+            }
+        }
+    }
+}

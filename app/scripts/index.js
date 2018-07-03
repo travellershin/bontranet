@@ -1,4 +1,37 @@
 import Attend from "./modules/attend.js";
+import City from "./modules/city.js";
+
+let uninflated = {
+    attend:true,
+    city:true
+}
+
+let u_i = {
+    mail:"",
+    name:"",
+    grade:0
+}
+
+$("#nav_attend").click(function(){
+    $("header li").removeClass("--selected");
+    $(this).addClass("--selected");
+    $(".pages").addClass("displayNone");
+    $(".pages.attend").removeClass("displayNone")
+    if(uninflated.attend){
+        Attend.init(u_i.mail, u_i.name, u_i.grade);
+        uninflated.attend = false;
+    }
+})
+$("#nav_city").click(function(){
+    $("header li").removeClass("--selected");
+    $(this).addClass("--selected");
+    $(".pages").addClass("displayNone");
+    $(".pages.city").removeClass("displayNone")
+    if(uninflated.city){
+        City.init(u_i.mail, u_i.name, u_i.grade);
+        uninflated.city = false;
+    }
+})
 
 $(document).ready(function(){
 
@@ -10,7 +43,13 @@ $(document).ready(function(){
               let userData = snap.val();
               if(userData[userMail]){
                   if(userData[userMail].uid = user.uid){
-                      Attend.init(userMail, user.displayName, userData[userMail].grade);
+                      u_i.mail = userMail;
+                      u_i.name = user.displayName;
+                      u_i.grade = userData[userMail].grade*1
+                      Attend.init(u_i.mail, u_i.name, u_i.grade);
+                      // City.init(u_i.mail, u_i.name, u_i.grade);
+                      uninflated.attend = false;
+                      login(u_i.name);
                   }else{
                       alert("데이터 열람 권한이 없습니다. 관리자에게 문의해주세요")
                   }
@@ -29,7 +68,12 @@ $(document).ready(function(){
                 let userData = snap.val();
                 if(userData[userMail]){
                     if(userData[userMail].uid = user.uid){
-                        Attend.init(userMail, user.displayName, userData[userMail].grade);
+                        u_i.mail = userMail;
+                        u_i.name = user.displayName;
+                        u_i.grade = userData[userMail].grade*1
+                        Attend.init(u_i.mail, u_i.name, u_i.grade);
+                        uninflated.attend = false;
+                        login(u_i.name);
                     }else{
                         alert("데이터 열람 권한이 없습니다. 관리자에게 문의해주세요")
                     }
@@ -52,3 +96,17 @@ $(document).ready(function(){
     });
 
 })
+
+function login(name){
+    $(".helloWorld").html(name[1]+"하!");
+    $(".helloWorld").attr("title",name+"님 안녕하세요!");
+    $(".helloWorld").click(function(){
+        if(confirm(name+"님 로그아웃 하시겠습니까?")){
+            firebase.auth().signOut().then(function() {
+              window.location.reload()
+            }).catch(function(error) {
+              // An error happened.
+            });
+        }
+    })
+}
