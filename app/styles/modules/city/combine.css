@@ -9,10 +9,13 @@
         margin-bottom: 20px;
         border-bottom: 1px solid #e0e0e0;
         width: 680px;
+        height: 190px;
+        box-sizing: border-box;
     }
 
     &__left{
         width: 700px;
+        height: 100%;
         float: left;
     }
     &__map{
@@ -86,6 +89,8 @@
 
 
     &__target{
+        height: calc(100% - 210px);
+        overflow-y: auto;
         &__div{
             overflow: hidden;
             width: 680px;

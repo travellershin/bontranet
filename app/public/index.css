@@ -102,7 +102,7 @@ header nav ul{
 header nav ul li{
                 float: left;
                 line-height: 60px;
-                width: 72px;
+                width: 60px;
                 text-align: center;
                 margin-left: 40px;
                 cursor: pointer;
@@ -118,6 +118,15 @@ header nav ul .--selected{
                         box-sizing: border-box;
                 border-bottom: 2px solid #fafafa;
             }
+header nav .worker_selector{
+            margin-left: 40px;
+            margin-top: 10px;
+            height: 38px;
+            width: 100px;
+            padding-left: 4px;
+            cursor: pointer;
+            background-color: #eDf2f6
+        }
 .wrap{
     width: 100%;
     position: relative;
@@ -642,6 +651,110 @@ a.fc-more:hover{text-decoration:underline}
 .inputWindow .bottom .confirm{
             border-right: 1px solid #555;
         }
+.subway{
+    width: 100%;
+    height: calc(100vh - 60px);
+    overflow: hidden;
+}
+.subway__map{
+        float: left;
+        width: calc(100% - 700px);
+        height: 100%;
+    }
+.subway__info{
+        float: left;
+        width: 700px;
+        height: 100%;
+        -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+        padding: 30px;
+        padding-top: 10px;
+        overflow-y: auto;
+    }
+.subway__info__title{
+            line-height: 30px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+.subway__info__line{
+            overflow: hidden;
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+        }
+.subway__info__line>*{
+                float: left;
+            }
+.subway__info__lineName{
+            height: 22px;
+            width: 22px;
+            border-radius: 20px;
+            line-height: 24px;
+            text-align: center;
+            color:white;
+            font-size: 13px;
+            margin-top: 8px;
+            margin-right: 20px;
+        }
+.subway__info__dif{
+            width: 100px;
+        }
+.subway__info__byStn__line{
+                overflow: hidden;
+                width: 100%;
+                height: 40px;
+                line-height: 40px;
+            }
+.subway__info__byStn__line>*{
+                    float: left;
+                }
+.subway__info__byStn__lineLine{
+                overflow: hidden;
+            }
+.subway__info__byStn__lineLine>*{
+                    float: left;
+                    margin-right: 4px !important;
+                }
+.subway__info__byStn__stnName{
+                width: 250px;
+            }
+.subway__info__byStn__lineName{
+                height: 22px;
+                width: 22px;
+                border-radius: 20px;
+                line-height: 24px;
+                text-align: center;
+                color:white;
+                font-size: 13px;
+                margin-top: 8px;
+                margin-right: 20px;
+            }
+.subway__info__byStn__dif{
+                width: 100px;
+            }
+.subway__info .ln_A{background-color: #0039A6;}
+.subway__info .ln_C{background-color: #0039A6;}
+.subway__info .ln_E{background-color: #0039A6;}
+.subway__info .ln_B{background-color: #FF6319;}
+.subway__info .ln_D{background-color: #FF6319;}
+.subway__info .ln_F{background-color: #FF6319;}
+.subway__info .ln_M{background-color: #FF6319;}
+.subway__info .ln_G{background-color: #6cbe45;}
+.subway__info .ln_J{background-color: #996633;}
+.subway__info .ln_Z{background-color: #996633;}
+.subway__info .ln_L{background-color: #a7a9ac;}
+.subway__info .ln_N{background-color: #fccc0a;}
+.subway__info .ln_Q{background-color: #fccc0a;}
+.subway__info .ln_R{background-color: #fccc0a;}
+.subway__info .ln_W{background-color: #fccc0a;}
+.subway__info .ln_S{background-color: #808183;}
+.subway__info .ln_1{background-color: #ee352e;}
+.subway__info .ln_2{background-color: #ee352e;}
+.subway__info .ln_3{background-color: #ee352e;}
+.subway__info .ln_4{background-color: #00933c;}
+.subway__info .ln_5{background-color: #00933c;}
+.subway__info .ln_6{background-color: #00933c;}
+.subway__info .ln_7{background-color: #b933ad;}
 .helloWorld{
     float: right;
     line-height: 60px;
@@ -704,6 +817,16 @@ However, delay the fade out process for 2.5 seconds */
     from {bottom: 30px; opacity: 1;}
     to {bottom: 0; opacity: 0;}
 }
+.account{
+    width: 100%;
+    height: calc(100% - 60px);
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    padding: 20px;
+}
+.account__calendar{
+        width: 900px;
+    }
 .cityCodeView{
     width: 100%;
     height: 100%;
@@ -858,7 +981,13 @@ However, delay the fade out process for 2.5 seconds */
 .check__confirm:hover,.check__spotDelete:hover{
             text-decoration: underline;
         }
+.check__txt{
+        margin-left: 80px;
+        float: left;
+        width: 150px;
+    }
 .check__spotDelete{
+        float: left;
         margin-left: 0;
     }
 .check__remainNumber{
@@ -890,6 +1019,104 @@ However, delay the fade out process for 2.5 seconds */
         font-size: 24px;
         font-weight: bold;
     }
+.verifying__box{
+    width: 100%;
+    height: 100%;
+}
+.verifying__control{
+    width: 240px;
+    height: 100px;
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    margin-left: -120px;
+    -webkit-box-shadow: 1px 2px 2px grey;
+            box-shadow: 1px 2px 2px grey;
+    background-color: white;
+}
+.verifying__control p{
+        width: 100%;
+        text-align: center;
+        line-height: 50px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+.verifying__control__line{
+        width: 100%;
+        overflow: hidden;
+    }
+.verifying__control__line>p{
+            float: left;
+            width: 120px;
+            text-align: center;
+            cursor: pointer;
+        }
+.verifying__control__line>p:hover{
+                text-decoration:underline;
+            }
+.top, .result_box{
+    overflow: hidden;
+    width: 1459px;
+}
+.top>*,.result_box>*{
+        float: left;
+        text-align: center;
+        border-right: 1px solid #aaa;
+        height: 50px;
+        line-height: 50px;
+        width: 60px;
+        font-size: 16px;
+    }
+.top .result_name,.result_box .result_name{
+            width: 600px;
+        }
+.top .result_url,.result_box .result_url{
+            width: 350px;
+        }
+.top .result_remove,.result_box .result_remove{
+            width: 100px;
+        }
+.top .result_save,.result_box .result_save{
+            width: 100px;
+        }
+.top .result_rank,.result_box .result_rank{
+            cursor: pointer;
+        }
+.top .result_rank.selected,.result_box .result_rank.selected{
+            background-image: url("./assets/check.png");
+            background-size: 40px 40px;
+            background-repeat: no-repeat;
+            background-position: left 10px top 4px;
+        }
+.top{
+    border-bottom: 1px solid #777;
+    border-top: 1px solid #777;
+}
+.top p{
+        font-weight: bold;
+        font-size: 17px;
+    }
+.result_box{
+    border-bottom: 1px solid #ccc;
+}
+.result_box:hover{
+        background-color: #fbfbfb;
+    }
+.result_box:hover input{
+            background-color: #fbfbfb;
+        }
+.result_box .result_remove:hover{
+            background-color:#F8A1BE;
+            color:white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+.result_box .result_save:hover{
+            background-color:#8ABAD1;
+            color:white;
+            font-weight: bold;
+            cursor: pointer;
+        }
 .combine{
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
@@ -902,9 +1129,13 @@ However, delay the fade out process for 2.5 seconds */
         margin-bottom: 20px;
         border-bottom: 1px solid #e0e0e0;
         width: 680px;
+        height: 190px;
+        -webkit-box-sizing: border-box;
+                box-sizing: border-box;
     }
 .combine__left{
         width: 700px;
+        height: 100%;
         float: left;
     }
 .combine__map{
@@ -970,6 +1201,10 @@ However, delay the fade out process for 2.5 seconds */
         line-height: 40px;
         margin-left: 12px;
     }
+.combine__target{
+        height: calc(100% - 210px);
+        overflow-y: auto;
+    }
 .combine__target__div{
             overflow: hidden;
             width: 680px;
@@ -1011,3 +1246,44 @@ However, delay the fade out process for 2.5 seconds */
             font-size: 17px;
             font-weight: bold;
         }
+.hotel__page{
+        width: 100%;
+        height: calc(100vh - 120px);
+    }
+.area__page{
+        width: 100%;
+        height: calc(100vh - 120px);
+        -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+        padding: 30px;
+    }
+.area__div{
+        margin-bottom: 30px;
+    }
+.area__name{
+        line-height: 30px;
+        height: 30px;
+        margin-bottom: 8px;
+        font-size: 18px;
+        font-weight: bold;
+        width: 300px;
+    }
+.area__line{
+        line-height: 30px;
+        overflow: hidden;
+    }
+.area__line>*{
+            float: left;
+        }
+.area__line__subTitle{
+            margin-right: 8px;
+        }
+.area__line__input--short{
+                height: 30px;
+                line-height: 30px;
+                font-size: 16px;
+                color:#555;
+                width: 30px;
+                margin-right: 20px;
+                text-align: center;
+            }

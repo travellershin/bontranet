@@ -1,0 +1,18 @@
+{
+  "manifest_version": 2,
+
+  "name": "메트로크롤러",
+  "description": "메트로를 크롤링하자",
+  "version": "1.0",
+  "browser_action": {
+    "default_icon": "metro.png",
+    "default_popup": "popup.html",
+    "default_title": "메트로!"
+  },
+  "permissions": [
+      "activeTab",
+      "tabs",
+      "*://*/*"
+  ],
+  "content_security_policy":"script-src 'self' https://www.gstatic.com/ https://apis.google.com https://cdn.firebase.com https://*.firebaseio.com https://www.googleapis.com; object-src 'self'"
+}

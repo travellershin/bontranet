@@ -1,5 +1,7 @@
 import Attend from "./modules/attend.js";
 import City from "./modules/city.js";
+import Subway from "./modules/subway.js";
+import Account from "./modules/account.js";
 
 let uninflated = {
     attend:true,
@@ -32,6 +34,15 @@ $("#nav_city").click(function(){
         uninflated.city = false;
     }
 })
+$("#nav_subway").click(function(){
+    $("header li").removeClass("--selected");
+    $(this).addClass("--selected");
+    $(".pages").addClass("displayNone");
+    $(".pages.subway").removeClass("displayNone")
+    Subway.init();
+})
+
+
 
 $(document).ready(function(){
 
@@ -48,6 +59,9 @@ $(document).ready(function(){
                       u_i.grade = userData[userMail].grade*1
                       Attend.init(u_i.mail, u_i.name, u_i.grade);
                       // City.init(u_i.mail, u_i.name, u_i.grade);
+                      if(u_i.grade === 5){
+                          Account.init(user.mail);
+                      }
                       uninflated.attend = false;
                       login(u_i.name);
                   }else{

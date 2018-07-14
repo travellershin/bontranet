@@ -1,4 +1,7 @@
 import ManualCombine from "./manualCombine.js";
+import Verify from "./spot/verifying.js";
+
+//Spot의 단계는 총 4단계 - 데이터 수집/1차검증 -> 데이터 합치기 -> 데이터 선별/2차검증 -> 완료
 
 let Spot = {
 
@@ -15,7 +18,9 @@ let Spot = {
             that.deleteSpot($(this).parent().attr("id"), $(this).parent().children(".check__spotName").html());
         })
 
-
+        $(".spot .check").on("click", ".check__remainLargeData", function(){
+            that.setRemainNumber($(this).parent().attr("id"), $(this).parent().children(".check__remainNumber").val());
+        })
     },
 
     init: function(data, cid, name){
@@ -26,18 +31,33 @@ let Spot = {
         $(".city .spot").removeClass("displayNone");
         $(".cityName").html(name).attr("id", cid);
 
-        if(data.spots.combined && !data.spots.combining){
-            console.log("1차 자료정리 완료")
-            //combined가 있고 combining이 없으면 1차 자료정리 완료라는 뜻
-
-        }else if (data.spots.combining) {
-            console.log("합치기 작업중")
-            //combining이 있으면 합치기 작업중이라는 뜻
-            ManualCombine.init(data.spots);
+        if(data.status){
+            if(data.status.spots === "finished"){
+                console.log("데이터 확보 완료");
+            }else if(data.status.spots === "verifying"){
+                console.log("데이터 선별, 2차 검증중");
+                Verify.init(data.spots.combined);
+                //combined가 있고 combining이 없으면 1차 자료정리 완료라는 뜻
+            }else if (data.spots.combining) {
+                console.log("합치기 작업중");
+                //combining이 있으면 합치기 작업중이라는 뜻
+                ManualCombine.init(data.spots);
+            }else{
+                this.firstCheck(data.spots); //combining, combined가 없으면 데이터 수집, 검증중이라는 뜻
+                //firstcheck를 통과하면 this.autoCombine을 통해 data.spots.combining이 만들어짐
+            }
         }else{
-            this.firstCheck(data.spots); //combining, combined가 없으면 데이터 수집, 검증중이라는 뜻
-            //firstcheck를 통과하면 this.autoCombine을 통해 data.spots.combining이 만들어짐
+            if (data.spots.combining) {
+                console.log("합치기 작업중")
+                //combining이 있으면 합치기 작업중이라는 뜻
+                ManualCombine.init(data.spots);
+            }else{
+                this.firstCheck(data.spots); //combining, combined가 없으면 데이터 수집, 검증중이라는 뜻
+                //firstcheck를 통과하면 this.autoCombine을 통해 data.spots.combining이 만들어짐
+            }
         }
+
+
     },
 
     autoCombine__spotRestructure: function(){
@@ -55,7 +75,7 @@ let Spot = {
                 }else{
 
                     for (var i = 0; i < data[site].length; i++) {
-                        if(data[site][i]){
+                        if(data[site][i]&&!data[site][i].deleted){
                             let oldSpot = data[site][i];
                             //기존 정보를 oldSpot이라고 하자. 새로운 스팟정보에는 이름을 한/영으로 분할하고 랭킹을 부여할 것이다.
 
@@ -123,12 +143,13 @@ let Spot = {
                     for (var key in combining[tCode]) {
                         tSpot[key] = combining[tCode][key]
                     }
+                    if(!tSpot.deleted){
+                        let dif = calculateDif(spot.coor, tSpot.coor)
 
-                    let dif = calculateDif(spot.coor, tSpot.coor)
-
-                    if(dif<250){
-                        combineObj[code].combine[tCode] = tSpot;
-                        hasCombined = true;
+                        if(dif<250){
+                            combineObj[code].combine[tCode] = tSpot;
+                            hasCombined = true;
+                        }
                     }
                 }
             }
@@ -137,6 +158,7 @@ let Spot = {
                 combined[code] = combineObj[code];
                 delete combineObj[code];
             }
+
         }
 
         firebase.database().ref("cities/"+city+"/spots").set({
@@ -190,7 +212,28 @@ let Spot = {
         }
     },
 
+    setRemainNumber: function(site, number){
+        let city = $(".cityName").attr("id");
+        let cutNo = number.trim()*1;
+
+        if(cutNo<100){
+            toast("100개 이상의 장소를 유지해주세요");
+        }else{
+            if(confirm("순위 "+ cutNo + "위 미만 장소를 모두 제거합니다. 맞습니까?")){
+                let cutObj = this.data.spots[site];
+                cutObj.length = cutNo;
+
+                firebase.database().ref("cities/"+ city + "/spots/" + site).set(cutObj);
+            }else{
+                return false;
+            }
+        }
+    },
+
     firstCheck: function(data){
+
+        $(".spot__page").addClass("displayNone");
+        $(".spot__page.check").removeClass("displayNone");
 
         $(".header__status").html("데이터 검증중")
         let hasProblem= false;

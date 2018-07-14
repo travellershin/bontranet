@@ -1,56 +1,70 @@
 import Spot from "./city/spot.js";
+//관광지 정리
+import Hotel from "./city/hotel.js";
+//호텔정보 관련
+import Area from "./city/area.js";
+//지역 데이터 입력
 
 let City = {
     codeData: {},
-
     cityData: {},
 
     listener: function(){
         let that = this;
 
         $(".cityCodeView").on("click", ".spots", function(){
-            let cid = $(this).parent().attr("id")
+            let cid = $(this).parent().attr("id");
             let name = $(this).parent().children(".name").html();
             Spot.init(that.cityData[cid], cid, name);
+        })
+        $(".cityCodeView").on("click", ".hotels", function(){
+            let cid = $(this).parent().attr("id");
+            let name = $(this).parent().children(".name").html();
+            Hotel.init(that.cityData[cid], cid, name);
+        })
+        $(".cityCodeView").on("click", ".area", function(){
+            let cid = $(this).parent().attr("id");
+            let name = $(this).parent().children(".name").html();
+            Area.init(that.cityData[cid], cid, name);
+        })
+
+        $(".cityCodeView").on("click", ".transport", function(){
+            that.metroAdjust($(this).parent().attr("id"));
+            //도시별로 메트로 정보를 다듬는데 사용
         })
 
         $(".header__return").click(function(){
             that.returnToCityView();
         })
-
-        $(".spot .check").on("click", ".check__remainLargeData", function(){
-            that.setRemainNumber($(this).parent().attr("id"), $(this).parent().children(".check__remainNumber").val());
-        })
     },
-
-    setRemainNumber: function(site, number){
-        let city = $(".cityName").attr("id");
-        let cutNo = number.trim()*1;
-
-        if(cutNo<100){
-            toast("100개 이상의 장소를 유지해주세요");
-        }else{
-            if(confirm("순위 "+ cutNo + "위 미만 장소를 모두 제거합니다. 맞습니까?")){
-                let cutObj = this.cityData[city].spots[site];
-                cutObj.length = cutNo;
-
-                firebase.database().ref("cities/"+ city + "/spots/" + site).set(cutObj);
-            }
-        }
-    },
-
 
     returnToCityView: function(){
+        $(".city__pages").addClass("displayNone");
         $(".cityCodeView").removeClass("displayNone");
-        $(".city .spot").addClass("displayNone");
-        $(".city .spot .check").html("")
+        $(".city .spot .check").html("");
 
         this.inflate_cityCodeView(this.codeData, this.cityData)
     },
 
+    metroAdjust: function(cid){
+        if(this.cityData[cid].metro){
+            let data = this.cityData[cid].metro
+            let nameArray = [];
+            for (var i = 0; i < data.length; i++) {
+                let metro = data[i];
+                if(!metro.line){
+                    console.log(metro.name)
+
+                }
+            }
+            console.log(data)
+            // firebase.database().ref("cities/"+cid+"/metro").update(data);
+        }
+    },
+
 
     inflate_cityCodeView: function(codeData,data){
-        let txt = '<div class="line top"><p class="name">도시명</p><p class="hotels">숙소</p><p class="spots">관광지 정리</p><p class="area">지역</p><p class="price">물가</p></div>'
+        let txt = '<div class="line top"><p class="name">도시명</p><p class="hotels">숙소</p><p class="spots">관광지 정리</p><p class="area">지역</p><p class="transport">교통</p><p class="price">물가</p></div>'
         for (var i = 0; i < codeData.length; i++) {
             let city = codeData[i];
             if(data[city.code]){
@@ -63,20 +77,40 @@ let City = {
                 }
 
                 if(data[city.code].spots){
-                    let spot = data[city.code].spots
-                    if(spot.combined&&!spot.combining){
-                        txt+= '<p class="spots">1차 자료정리 완료</p>'
+                    let spot = data[city.code].spots;
+
+                    if(data[city.code].status){
+                        if(data[city.code].status.spots === "finished"){
+                            txt+= '<p class="spots">데이터 확보 완료</p>'
+                        }else if(data[city.code].status.spots === "verifying"){
+                            txt+= '<p class="spots">데이터 선별, 2차 검증중</p>'
+                        }else if(spot.combining){
+                            txt+= '<p class="spots">데이터 합치기 작업중</p>'
+                        }else{
+                            txt+= '<p class="spots">데이터 수집, 1차 검증중</p>'
+                        }
                     }else if(spot.combining){
                         txt+= '<p class="spots">데이터 합치기 작업중</p>'
                     }else{
-                        txt+= '<p class="spots">데이터 수집, 검증중</p>'
+                        txt+= '<p class="spots">데이터 수집, 1차 검증중</p>'
                     }
+                }
+
+                if(!data[city.code].status){
+                    firebase.database().ref("cities/"+ city.code + "/status").set({
+                        spots:false
+                    })
                 }
 
                 if(data[city.code].area){
                     txt+= '<p class="area">O</p>'
                 }else{
                     txt+= '<p class="area">X</p>'
+                }
+                if(data[city.code].metro){
+                    txt+= '<p class="transport">O</p>'
+                }else{
+                    txt+= '<p class="transport">X</p>'
                 }
 
                 if(data[city.code].price){
@@ -89,7 +123,7 @@ let City = {
 
             }else{
                 txt+='<div class="line" id="'+city.code+'"><p class="name nodata">'+city.name+'</p>'
-                txt += '<p class="hotels">X</p><p class="spots">데이터 없음</p><p class="area">X</p><p class="price">X</p></div>'
+                txt += '<p class="hotels">X</p><p class="spots">데이터 없음</p><p class="area">X</p><p class="transport">X</p><p class="price">X</p></div>'
             }
         }
 
@@ -108,6 +142,7 @@ let City = {
             this.cityData = data;
             this.codeData = codeData;
             this.inflate_cityCodeView(codeData, data)
+            console.log(data)
         })
     }
 }

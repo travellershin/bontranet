@@ -1,0 +1,40 @@
+.area{
+    &__page{
+        width: 100%;
+        height: calc(100vh - 120px);
+        box-sizing: border-box;
+        padding: 30px;
+    }
+    &__div{
+        margin-bottom: 30px;
+    }
+    &__name{
+        line-height: 30px;
+        height: 30px;
+        margin-bottom: 8px;
+        font-size: 18px;
+        font-weight: bold;
+        width: 300px;
+    }
+    &__line{
+        line-height: 30px;
+        overflow: hidden;
+        &>*{
+            float: left;
+        }
+        &__subTitle{
+            margin-right: 8px;
+        }
+        &__input{
+            &--short{
+                height: 30px;
+                line-height: 30px;
+                font-size: 16px;
+                color:#555;
+                width: 30px;
+                margin-right: 20px;
+                text-align: center;
+            }
+        }
+    }
+}

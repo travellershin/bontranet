@@ -60,6 +60,9 @@ let ManualCombine = {
             }
 
             delete this.data.combining[tid];
+            if(this.data.combined[tid]){
+                delete this.data.combined[tid];
+            }
         }
         mainData.name.ko = $("#name_ko").val();
         mainData.name.en = $("#name_en").val();
@@ -71,12 +74,16 @@ let ManualCombine = {
 
         firebase.database().ref("cities/"+city+"/spots").update(this.data);
 
-        this.remain --;
-        if(this.remain>0){
+
+        if(Object.keys(this.data.combining).length>0){
             this.inflate();
         }else{
-            console.log("작업완료!")
-            // TODO: 작업완료했으면 데이터정리 들어가기
+            firebase.database().ref("cities/"+city+"/status/spots").set("verifying")
+            firebase.database().ref("cities/"+city+"/spots/combining").remove();
+            toast("합치기 작업이 완료되었습니다! 2초 후 페이지를 새로고침합니다.")
+            setTimeout(function () {
+                location.reload();
+            }, 2000);
         }
     },
 

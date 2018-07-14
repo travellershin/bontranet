@@ -3,7 +3,13 @@ var Attend = {
 
     id: "",
 
+    viewID: "",
+    //관리자가 다른 사람의 ID 확인중
+
     attendObj: {},
+
+    salary: {},
+
 
     weekdays: ["일", "월", "화", "수", "목", "금", "토", "일"],
 
@@ -12,37 +18,41 @@ var Attend = {
 
         this.id = id;
 
-        if(grade === 5){
-            $(".worker_selector").removeClass("displayNone");
-            firebase.database().ref("users").once("value", snap =>{
-                $(".loadingView").addClass("displayNone")
-                let users = snap.val();
-                let txt = ''
-                for (var mailID in users) {
-                    txt += '<option value="'+mailID+'">'+mailID+'</option>'
-                }
-                $(".worker_selector").html(txt);
-            })
-        }else{
-            firebase.database().ref("attend/"+this.id).on("value", snap => {
-                $(".loadingView").addClass("displayNone")
-                this.attendObj = snap.val();
-                that.inflate_calendar(that.attendObj)
+        firebase.database().ref("account/salary").once("value", snap =>{
+            that.salary = snap.val();
 
-                $('#calendar').fullCalendar({
-                    height: 564,
-                    firstDay: 1,
-                    viewRender : function (view, element) {
-                        that.inflate_calendar(that.attendObj)
-                    },
-                    dayClick: function(date){
-                        console.log(date)
-                        that.inputWorkHour(date)
+            if(grade === 5){
+                $(".worker_selector").removeClass("displayNone");
+                firebase.database().ref("users").once("value", snap =>{
+                    $(".loadingView").addClass("displayNone")
+                    let users = snap.val();
+                    let txt = ''
+                    for (var mailID in users) {
+                        txt += '<option value="'+mailID+'">'+users[mailID].name+'</option>'
                     }
-                });
-            })
+                    $(".worker_selector").html(txt).val(id).prop("selected", true);
+                })
+            }else{
+                firebase.database().ref("attend/"+this.id).on("value", snap => {
+                    $(".loadingView").addClass("displayNone")
+                    this.attendObj = snap.val();
+                    that.inflate_calendar(that.attendObj)
 
-        }
+                    if(!$(".fc-header-toolbar").length){
+                        $('#calendar').fullCalendar({
+                            height: 564,
+                            firstDay: 1,
+                            viewRender : function (view, element) {
+                                that.inflate_calendar(that.attendObj)
+                            },
+                            dayClick: function(date){
+                                that.inputWorkHour(date)
+                            }
+                        });
+                    }
+                })
+            }
+        })
 
         this.listener();
     },
@@ -75,10 +85,59 @@ var Attend = {
                 }
             }
         })
+
+        $(".worker_selector").change(function(){
+            let id = $(this).val();
+
+            that.view_worker(id);
+        })
+    },
+
+    view_worker: function(id){
+        let that = this;
+
+        if(id === that.id){
+            $(".attend__calendar").addClass("displayNone");
+            $(".attend__week").html("");
+            $(".attend__month").html("");
+        }else{
+            $(".attend__calendar").removeClass("displayNone");
+            if(that.viewID.length>0){
+                firebase.database().ref("attend/"+that.viewID).off();
+            }
+
+            firebase.database().ref("attend/"+id).on("value", snap => {
+                that.attendObj = snap.val();
+                let yo = that.viewID;
+                that.viewID = id;
+
+                if(yo.length === 0){
+                    $('#calendar').fullCalendar({
+                        height: 564,
+                        firstDay: 1,
+                        viewRender : function (view, element) {
+                            if(that.id !== that.viewID){
+                                that.inflate_calendar(that.attendObj)
+                            }
+                        },
+                        dayClick: function(date){
+                            that.inputWorkHour(date)
+                        }
+                    });
+                }else{
+                    that.inflate_calendar(that.attendObj);
+                }
+
+
+            })
+        }
+
+
     },
 
     inflate_calendar: function(data){
         $(".attend").removeClass("displayNone");
+        $(".fc-day").html("");
 
         if(data.attend){
             data = data.attend
@@ -96,19 +155,22 @@ var Attend = {
                 $('.fc-day[data-date="'+dateID+'"]').html(txt)
             }
             let durMon = 0;
-
-            for (var i = 0; i < $(".fc-day").length; i++) {
-                let dateDom = $(".fc-day").eq(i);
+            let thisMonth = '';
+            for (var i = 0; i < $(".attend .fc-day").length; i++) {
+                let dateDom = $(".attend .fc-day").eq(i);
                 if(!dateDom.hasClass("fc-other-month")){
-                    let date = dateDom.attr("data-date").split("-")
+                    let date = dateDom.attr("data-date").split("-");
+                    thisMonth = date[0]+date[1];
                     date = date[0]+date[1]+date[2];
+
                     if(data[date]){
                         for (var j = 0; j < data[date].length; j++) {
-                            durMon += data[date][j].dif
+                            durMon += data[date][j].dif;
                         }
                     }
                 }
             }
+
             let txt = ''
 
             if($(".fc-view-container").length){
@@ -147,34 +209,49 @@ var Attend = {
             let fullMonthBonus = 30400;
             let insuranceFee = 0;
             let basic = Math.round(durMon/60*7600)
-            let fullWeekBunus = Math.round((durMon/60*7600)*0.2)
+            let fullWeekBunus = Math.round((durMon/60*7600)*0.2);
 
-            txt+='<div class="attend__month__line">'
-            txt+=   '<p class="attend__month__category">기본급</p>'
-            txt+=   '<p class="attend__month__value">'+ comma(basic)+ "원</p>"
-            txt+=   '<p class="attend__month__explain">근무시간 X 7,600원</p>'
+            // if(this.id === this.viewID){
+            //     //본인 모드
+            //     firebase.database().ref("account/salary/"+thisMonth+"/"+this.id).update({
+            //         basic: basic,
+            //         fullWeekBunus: fullWeekBunus,
+            //         fullMonthBonus: fullMonthBonus
+            //     });
+            // }else{
+            //     firebase.database().ref("account/salary/"+thisMonth+"/"+this.viewID).update({
+            //         basic: basic,
+            //         fullWeekBunus: fullWeekBunus,
+            //         fullMonthBonus: fullMonthBonus
+            //     });
+            // }
+
+            txt+='<div class="attend__month__line">';
+            txt+=   '<p class="attend__month__category">기본급</p>';
+            txt+=   '<p class="attend__month__value">'+ comma(basic)+ "원</p>";
+            txt+=   '<p class="attend__month__explain">근무시간 X 7,600원</p>';
+            txt+='</div>';
+
+            txt+='<div class="attend__month__line">';
+            txt+=   '<p class="attend__month__category">주휴수당</p>';
+            txt+=   '<p class="attend__month__value">'+ comma(fullWeekBunus) +"원</p>";
+            txt+=   '<p class="attend__month__explain">기본급의 20%</p>';
+            txt+='</div>';
+
+            txt+='<div class="attend__month__line">';
+            txt+=   '<p class="attend__month__category">연차수당</p>';
+            txt+=   '<p class="attend__month__value">'+ comma(fullMonthBonus) +"원</p>";
+            txt+=   '<p class="attend__month__explain">5시간 상당 기본급</p>';
             txt+='</div>'
 
-            txt+='<div class="attend__month__line">'
-            txt+=   '<p class="attend__month__category">주휴수당</p>'
-            txt+=   '<p class="attend__month__value">'+ comma(fullWeekBunus) +"원</p>"
-            txt+=   '<p class="attend__month__explain">기본급의 20%</p>'
+            txt+='<div class="attend__month__line attend__month__line--red">';
+            txt+=   '<p class="attend__month__category">사회보험료</p>';
+            txt+=   '<p class="attend__month__value">'+ comma(insuranceFee) +"원</p>";
+            txt+=   '<p class="attend__month__explain">국민연금/고용보험/건강보험 청구액</p>';
             txt+='</div>'
 
-            txt+='<div class="attend__month__line">'
-            txt+=   '<p class="attend__month__category">연차수당</p>'
-            txt+=   '<p class="attend__month__value">'+ comma(fullMonthBonus) +"원</p>"
-            txt+=   '<p class="attend__month__explain">5시간 상당 기본급</p>'
-            txt+='</div>'
-
-            txt+='<div class="attend__month__line attend__month__line--red">'
-            txt+=   '<p class="attend__month__category">사회보험료</p>'
-            txt+=   '<p class="attend__month__value">'+ comma(insuranceFee) +"원</p>"
-            txt+=   '<p class="attend__month__explain">국민연금/고용보험/건강보험 청구액</p>'
-            txt+='</div>'
-
-            txt+='<div class="attend__month__line attend__month__line--sum">'
-            txt+=   '<p class="attend__month__category">합계</p>'
+            txt+='<div class="attend__month__line attend__month__line--sum">';
+            txt+=   '<p class="attend__month__category">합계</p>';
             txt+=   '<p class="attend__month__value">'+ comma(basic + fullWeekBunus + fullMonthBonus - insuranceFee) +"원</p>"
             txt+=   '<p class="attend__month__explain">기본급 + 주휴수당 + 연차수당 - 사회보험료</p>'
             txt+='</div>'
@@ -244,7 +321,12 @@ var Attend = {
         }
 
         if(allEmpty){
-            firebase.database().ref("attend/"+this.id+"/attend/"+date).remove();
+            if(this.viewID.length>0){
+                firebase.database().ref("attend/"+this.viewID+"/attend/"+date).remove();
+            }else{
+                firebase.database().ref("attend/"+this.id+"/attend/"+date).remove();
+            }
+
             $(".modal").html("");
             let dateID = date.slice(0,4) + "-"+date.slice(4,6) + "-"+date.slice(6,8)
             $('.fc-day[data-date="'+dateID+'"]').html("")
@@ -255,7 +337,7 @@ var Attend = {
         if($("#first_from").val()<"23:59"&&$("#first_from").val()>"08:00"){
             //시작시간이 잘 입력되었나 확인
 
-            if(date<moment().format("MM-DD")){
+            if(date<moment().format("YYYYMMDD")){
                 //오늘 이전 일의 날짜를 다루고 있을 경우 - 근무 종료시간이 입력되지 않으면 안 됨
                 if($("#first_to").val()<"23:59"&&$("#first_to").val()>"08:00"){
 
@@ -295,7 +377,7 @@ var Attend = {
         if($("#second_from").val().length>0){
             if($("#second_from").val()<"23:59"&&$("#second_from").val()>"08:00"){
 
-                if(date<moment().format("MM-DD")){
+                if(date<moment().format("YYYYMMDD")){
                     //오늘 이전 일의 날짜를 다루고 있을 경우 - 근무 종료시간이 입력되지 않으면 안 됨
                     if($("#second_to").val()<"23:59"&&$("#second_to").val()>"08:00"){
 
@@ -332,8 +414,12 @@ var Attend = {
                 return false;
             }
         }
+        if(this.viewID.length>0){
+            firebase.database().ref("attend/"+this.viewID+"/attend/"+date).set(work);
+        }else{
+            firebase.database().ref("attend/"+this.id+"/attend/"+date).set(work);
+        }
 
-        firebase.database().ref("attend/"+this.id+"/attend/"+date).set(work);
         $(".modal").html("");
     }
 }

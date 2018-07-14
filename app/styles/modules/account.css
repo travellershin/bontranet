@@ -1,0 +1,10 @@
+.account{
+    width: 100%;
+    height: calc(100% - 60px);
+    box-sizing: border-box;
+    padding: 20px;
+
+    &__calendar{
+        width: 900px;
+    }
+}

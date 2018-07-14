@@ -106,7 +106,14 @@
         }
     }
 
+    &__txt{
+        margin-left: 80px;
+        float: left;
+        width: 150px;
+    }
+
     &__spotDelete{
+        float: left;
         margin-left: 0;
     }
 
