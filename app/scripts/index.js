@@ -60,7 +60,8 @@ $(document).ready(function(){
                       Attend.init(u_i.mail, u_i.name, u_i.grade);
                       // City.init(u_i.mail, u_i.name, u_i.grade);
                       if(u_i.grade === 5){
-                          Account.init(user.mail);
+                          // Account.init(user.mail);
+
                       }
                       uninflated.attend = false;
                       login(u_i.name);

@@ -145,6 +145,7 @@ let City = {
             console.log(data)
         })
     }
+
 }
 
 export default City;

@@ -105,6 +105,7 @@ var Verify = {
 
         for (var sid in this.data) {
             let spot = this.data[sid];
+            spot.sid = sid;
             let numSite = Object.keys(spot.rank).length; //등재된 사이트 갯수
             let score = 0
             let avg = 0
@@ -145,11 +146,14 @@ var Verify = {
         rankArray.sort(function(a, b){
             return a.score > b.score ? -1 : a.score < b.score ? 1 : 0;
         })
-        console.log(rankArray)
         let txt = ''
+
+        var spotArray = [];
 
         for (var i = 0; i < rankArray.length; i++) {
             let data = this.data
+
+            spotArray.push(this.data[rankArray[i].sid])
 
             let sid = rankArray[i].sid;
             let url = ""
@@ -178,6 +182,9 @@ var Verify = {
             txt+='</div>';
         }
         $(".verifying__box").html(txt)
+
+        firebase.database().ref("cities/"+$('.cityName').attr('id')+"/spots/ranked").set(spotArray);
+        console.log(spotArray)
     },
 
     init: function(data){
@@ -191,6 +198,8 @@ var Verify = {
         if(!data.ranked){
             this.rank();//랭킹 데이터가 없으면 만든다
             console.log("yolo?")
+        }else{
+            console.log(data.ranked);
         }
 
     }
