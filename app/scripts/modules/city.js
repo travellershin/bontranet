@@ -135,15 +135,24 @@ let City = {
         let that = this;
         this.listener();
 
-        firebase.database().ref().once("value", snap =>{
-            $(".loadingView").addClass("displayNone")
-            let codeData = snap.val().setting.cities;
-            let data = snap.val().cities
-            this.cityData = data;
-            this.codeData = codeData;
-            this.inflate_cityCodeView(codeData, data)
-            console.log(data)
+        // firebase.database().ref().once("value", snap =>{
+        //     $(".loadingView").addClass("displayNone")
+        //     let codeData = snap.val().setting.cities;
+        //     let data = snap.val().cities
+        //     this.cityData = data;
+        //     this.codeData = codeData;
+        //     this.inflate_cityCodeView(codeData, data)
+        //     console.log(data)
+        // })
+        console.log('init')
+        firebase.database().ref('cities/nyc').once("value", snap =>{
+            var data = snap.val();
+            console.log(data);
+
+
+
         })
+
     }
 
 }

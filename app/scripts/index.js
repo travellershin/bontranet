@@ -57,8 +57,8 @@ $(document).ready(function(){
                       u_i.mail = userMail;
                       u_i.name = user.displayName;
                       u_i.grade = userData[userMail].grade*1
-                      Attend.init(u_i.mail, u_i.name, u_i.grade);
-                      // City.init(u_i.mail, u_i.name, u_i.grade);
+                      // Attend.init(u_i.mail, u_i.name, u_i.grade);
+                      City.init(u_i.mail, u_i.name, u_i.grade);
                       if(u_i.grade === 5){
                           // Account.init(user.mail);
 
