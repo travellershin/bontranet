@@ -7,7 +7,6 @@ import Area from "./city/area.js";
 
 let City = {
     codeData: {},
-    cityData: {},
 
     listener: function(){
         let that = this;
@@ -15,17 +14,17 @@ let City = {
         $(".cityCodeView").on("click", ".spots", function(){
             let cid = $(this).parent().attr("id");
             let name = $(this).parent().children(".name").html();
-            Spot.init(that.cityData[cid], cid, name);
+            Spot.init($(this).attr('status'), cid, name);
         })
         $(".cityCodeView").on("click", ".hotels", function(){
             let cid = $(this).parent().attr("id");
             let name = $(this).parent().children(".name").html();
-            Hotel.init(that.cityData[cid], cid, name);
+            Hotel.init(cid, name);
         })
         $(".cityCodeView").on("click", ".area", function(){
             let cid = $(this).parent().attr("id");
             let name = $(this).parent().children(".name").html();
-            Area.init(that.cityData[cid], cid, name);
+            Area.init(cid, name);
         })
 
         $(".cityCodeView").on("click", ".transport", function(){
@@ -43,7 +42,7 @@ let City = {
         $(".cityCodeView").removeClass("displayNone");
         $(".city .spot .check").html("");
 
-        this.inflate_cityCodeView(this.codeData, this.cityData)
+        this.inflate_cityCodeView(this.codeData)
     },
 
     metroAdjust: function(cid){
@@ -63,94 +62,66 @@ let City = {
     },
 
 
-    inflate_cityCodeView: function(codeData,data){
+    inflate_cityCodeView: function(data){
         let txt = '<div class="line top"><p class="name">도시명</p><p class="hotels">숙소</p><p class="spots">관광지 정리</p><p class="area">지역</p><p class="transport">교통</p><p class="price">물가</p></div>'
-        for (var i = 0; i < codeData.length; i++) {
-            let city = codeData[i];
-            if(data[city.code]){
-                txt+='<div class="line" id="'+city.code+'"><p class="name">'+city.name+'</p>'
+        
+        for (var code in data) {
+            var city = data[code];
+            var status = city.status;
 
-                if(data[city.code].hotels){
-                    txt+= '<p class="hotels">O</p>'
-                }else{
-                    txt+= '<p class="hotels">X</p>'
-                }
+            txt += '<div class="line" id="' + city.code + '"><p class="name">' + city.name + '</p>'
 
-                if(data[city.code].spots){
-                    let spot = data[city.code].spots;
-
-                    if(data[city.code].status){
-                        if(data[city.code].status.spots === "finished"){
-                            txt+= '<p class="spots">데이터 확보 완료</p>'
-                        }else if(data[city.code].status.spots === "verifying"){
-                            txt+= '<p class="spots">데이터 선별, 2차 검증중</p>'
-                        }else if(spot.combining){
-                            txt+= '<p class="spots">데이터 합치기 작업중</p>'
-                        }else{
-                            txt+= '<p class="spots">데이터 수집, 1차 검증중</p>'
-                        }
-                    }else if(spot.combining){
-                        txt+= '<p class="spots">데이터 합치기 작업중</p>'
-                    }else{
-                        txt+= '<p class="spots">데이터 수집, 1차 검증중</p>'
-                    }
-                }
-
-                if(!data[city.code].status){
-                    firebase.database().ref("cities/"+ city.code + "/status").set({
-                        spots:false
-                    })
-                }
-
-                if(data[city.code].area){
-                    txt+= '<p class="area">O</p>'
-                }else{
-                    txt+= '<p class="area">X</p>'
-                }
-                if(data[city.code].metro){
-                    txt+= '<p class="transport">O</p>'
-                }else{
-                    txt+= '<p class="transport">X</p>'
-                }
-
-                if(data[city.code].price){
-                    txt+= '<p class="price">O</p>'
-                }else{
-                    txt+= '<p class="price">X</p>'
-                }
-
-                txt+= '</div>'
-
-            }else{
-                txt+='<div class="line" id="'+city.code+'"><p class="name nodata">'+city.name+'</p>'
-                txt += '<p class="hotels">X</p><p class="spots">데이터 없음</p><p class="area">X</p><p class="transport">X</p><p class="price">X</p></div>'
+            if (status.hotel) {
+                txt += '<p class="hotels">O</p>'
+            } else {
+                txt += '<p class="hotels">X</p>'
             }
+            console.log(status)
+            if (status.spot === 4) {
+                txt += '<p class="spots" status="'+status.spot+'">데이터 확보 완료</p>'
+            } else if (status.spot === 3) {
+                txt += '<p class="spots" status="' + status.spot +'">데이터 선별, 2차 검증중</p>'
+            } else if (status.spot === 2) {
+                txt += '<p class="spots" status="' + status.spot +'">데이터 합치기 작업중</p>'
+            } else if (status.spot === 1) {
+                txt += '<p class="spots" status="' + status.spot +'">데이터 수집, 1차 검증중</p>'
+            } else {
+                txt += '<p class="spots" status="' + status.spot +'">데이터 없음</p>'
+            }
+
+            if (status.area) {
+                txt += '<p class="area">O</p>'
+            } else {
+                txt += '<p class="area">X</p>'
+            }
+
+            if (status.transport) {
+                txt += '<p class="transport">O</p>'
+            } else {
+                txt += '<p class="transport">X</p>'
+            }
+
+            if (status.prices) {
+                txt += '<p class="price">O</p>'
+            } else {
+                txt += '<p class="price">X</p>'
+            }
+            txt += '</div>'
         }
 
         $(".cityCodeView").html(txt)
 
     },
 
-    init: function(id, name, grade){
-        let that = this;
+    init: function(){
         this.listener();
 
-        // firebase.database().ref().once("value", snap =>{
-        //     $(".loadingView").addClass("displayNone")
-        //     let codeData = snap.val().setting.cities;
-        //     let data = snap.val().cities
-        //     this.cityData = data;
-        //     this.codeData = codeData;
-        //     this.inflate_cityCodeView(codeData, data)
-        //     console.log(data)
-        // })
-        console.log('init')
-        firebase.database().ref('cities/nyc').once("value", snap =>{
-            var data = snap.val();
-            console.log(data);
+        firebase.database().ref('setting/cities').on("value", snap =>{
+            $(".loadingView").addClass("displayNone")
 
-
-
+            var data = snap.val()
+            this.inflate_cityCodeView(data)
+            this.codeData = data;
         })
 
     }

@@ -1,5 +1,6 @@
 import ManualCombine from "./manualCombine.js";
 import Verify from "./spot/verifying.js";
+import { totalmem } from "os";
 
 //Spot의 단계는 총 4단계 - 데이터 수집/1차검증 -> 데이터 합치기 -> 데이터 선별/2차검증 -> 완료
 
@@ -21,47 +22,46 @@ let Spot = {
         $(".spot .check").on("click", ".check__remainLargeData", function(){
             that.setRemainNumber($(this).parent().attr("id"), $(this).parent().children(".check__remainNumber").val());
         })
+
+        $(".spot .check").on("click", ".check__nodata", function(){
+            var sid = $(this).attr('sid');
+            that.siteNodata(sid);
+            toast('데이터 공백 처리')
+        })
     },
 
-    init: function(data, cid, name){
-        this.listener();
-        this.data = data;
 
-        $(".cityCodeView").addClass("displayNone");
-        $(".city .spot").removeClass("displayNone");
-        $(".cityName").html(name).attr("id", cid);
+    init: function(status, cid, name){
+        var that = this;
+        firebase.database().ref('cities/' + cid).once("value", snap => {
+            $(".loadingView").addClass("displayNone")
 
-        if(data.status){
-            if(data.status.spots === "finished"){
-                console.log("데이터 확보 완료");
-            }else if(data.status.spots === "verifying"){
-                console.log("데이터 선별, 2차 검증중");
+            var data = snap.val()
+            this.data = snap.val();
+            
+            if(status == 4){
+
+            } else if(status == 3){
                 Verify.init(data.spots.combined);
-                //combined가 있고 combining이 없으면 1차 자료정리 완료라는 뜻
-            }else if (data.spots.combining) {
-                console.log("합치기 작업중");
-                //combining이 있으면 합치기 작업중이라는 뜻
+            } else if (status == 2) {
                 ManualCombine.init(data.spots);
-            }else{
-                this.firstCheck(data.spots); //combining, combined가 없으면 데이터 수집, 검증중이라는 뜻
-                //firstcheck를 통과하면 this.autoCombine을 통해 data.spots.combining이 만들어짐
-            }
-        }else{
-            if (data.spots.combining) {
-                console.log("합치기 작업중")
-                //combining이 있으면 합치기 작업중이라는 뜻
-                ManualCombine.init(data.spots);
-            }else{
-                this.firstCheck(data.spots); //combining, combined가 없으면 데이터 수집, 검증중이라는 뜻
-                //firstcheck를 통과하면 this.autoCombine을 통해 data.spots.combining이 만들어짐
-            }
-        }
+            } else if (status == 1) {
+                this.firstCheck(data.spots)
+            } else {
 
+            }
+
+            this.listener();
+
+            $(".cityCodeView").addClass("displayNone");
+            $(".city .spot").removeClass("displayNone");
+            $(".cityName").html(name).attr("id", cid);
+        })
 
     },
 
     autoCombine__spotRestructure: function(){
-        let city = $(".cityName").attr("id");
+        let city = $(".cityName").attr("cid");
         let siteArr = ["gg","lp","nv","ta"];
         let combining = {};
         let counter = 0;
@@ -125,7 +125,7 @@ let Spot = {
     autoCombine__combine: function(combining){
         // TODO: 끝나면 합치기 작업 화면 inflate하기
 
-        let city = $(".cityName").attr("id");
+        let city = $(".cityName").attr("cid");
 
         let combineObj = {}
         let combined = {}
@@ -174,7 +174,7 @@ let Spot = {
     },
 
     deleteSpot: function(sid, name){
-        let city = $(".cityName").attr("id");
+        let city = $(".cityName").attr("cid");
         let site = sid.split("_")[0];
         let no = sid.split("_")[1];
 
@@ -186,7 +186,7 @@ let Spot = {
     },
 
     inputCoordinate: function(sid, coorTxt){
-        let city = $(".cityName").attr("id");
+        let city = $(".cityName").attr("cid");
         let site = sid.split("_")[0];
         let no = sid.split("_")[1];
         let coor = {};
@@ -209,152 +209,6 @@ let Spot = {
             }
         }else{
             toast("좌표가 부정확하게 입력되었습니다")
-        }
-    },
-
-    setRemainNumber: function(site, number){
-        let city = $(".cityName").attr("id");
-        let cutNo = number.trim()*1;
-
-        if(cutNo<100){
-            toast("100개 이상의 장소를 유지해주세요");
-        }else{
-            if(confirm("순위 "+ cutNo + "위 미만 장소를 모두 제거합니다. 맞습니까?")){
-                let cutObj = this.data.spots[site];
-                cutObj.length = cutNo;
-
-                firebase.database().ref("cities/"+ city + "/spots/" + site).set(cutObj);
-            }else{
-                return false;
-            }
-        }
-    },
-
-    firstCheck: function(data){
-
-        $(".spot__page").addClass("displayNone");
-        $(".spot__page.check").removeClass("displayNone");
-
-        $(".header__status").html("데이터 검증중")
-        let hasProblem= false;
-        let txt = ''
-        let searchUrl = 'https://www.google.co.kr/maps/place/' + $(".cityName").html() +"+"
-
-        let siteObj = {
-            gg: "구글",
-            nv: "네이버",
-            ta: "트립어드바이저",
-            lp: "론리플래닛"
-        }
-
-        for (var site in siteObj) {
-            let siteHasProblem = false;
-            let noCoor = false;
-            let noCoorTxt = '<p class="check__subTitle">좌표가 입력되지 않은 관광지가 있습니다</p>';
-            let noSpot = false;
-            let noSpotTxt = '<p class="check__subTitle">비어있는 관광지가 있습니다</p>';
-
-            if(data[site]){
-                txt+='<p class="check__title">'+siteObj[site]+' 데이터 확인</p>'
-                for (var i = 0; i < data[site].length; i++) {
-                    let spot = data[site][i];
-                    if(spot){
-                        let hasCoor = true;
-                        if(spot.deleted){
-                            //일부러 삭제한 관광지 -> 넘어간다
-                        }else{
-                            if(spot.coor){
-                                if(spot.coor.lng){
-                                    if(isNaN(spot.coor.lng*1)){
-                                        hasCoor = false;
-                                    }
-                                }else{
-                                    hasCoor = false;
-                                }
-
-                                if(spot.coor.lat){
-                                    if(isNaN(spot.coor.lat*1)){
-                                        hasCoor = false;
-                                    }
-                                }else{
-                                    hasCoor = false;
-                                }
-                            }else{
-                                hasCoor = false;
-                            }
-
-                            if(!hasCoor){
-                                noCoorTxt+='<div class="check__line" id="'+site+'_'+i+'">'
-                                noCoorTxt+=   '<a class="check__spotName" href="'+searchUrl+spot.name+'" target="_blank">'+spot.name+'</a>'
-                                noCoorTxt+=   '<input class="check__spotCoor" placeholder="xx.xxxxx, xx.xxxxx 형태 입력">'
-                                noCoorTxt+=   '<p class="check__confirm">좌표 입력</p><p class="check__spotDelete">장소 삭제</p>'
-                                noCoorTxt+='</div>'
-                                hasProblem = true;
-                                siteHasProblem = true;
-                                noCoor = true;
-                            }
-                        }
-
-                    }else{
-                        noSpotTxt+='<div class="check__line" id="'+site+'_'+i+'">'
-                        noSpotTxt+=   '<p class="check__txt">'+i+' 번 관광지</p>'
-                        noSpotTxt+=   '<p class="check__spotDelete">장소 삭제</p>'
-                        noSpotTxt+='</div>'
-                        hasProblem = true;
-                        siteHasProblem = true;
-                        noSpot = true;
-                    }
-                }
-
-                if(noCoor){
-                    txt += noCoorTxt;
-                }
-                if(noSpot){
-                    txt += noSpotTxt;
-                }
-
-                if(data[site].length>150){
-                    let largeOK = true;
-                    if(data.largeData){
-                        if(data.largeData[site]){
-                            //150개 이상의 데이터를 보유하려면 도시명/spots/largeData/사이트명이 true라고 부여되어야 함
-                        }else{
-                            largeOK = false;
-                        }
-                    }else{
-                        largeOK = false;
-                    }
-
-                    if(!largeOK){
-                        hasProblem = true;
-                        siteHasProblem = true;
-                        txt+='<p class="check__subTitle">'+siteObj[site]+' 장소 데이터가 150개를 초과('+data[site].length+'개)합니다.</p>'
-                        txt+='<div class="check__line" id="'+site+'">'
-                        txt+=   '<input class="check__remainNumber" value="'+data[site].length+'">'
-                        txt+=   '<p class="check__remainLargeData">개의 장소 유지하기</p>'
-                        txt+='</div>'
-                    }
-
-                }
-
-            }else{
-                txt+='<p class="check__title">'+siteObj[site]+' 데이터가 존재하지 않습니다.</p>'
-                hasProblem = true;
-                siteHasProblem = true;
-
-                // TODO: 원래 사이트 데이터가 존재하지 않는 경우를 대비한 버튼을 만들고 site 값으로 nodata: true를 넣어준다.
-            }
-            if(!siteHasProblem){
-                txt+= '<p class="check__subTitle">발견된 문제가 없습니다</p>'
-            }
-        }
-
-        if(hasProblem){
-            txt += '<p class="check__finish">검사를 모두 마쳤습니다</p>'
-            $(".spot .check").html(txt);
-        }else{
-            toast("발견된 문제가 없어 데이터 병합을 실시합니다.")
-            this.autoCombine__spotRestructure();
         }
     }
 }

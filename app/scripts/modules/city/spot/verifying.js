@@ -169,17 +169,22 @@ var Verify = {
             for (var site in data[sid].rank) {
                 ranking[site] = data[sid].rank[site]
             }
-            txt+='<div class="result_box" id="'+sid+'">'
-            txt+=   '<p class="result_rank">'+(i+1)+'</p>';
-            txt+=   '<input class="result_name" value="'+data[sid].name.ko+"--"+data[sid].name.en+'">'
-            txt+=   '<input class="result_url" value="'+url+'">';
-            txt+=   '<p class="result_gg">'+ranking.gg+'</p>';
-            txt+=   '<p class="result_nv">'+ranking.nv+'</p>';
-            txt+=   '<p class="result_lp">'+ranking.lp+'</p>';
-            txt+=   '<p class="result_ta">'+ranking.ta+'</p>';
-            txt+=   '<p class="result_save save_spot">저장</p>';
-            txt+=   '<p class="result_remove remove_spot">삭제</p>'
-            txt+='</div>';
+            if (data[sid].name.ko.includes('<div class') || data[sid].name.ko.includes('<div class')){
+                delete data[sid]
+            }else{
+                txt += '<div class="result_box" id="' + sid + '">'
+                txt += '<p class="result_rank">' + (i + 1) + '</p>';
+                txt += '<input class="result_name" value="' + data[sid].name.ko + "--" + data[sid].name.en + '">'
+                txt += '<input class="result_url" value="' + url + '">';
+                txt += '<p class="result_gg">' + ranking.gg + '</p>';
+                txt += '<p class="result_nv">' + ranking.nv + '</p>';
+                txt += '<p class="result_lp">' + ranking.lp + '</p>';
+                txt += '<p class="result_ta">' + ranking.ta + '</p>';
+                txt += '<p class="result_save save_spot">저장</p>';
+                txt += '<p class="result_remove remove_spot">삭제</p>'
+                txt += '</div>';
+            }
+            
         }
         $(".verifying__box").html(txt)
 

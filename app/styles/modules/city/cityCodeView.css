@@ -17,7 +17,7 @@
             text-align: center;
             font-size: 17px;
             width: 40px;
-            margin: 0 30px;
+            padding: 0 30px;
 
             &:hover{
                 cursor: pointer;
@@ -27,7 +27,7 @@
 
         .name{
             width: 180px;
-            margin: 0 40px;
+            padding: 0 40px;
             &:hover{
                 cursor: default;
                 text-decoration: none;

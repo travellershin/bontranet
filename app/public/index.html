@@ -19,16 +19,23 @@
 
     <header class="clearfix">
         <nav class="clearfix">
-            <ul class="clearfix">
-                <!-- index.js -->
-                <li id="nav_attend" class="--selected">출근</li>
-                <li>업무</li>
-                <li id="nav_city">도시</li>
-                <li id="nav_subway">지하철</li>
-                <li>동아리</li>
-                <li>링크</li>
+            <!-- index.js / function login -->
+            <ul class="clearfix nav">
+                <li id="nav_attend" class="nav__item nav__item--selected">출근</li>
+                <li id="nav_todo" class="nav__item">업무</li>
+                <div class="nav__item nav__item--hasDrawer">
+                    <p>도시</p>
+                    <div class="nav__drawer">
+                        <p class="nav__drawer__item" id="nav_city">전체현황</p>
+                        <p class="nav__drawer__item" id="nav_spot">관광지</p>
+                        <p class="nav__drawer__item" id="nav_calc">계산기</p>
+                        <p class="nav__drawer__item" id="nav_hotel">숙소</p>
+                        <p class="nav__drawer__item" id="nav_link">링크</p>
+                    </div>
+                </div>
+                <li id="nav_map" class="nav__item">지도</li>
+                <li id="nav_account" class="nav__item">회계</li>
             </ul>
-            <select class="worker_selector displayNone"></select>
         </nav>
 
 
@@ -41,21 +48,14 @@
     <!-- global/layout.css -->
     <div class="wrap">
         <!-- modules/attend.css -->
-        <div class="pages attend displayNone">
+        <div class="pages attend displayNone"></div>
 
-            <div class="attend__top">
-                <div id="calendar" class="attend__calendar"></div>
-                <div class="attend__week"></div>
-            </div>
-            <div class="attend__month"></div>
+        <div class="pages spot displayNone"></div>
+        
 
-        </div>
+        <div class="pages account displayNone"></div>
 
-        <div class="pages account displayNone">
-            <div id="accountCalendar" class="account__calendar">
-
-            </div>
-        </div>
+        
 
         <div class="pages city displayNone">
             <!-- modules/city/cityCodeView.css -->

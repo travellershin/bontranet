@@ -11,6 +11,9 @@
 @import "modules/toast";
 @import "modules/account";
 
+@import "modules/spot/status.css";
+@import "modules/spot/first_check.css";
+
 @import "modules/city/cityCodeView";
 @import "modules/city/spot";
 @import "modules/city/spot/verifying";

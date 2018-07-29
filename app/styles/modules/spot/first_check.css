@@ -1,0 +1,119 @@
+.spot .wrapper{
+    width: 1080px;
+    margin: 0 auto;
+
+.check{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 40px;
+
+    &__title{
+        line-height: 40px;
+        height: 40px;
+        width: 100%;
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 12px;
+        color:#777;
+        margin-top: 40px;
+    }
+
+    &__ok{
+        float: left;
+    }
+
+    &__subTitle{
+        line-height: 30px;
+        height: 30px;
+        font-size: 18px;
+        font-weight: bold;
+        margin: 20px 0 12px 40px;
+    }
+
+    &__line{
+        margin-bottom: 4px;
+        height: 40px;
+        line-height: 40px;
+        overflow: hidden;
+    }
+
+    &__spotName{
+        width: 260px;
+        float: left;
+        margin-left: 80px;
+        cursor: pointer;
+        overflow: hidden;
+        &:hover{
+            text-decoration: underline;
+        }
+    }
+
+    &__spotCoor{
+        width: 400px;
+        float: left;
+        height: 32px;
+        margin-top: 4px;
+        box-sizing: border-box;
+        border: 1px solid #777;
+        padding: 0 12px;
+        border-radius: 2px;
+    }
+
+    &__confirm, &__spotDelete{
+        width: 75px;
+        margin: 5px 15px 5px 40px;
+        height: 30px;
+        line-height: 30px;
+        font-size: 14px;
+        box-sizing: border-box;
+        float: left;
+        text-align: center;
+        cursor: pointer;
+        &:hover{
+            text-decoration: underline;
+        }
+    }
+
+    &__txt{
+        margin-left: 80px;
+        float: left;
+        width: 150px;
+    }
+
+    &__spotDelete{
+        float: left;
+        margin-left: 0;
+    }
+
+    &__remainNumber{
+        margin-left: 80px;
+        float: left;
+        width: 60px;
+        height: 32px;
+        margin-top: 4px;
+        text-align: center;
+        box-sizing: border-box;
+        border: 1px solid #888;
+    }
+
+    &__remainLargeData{
+        float: left;
+        height: 40px;
+        box-sizing: border-box;
+        width: 140px;
+        text-align: center;
+        cursor: pointer;
+        margin-left: 8px;
+        &:hover{
+            text-decoration: underline;
+        }
+    }
+
+    &__finish{
+        margin:100px 0;
+        font-size: 24px;
+        font-weight: bold;
+    }
+}
+}
+

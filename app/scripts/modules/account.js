@@ -2,6 +2,11 @@ let Account = {
     user: {},
     init: function(id){
         let that = this;
+        var txt = '';
+        txt +='<div id="accountCalendar" class="account__calendar">';
+        txt +='</div>';
+
+        $(".account").html(txt);
 
         firebase.database().ref("users").once("value", snap => {
             let data = snap.val();
@@ -14,14 +19,6 @@ let Account = {
                     }
                 }
             }
-            $("header ul").prepend('<li id="nav_account">회계</li>');
-
-            $("header ul").on("click", "#nav_account", function(){
-                $("header li").removeClass("--selected");
-                $(this).addClass("--selected");
-                $(".pages").addClass("displayNone");
-                $(".pages.account").removeClass("displayNone");
-            })
 
             $('#accountCalendar').fullCalendar({
                 height: 564,

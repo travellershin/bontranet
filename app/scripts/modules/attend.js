@@ -13,14 +13,25 @@ var Attend = {
 
     weekdays: ["일", "월", "화", "수", "목", "금", "토", "일"],
 
-    init: function(id, name, grade){
+    init: function(u_i){
         let that = this;
+        var grade = u_i.grade;
+        var id = u_i.id;
 
         this.id = id;
 
+        var txt = '';
+        txt+='<select class="worker_selector"></select>'
+        txt+='<div class="attend__top">';
+        txt +=   '<div id="calendar" class="attend__calendar"></div>'
+        txt +=   '<div class="attend__week"></div>'
+        txt +='</div>'
+        txt +='<div class="attend__month"></div>'
+
+        $(".pages.attend").html(txt).removeClass("displayNone");
+
         firebase.database().ref("account/salary").once("value", snap =>{
             that.salary = snap.val();
-
             if(grade === 5){
                 $(".worker_selector").removeClass("displayNone");
                 firebase.database().ref("users").once("value", snap =>{
@@ -28,7 +39,9 @@ var Attend = {
                     let users = snap.val();
                     let txt = ''
                     for (var mailID in users) {
-                        txt += '<option value="'+mailID+'">'+users[mailID].name+'</option>'
+                        if(users[mailID].grade*1<5){
+                            txt += '<option value="' + mailID + '">' + users[mailID].name + '</option>'
+                        }
                     }
                     $(".worker_selector").html(txt).val(id).prop("selected", true);
                 })
@@ -36,6 +49,7 @@ var Attend = {
                 firebase.database().ref("attend/"+this.id).on("value", snap => {
                     $(".loadingView").addClass("displayNone")
                     this.attendObj = snap.val();
+                    console.log(this.attendObj)
                     that.inflate_calendar(that.attendObj)
 
                     if(!$(".fc-header-toolbar").length){
@@ -60,27 +74,26 @@ var Attend = {
     listener: function(){
         let that = this;
 
-        $(".attendView_input").click(function(){
-            that.inflate_input();
+        $(".modal").on("click", ".confirm", function(){
+            if(!$(".attend").hasClass('displayNone')){
+                that.setWorkHour($(this).attr("did"));
+                $(".inputWindow input").val("");
+            }
         })
-        $(".attendView_Show").click(function(){
-            that.inflate_calendar(that.attendObj);
-        })
-
-        $("body").on("click", ".confirm", function(){
-            that.setWorkHour($(this).attr("did"));
-            $(".inputWindow input").val("");
-        })
-        $("body").on("click", ".close", function(){
-            $(".blackScreen").addClass("displayNone");
-            $(".inputWindow input").val("");
+        $(".modal").on("click", ".close", function(){
+            if (!$(".attend").hasClass('displayNone')) {
+                $(".blackScreen").addClass("displayNone");
+                $(".inputWindow input").val("");
+            }
         })
         $("body").keyup(function(e){
-            if($(".modal .confirm").length){
-                var code = e.which; // recommended to use e.which, it's normalized across browsers
-                if(code==13){
-                    if($("#first_from").val().length>0){
-                        that.setWorkHour($(".modal .confirm").attr("did"));
+            if (!$(".attend").hasClass('displayNone')) {
+                if ($(".modal .confirm").length) {
+                    var code = e.which; // recommended to use e.which, it's normalized across browsers
+                    if (code == 13) {
+                        if ($("#first_from").val().length > 0) {
+                            that.setWorkHour($(".modal .confirm").attr("did"));
+                        }
                     }
                 }
             }
@@ -152,7 +165,7 @@ var Attend = {
                 }
 
                 txt+='<p>' + Math.floor(dif/60) + "시간 "+ dif%60 +"분"+'</p>'
-                $('.fc-day[data-date="'+dateID+'"]').html(txt)
+                $('.attend .fc-day[data-date="'+dateID+'"]').html(txt)
             }
             let durMon = 0;
             let thisMonth = '';
@@ -173,9 +186,9 @@ var Attend = {
 
             let txt = ''
 
-            if($(".fc-view-container").length){
+            if($(".attend .fc-view-container").length){
                 for (var i = 0; i < 6; i++) {   //무조건 6주
-                    let weekDom = $(".fc-week").eq(i);
+                    let weekDom = $(".attend .fc-week").eq(i);
                     let weekDur = 0;
 
                     for (var j = 0; j < 7; j++) {
@@ -198,10 +211,10 @@ var Attend = {
                 $(".attend__week").html(txt)
             }
 
-            if($(".fc-left").children("h2.durMonth").length){
-                $("h2.durMonth").html(' ('+Math.floor(durMon/60)+'시간 '+durMon%60+'분)')
+            if ($(".attend .fc-left").children("h2.durMonth").length){
+                $(".attend h2.durMonth").html(' ('+Math.floor(durMon/60)+'시간 '+durMon%60+'분)')
             }else{
-                $(".fc-left").append('<h2 class="durMonth"> ('+Math.floor(durMon/60)+'시간 '+durMon%60+'분)</h2>')
+                $(".attend .fc-left").append('<h2 class="durMonth"> ('+Math.floor(durMon/60)+'시간 '+durMon%60+'분)</h2>')
             }
 
             txt = '';   //var 빼먹은거 아님. 위에서 선언 했음!

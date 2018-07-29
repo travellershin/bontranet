@@ -1,78 +1,76 @@
+import Transport from "./score/transport.js";
+import Safety from "./score/safety.js";
+
 let Hotel = {
-    data: {},
     city: "",
     cityName: "",
 
-    init: function(data, cid, name){
+    init: function(cid, name){
         $(".cityName").html(name).attr("id", cid);
         $(".cityCodeView").addClass("displayNone");
         $(".hotel").removeClass("displayNone");
-        this.data = data;
-        this.city = cid;
-        this.cityName = name;
-        console.log(data)
 
-        this.score();
-        //점수 부여를 실시한다.
+        firebase.database().ref('cities/'+cid).once('value', snap =>{
+            var data = snap.val();
+            this.city = cid;
+            this.cityName = name;
+
+            this.score(data);
+        })
     },
 
-    score: function(){
-        let status = false;
-
-        if(this.data.status){
-            if(!this.data.status.hotels){
+    score: function (data){
+        if(data.status){
+            if(!data.status.hotels){
                 //stauts는 있는데 호텔에 대한 status 데이터가 없으면 만들어 넣는다.
-                this.data.status.hotels = {
+                data.status.hotels = {
                     transport: false,
                     safety: false,
                     facility: false,
-                    costEff: false
+                    theme:false
                 }
             }
         }else{
             // status 데이터 자체가 없으면 만들어 넣는다.
-            this.data.status = {
+            data.status = {
                 hotels:{
                     transport: false,
                     safety: false,
                     facility: false,
-                    costEff: false
+                    theme: false
                 }
             }
         }
 
-        status = this.data.status.hotels;
+        var status = data.status.hotels;
 
-        //점수 체계가 완성되어있는지 검사하고 없으면 점수를 부여하는 함수를 실행한다
+        //점수 체계가 완성되어있는지 검사하고 없으면 점수를 부여한다.
+        //각 객체 안에서 점수를 계산해 데이터베이스에 업로드하며, return값으로는 값을 계산할 수 있었다/없었다라는 문구가 반환된다.
         if(status.transport){
-            $("#status_transport").html("정보가 존재합니다.")
+            $("#status_transport").html("정보가 이미 존재합니다.")
         }else{
-            if(this.data.metro&&this.data.metroLine){
-                $("#status_transport").html("대중교통 정보 발견. 교통 편의성을 계산합니다.")
-                this.score_transport();
-            }else{
-                $("#status_transport").html("대중교통 정보가 입력되지 않아 교통 편의성을 계산할 수 없습니다. 데이터를 입력해주세요.")
-            }
+            $("#status_transport").html(Transport.init(data));
         }
 
         if(status.safety){
-            $("#status_safety").html("정보가 존재합니다.")
+            $("#status_safety").html("정보가 이미 존재합니다.")
         }else{
-            this.score_safety();
+            $("#status_safety").html(Safety.init(data));
         }
 
-        if(status.facility){
-            $("#status_facility").html("정보가 존재합니다.")
-        }else{
-            this.score_facility();
-        }
-        if(status.costEff){
+        // if(status.facility){
+        //     $("#status_facility").html("정보가 존재합니다.")
+        // }else{
+        //     this.score_facility();
+        // }
 
-        }
+        // if(status.theme){
+        //     this.score_theme();
+        // }
     },
 
     score_facility: function(){
-        var data = this.data;
+        var data = data;
 
         var scoreArray = [];
 
@@ -420,524 +418,11 @@ let Hotel = {
     },
 
     score_safety: function(){
-        let city = this.city;
-        let orderArray = [];
-
-        var scoreWord_connect = ["매우 나쁘","매우 나쁘","좋지 않으","좋지 않은 편이","나쁘지 않은 편이","좋은 편이","매우 좋은 편이","매우 좋으"];
-        var scoreWord = ["매우 나빠 조심해야 함.","매우 나빠 조심해야 함.","좋지 않은 편.","좋지 않은 편.","나쁘지 않은 편.","좋은 편.","매우 좋은 편.","매우 좋은 편."];
-        var misdemeanorWord = ["소매치기 등 경범죄에는 주의해야 함.","소매치기 등 경범죄에는 주의해야 함.", "소매치기 등 경범죄에는 주의해야 함.", "경범죄에는 주의해야 함.","","","",""]
-
-
-        var scoreArray = [];
-
-        for (var hid in this.data.hotels) {
-            let hotel = this.data.hotels[hid];
-
-            var shortTxt = '';
-
-            let safe_txt = [];
-            var score = 0;
-
-            var areaName = this.data.area[hotel.area].name;
-            var areaSafety = this.data.area[hotel.area].safety;
-
-            score+= areaSafety.score*1 + (areaSafety.misdemeanor/3)*1;
-
-            var txt = areaName+' 지역에 위치한 숙소로, 지역의 전반적인 치안은 ';
-
-            if(areaSafety.score>4&&areaSafety.misdemeanor<4){
-                txt += scoreWord_connect[areaSafety.score] + '지만 ' + misdemeanorWord[areaSafety.misdemeanor];
-            }else{
-                txt += scoreWord[areaSafety.score]
-            }
-
-            safe_txt.push(txt);
-
-
-            var safety_local = {  //유동인구에 따른 치안
-                atm:0, //0:별로 1:보통 2:좋음
-                spot:0,
-                grocery:0,
-                area:false
-            }
-
-            if(hotel.area>5&&hotel.area<9){
-                safety_local.area = true;
-            }else if(hotel.area === 10){
-                safety_local.area = true;
-            }
-
-            var atm30th = hotel.local.atm[29].location.score; //30번째 atm이 몇 마일 떨어져있는지
-
-            if(atm30th<0.084){
-                safety_local.atm = 2
-            }else if(atm30th<0.12){
-                safety_local.atm = 1
-            }
-
-            score += Math.max((0.15 - atm30th), 0)*5
-
-            hotel.spot = {
-                walkable: []
-            }
-            hotel.local.spot = [];
-            hotel.local.grocery = [];
-
-            for (var i = 0; i < this.data.spots.ranked.length; i++) {
-                var spot = this.data.spots.ranked[i];
-
-                if(spot.enterance){
-                    for (var j = 0; j < spot.enterance.length; j++) {
-                        var dif = calculateDif(hotel.coor, spot.enterance[j])
-                        if(dif < 500){
-                            hotel.spot.walkable.push({
-                                rank:i,
-                                sid:spot.sid
-                            })
-                            if(dif<200){
-                                if(safety_local.spot === 0){
-                                    safety_local.spot = 1
-                                }
-                            }
-
-                            if(dif < 80){
-                                hotel.local.spot.push(spot)
-                                safety_local.spot = 2
-                            }
-                        }
-                    }
-                }else{
-                    var dif = calculateDif(hotel.coor, spot.coor)
-                    if(dif < 500){
-                        hotel.spot.walkable.push({
-                            rank:i,
-                            sid:spot.sid
-                        })
-                        if(dif<200){
-                            if(safety_local.spot === 0){
-                                safety_local.spot = 1
-                            }
-
-                            score += (250 - dif)/200
-                        }
-
-                        if(dif < 150){
-                            hotel.local.spot.push(spot)
-                            safety_local.spot = 2
-                        }
-                    }
-                }
-            }
-            hotel.local.grocery = []
-
-            hotel.local.nearestMetro = {
-                distance: 1000
-            }
-            for (var line in hotel.metroInfo) {
-                var metro = hotel.metroInfo[line];
-
-                if(metro.distance<hotel.local.nearestMetro.distance){
-                    hotel.local.nearestMetro = metro;
-                    hotel.local.nearestMetro.line = line;
-                }
-            }
-
-            for (var i = 0; i < this.data.local.local.grocery.length; i++) {
-                var grocery = this.data.local.local.grocery[i];
-                var dif = calculateDif(hotel.coor, grocery)
-
-                if(dif<110){
-                    hotel.local.grocery.push(dif);
-                }
-            }
-
-            score += Math.min((hotel.local.grocery.length / 6), 0.7)
-
-            if(hotel.local.grocery.length>3){
-                safety_local.grocery = 2;
-            }else if(hotel.local.grocery.length>1){
-                safety_local.grocery = 1;
-            }
-
-
-            var areaScore = Math.round((areaSafety.score*1 + (areaSafety.misdemeanor/3)*1)*10)/10
-
-
-            var localTxt = '';
-            var localGood = false;
-
-            if(safety_local.area){
-                localTxt += '맨해튼 한복판에 위치해 유동인구가 매우 많'
-                shortTxt += '유동인구가 매우 많은 맨해튼 한복판에 위치하고, 지하철도 가까워 <strong>밤 늦게까지 안전하지만 소매치기 등 경범죄에는 조심해야 함</strong>'
-            }else{
-                if(hotel.local.spot.length>0){
-                    if(safety_local.grocery>0){
-                        if(safety_local.atm>0){
-                            localTxt += '주변 상업시설, 편의시설이 잘 갖추어져 있고, ' + hotel.local.spot[0].name.ko + ' 등 유명 관광지가 가까워 <strong>유동인구가 매우 많음.</strong>'
-                            localGood = true;
-                        }else{
-                            localTxt += '주변 편의시설이 잘 갖추어져 있고, ' + hotel.local.spot[0].name.ko + ' 등 유명 관광지가 가까워 <strong>유동인구 많음.</strong>'
-                            localGood = true;
-                        }
-                    }else{
-                        if(safety_local.atm>0){
-                            localTxt += '주변 상업시설이 잘 갖추어져 있고, ' + hotel.local.spot[0].name.ko + ' 등 유명 관광지가 가까워 <strong>유동인구 많음.</strong>'
-                            localGood = true;
-                        }else{
-                            localTxt +=  hotel.local.spot[0].name.ko + ' 등 유명 관광지가 가까워 <strong>유동인구가 많음.</strong>'
-                            localGood = true;
-                        }
-                    }
-                }else{
-                    if(safety_local.grocery>0){
-                        if(safety_local.atm>0){
-                            localTxt += '주변 상업시설, 편의시설이 잘 갖추어져 있어 <strong>유동인구가 많음.</strong>'
-                            localGood = true;
-                        }else{
-
-                        }
-                    }else{
-                        if(safety_local.atm>0){
-
-                        }else{
-
-                        }
-                    }
-                }
-            }
-
-            if(areaScore>7.5){
-                if(!safety_local.area){
-                    shortTxt += '전반적으로 치안이 좋은 <b>'+areaName+'</b>지역에 위치하고 있'
-                }
-
-                if(localGood){
-                    if(!safety_local.area){
-                        if(hotel.local.nearestMetro.distance<100){
-                            shortTxt += '으며, 주변 <strong>유동인구가 많고 지하철이 가까워 밤 늦게까지도 매우 안전</strong>함.'
-                        }else{
-                            shortTxt += '으며, 주변 유동인구가 많아 <strong>지역 내에서도 더 안전</strong>한 편.'
-                        }
-                    }
-
-                }else{
-                    localTxt += '지역 내 다른 숙소들에 비해 주변 유동인구가 아주 많지는 않은 편.'
-
-                    if(!safety_local.area){
-                        if(hotel.local.nearestMetro.distance<100){
-                            shortTxt += '으며, 지하철이 가까워 <strong>밤 늦게 귀가할 때도 안전</strong>한 편.'
-                        }else{
-                            shortTxt += '지만 <strong>너무 밤 늦게 돌아다니는 것은 삼가는 것</strong>이 좋음.'
-                        }
-                    }
-                }
-            }else if(areaScore>6.8){
-
-                if(!safety_local.area){
-                    shortTxt += '치안이 좋은 편인 <b>'+areaName+'</b>지역에 위치하고 있'
-                }
-
-                if(localGood){
-
-                    if(!safety_local.area){
-                        if(hotel.local.nearestMetro.distance<100){
-                            shortTxt += '으며, 주변 유동인구가 많고 지하철이 가까워 <strong>밤 늦게까지도 안전</strong>한 편.'
-                        }else{
-                            shortTxt += '으며, 주변 유동인구가 많아 <strong>지역 내에서도 안전</strong>한 편.'
-                        }
-                    }
-
-                }else{
-                    localTxt += '지역 내 다른 숙소들에 비해 주변 유동인구가 아주 많지는 않은 편.'
-
-                    if(!safety_local.area){
-                        if(hotel.local.nearestMetro.distance<100){
-                            shortTxt += '으며, 지하철이 가까워 <strong>밤 늦게 귀가할 때도 안전</strong>한 편.'
-                        }else{
-                            shortTxt += '지만 너무 <strong>밤 늦게 돌아다니는 것은 삼가는 것</strong>이 좋음.'
-                        }
-                    }
-                }
-
-            }else if(areaScore>6){
-                if(!safety_local.area){
-                    shortTxt+='일반적인 치안 수준의 <b>'+ areaName+ '</b> 지역에 위치하고 있'
-                }
-
-                if(localGood){
-                    if(!safety_local.area){
-                        if(hotel.local.nearestMetro.distance<100){
-                            shortTxt += '으며, 주변 유동인구가 많고 지하철이 가까워 <strong>밤 늦게 귀가할 때도 안전</strong>한 편.'
-                        }else{
-                            shortTxt += '으며, 주변 유동인구가 많아 <strong>안전한 편이지만 너무 밤 늦게 귀가하는 것은 삼가</strong>는 것이 좋음.'
-                        }
-                    }
-
-                }else{
-                    localTxt += '지역 내 다른 숙소들에 비해 주변 유동인구가 많지는 않은 편에 속함.'
-
-                    if(!safety_local.area){
-                        if(hotel.local.nearestMetro.distance<100){
-                            shortTxt += '으며, <strong>지하철이 가깝지만 너무 밤 늦게 귀가하는 것은 삼가</strong>는 것이 좋음.'
-                        }else{
-                            shortTxt += '으며, 주변 유동인구가 아주 많은 편은 아니므로 <strong>밤 늦게 돌아다니지 않는</strong> 것이 좋음.'
-                        }
-                    }
-                }
-            }else{
-                if(!safety_local.area){
-                    shortTxt+='전반적으로 치안이 좋지 않은 편인 <b>'+areaName+ '</b> 지역에 위치하고 있'
-                }
-
-                if(localGood){
-                    if(!safety_local.area){
-                        if(hotel.local.nearestMetro.distance<100){
-                            shortTxt += '으며, 유동인구가 많고 지하철이 가까워 <strong>지역 내에서는 안전한 편이지만 늦은 시간 귀가는 삼가는 것</strong>이 좋음.'
-                        }else{
-                            shortTxt += '으며, 주변 유동인구가 많은 편이지만 <strong>늦은 시간에 귀가하지 않는 것</strong>이 좋음.'
-                        }
-                    }
-                }else{
-                    localTxt += '주변에 많은 시설이 있거나 유명한 관광지가 있지 않아 유동인구가 지역 내에서도 많지 않은 편.'
-                    if(!safety_local.area){
-                        if(hotel.local.nearestMetro.distance<100){
-                            shortTxt += '으며, 지하철이 가깝지만 유동인구가 많지 않은 편이므로 <strong>안전에 유의해야 함</strong>.'
-                        }else{
-                            shortTxt += '으며, 유동인구가 많지 않아 <strong>안전에 유의해야 함</strong>.'
-                        }
-                    }
-                }
-            }
-
-            safe_txt.push(localTxt);
-
-            var met = hotel.local.nearestMetro;
-            var metDis = met.distance;
-            var metTxt = '가장 가까운 지하철 역은 <b>' + met.line + '호선 ' + met.name + '역</b>으로, 도보로 약 <strong>' +(Math.floor(metDis/75) + 1)+'분</strong> 거리에 있';
-
-            if(metDis<200){
-                metTxt += '어 <strong>늦은 밤에 귀가하기 좋음</strong>.'
-            }else if(metDis<500){
-                metTxt += '음.'
-            }else{
-                metTxt += '어 <strong>너무 늦은 밤에는 지하철로 귀가하기 부담</strong>스러울 수 있음'
-            }
-
-            var metScore = Math.max(Math.round((300 - metDis)/300),0);
-
-            score+= metScore
-
-            if(score>9.2){
-                score = 9.2 + (score-9.2)/4
-            }
-
-            score = Math.min(Math.round(score*7.92+22)/10,9.9);
-
-            safe_txt.push(metTxt);
-
-            hotel.assessment.safety = {
-                score: score
-            }
-
-            scoreArray.push(score)
-
-            if(score>9.4){
-                safe_txt.push('전반적으로 뉴욕의 숙소들 중에서도 <strong>치안으로는 최상위권</strong>에 속해 여행을 즐기기 좋음.')
-            }else if(score>9){
-                safe_txt.push('뉴욕 숙소들 중에서도 전반적으로 <strong>상당히 좋은 치안</strong>을 자랑함.')
-            }else if(score>8.5){
-                safe_txt.push('<strong>전반적으로 주변 치안이 안정</strong>되어 여행하기에 좋음.')
-            }else if(score>7.9){
-                safe_txt.push('밤 늦게 돌아다니지 않고 <strong>조심한다면 전반적으로 여행하기에 안전</strong>한 편.')
-            }else if(score>7.3){
-                safe_txt.push('전반적으로 <strong>뉴욕 평균 정도의 치안 수준</strong>을 보이며, 조심히 다닐 필요는 있음.')
-            }else if(score>6.9){
-                safe_txt.push('치안이 아주 나쁘지는 않지만 <strong>조심히 다니는 것이 좋음</strong>.')
-            }else{
-                safe_txt.push('치안이 좋은 편은 아니므로 <strong>안전한 숙소를 원한다면 좋은 선택은 아님.</strong>')
-            }
-
-            hotel.explain.safety = safe_txt;
-
-            if(hotel.summary){
-                hotel.summary.safety = shortTxt;
-            }else{
-                hotel.summary = {
-                    safety: shortTxt
-                };
-            }
-        }
-
-        scoreArray.sort();
-
-        this.data.status.hotels.safety = true;
-
-        // firebase.database().ref('cities/'+this.city).update(this.data)
+        
     },
 
     score_transport: function(){
         let city = this.city
-        let orderArray = [];
-
-        for (var hid in this.data.hotels) {
-            let hotel = this.data.hotels[hid];
-
-            let transport_txt = [];
-
-            let score = 0;
-            //교통 편의성 점수부여용
-            let goodLine = [];
-            //좋은 지하철 라인들 Array
-            let visitable = [];
-            //환승 없이 갈 수 있는 관광지 목록
-            let nearest = {distance:1000, name:"", code:""};
-            //가장 가까운 지하철
-            let lineNo = 0
-
-            var summary = '';
-
-            if(hotel.metroInfo){
-                lineNo = Object.keys(hotel.metroInfo).length
-            }
-            //10분거리 이내의 지하철  노선 개수
-
-
-            for (var metLine in hotel.metroInfo) {
-
-                if(hotel.metroInfo[metLine].distance < nearest.distance){
-                    nearest = hotel.metroInfo[metLine]
-                    //가장 가까운 지하철 갱신
-                }
-
-                if(this.data.metroLine[metLine].score>80){
-                    goodLine.push(metLine)
-                    //좋은 라인이면 푸시함
-                }
-
-                for (var i = 0; i < this.data.metroLine[metLine].spot.length; i++) {
-                    let spot = this.data.metroLine[metLine].spot[i]
-                    if(!visitable.includes(spot.name)){
-                        visitable.push(spot.name)
-                    }
-                }
-            }
-
-            if(Math.ceil((nearest.distance)/70)<4){
-                transport_txt.push('가장 가까운 지하철 역은 <b>' + nearest.name + "</b> 역으로, <strong>도보 단 "+ Math.ceil((nearest.distance)/70) +"분 거리</strong>");
-            }else{
-                transport_txt.push('가장 가까운 지하철 역은 <b>' + nearest.name + "</b> 역으로, 도보 "+ Math.ceil((nearest.distance)/70) +"분 거리");
-            }
-            transport_txt.push('숙소에서 도보 10분거리 이내에 <b>지하철 ' + lineNo + '개 노선</b>이 지남');
-
-            if(goodLine.length>0){
-                if(goodLine.length>1){
-                    transport_txt.push('그 중에서도 실질적으로 '+this.cityName+' 관광에 편리한 <strong>'+ goodLine + '호선</strong>이 지나는 <b>초 역세권</b>');
-                }else{
-                    transport_txt.push('그 중에서도 실질적으로 '+this.cityName+' 관광에 편리한 <strong>'+ goodLine + '호선</strong>이 지나는 <b> 역세권</b>');
-                }
-            }
-
-            let spotNo = visitable.length;
-            if(spotNo>0){
-                // TODO: 100대 관광지 -> 뉴욕 실제 spot 데이터 길이
-                if(spotNo>90){
-                    transport_txt.push('<b>' + this.cityName + ' 100대 관광지 중 '+spotNo+'개</b>를 환승 없이 방문할 수 있는 <strong>최고의 교통 요지</strong>');
-                }else if(spotNo>75){
-                    transport_txt.push('<b>' + this.cityName + ' 100대 관광지 중 '+spotNo+'개</b>를 환승 없이 방문할 수 있는 <strong>교통 요지</strong>');
-                }else{
-                    transport_txt.push(this.cityName + ' 100대 관광지 중 '+spotNo+'개를 환승 없이 방문 가능');
-                }
-            }
-
-
-            var min = Math.ceil(nearest.distance/70);
-            if(min<2){
-                if(lineNo>18){
-                    summary = '가장 가까운 지하철역이 <strong>도보 단 '+min+'~'+(min+1)+'분 거리</strong>에 있고, 도보 10분 거리에 <strong>지하철 '+lineNo+'개 노선</strong>이 지나는 <b>최상의 역세권</b>'
-                }else if(lineNo>14){
-                    summary = '가장 가까운 지하철역이 <strong>도보 단 '+min+'~'+(min+1)+'분 거리</strong>에 있고, 도보 10분 거리에 <strong>지하철 '+lineNo+'개 노선</strong>이 지나는 <b>굉장히 훌륭한 역세권</b>'
-                }else{
-                    if(goodLine.length>3){
-                        summary = '가장 가까운 지하철역이 <strong>도보 단 '+min+'~'+(min+1)+'분 거리</strong>에 있고, 관광에 편리한 <strong>'+ goodLine + '호선</strong>이 지나는 <b>훌륭한 역세권</b>'
-                    }else if(goodLine.length>0){
-                        summary = '가장 가까운 지하철역이 <strong>도보 단 '+min+'~'+(min+1)+'분 거리</strong>에 있고, 관광에 편리한 <strong>'+ goodLine + '호선</strong>이 지나는 <b>좋은 역세권</b>'
-                    }
-                }
-            }else if(min<4){
-                if(lineNo>18){
-                    summary = '가장 가까운 지하철역이 <strong>도보 '+(min+1)+'~'+(min+2)+'분 거리</strong>에 있고, 도보 10분 거리에 <strong>지하철 '+lineNo+'개 노선</strong>이 지나는 <b>굉장히 훌륭한 역세권</b>'
-                }else if(lineNo>14){
-                    summary = '가장 가까운 지하철역이 <strong>도보 '+(min+1)+'~'+(min+2)+'분 거리</strong>에 있고, 도보 10분 거리에 <strong>지하철 '+lineNo+'개 노선</strong>이 지나는 <b>훌륭한 역세권</b>'
-                }else{
-                    if(goodLine.length>2){
-                        summary = '가장 가까운 지하철역이 <strong>도보 '+(min+1)+'~'+(min+2)+'분 거리</strong>에 있고, 관광에 편리한 <strong>'+ goodLine + '호선</strong>이 지나는 <b>역세권</b>'
-                    }else if(goodLine.length>0){
-                        summary = '가장 가까운 지하철역이 <strong>도보 '+(min+1)+'~'+(min+2)+'분 거리</strong>에 있고, 관광에 편리한 <strong>'+ goodLine + '호선</strong>이 지남'
-                    }
-                }
-            }else if(min<7){
-                if(lineNo>19){
-                    summary = '가장 가까운 지하철역이 <strong>도보 '+(min+2)+'~'+(min+3)+'분 거리</strong>로 약간 멀지만, 도보 10분 거리에 <strong>지하철 '+lineNo+'개 노선</strong>이 지나는 <b>좋은 역세권</b>'
-                }else if(lineNo>15){
-                    summary = '가장 가까운 지하철역이 <strong>도보 '+(min+2)+'~'+(min+3)+'분 거리</strong>로 약간 멀지만, 도보 10분 거리에 <strong>지하철 '+lineNo+'개 노선</strong>이 지나는 <b>역세권</b>'
-                }else{
-                    if(goodLine.length>2){
-                        summary = '가장 가까운 지하철역이 <strong>도보 '+(min+2)+'~'+(min+3)+'분 거리</strong>로 약간 멀지만, 관광에 편리한 <strong>'+ goodLine + '호선</strong>이 지남'
-                    }else{
-                        summary = '가장 가까운 지하철역이 <strong>도보 '+(min+2)+'~'+(min+3)+'분 거리</strong>로 약간 떨어져 있어 다소 불편할 수 있음'
-                    }
-                }
-            }else{
-                summary = '가장 가까운 지하철역이 <strong>도보 '+(min+3)+'~'+(min+5)+'분 거리</strong>로 조금 떨어져 있어 불편할 수 있음'
-            }
-
-            hotel.summary.transport = summary;
-
-
-            for (var metLine in hotel.metroInfo) {
-                let metDistance = hotel.metroInfo[metLine].distance;
-                score += (10000 - metDistance)*this.data.metroLine[metLine].score;
-            }
-
-            orderArray.push({
-                score: score,
-                hid: hid
-            })
-
-            if(hotel.explain){
-                hotel.explain.transport = transport_txt;
-            }else{
-                hotel.explain = {
-                    transport:transport_txt
-                }
-            }
-        }
-
-        orderArray.sort(function(a, b){
-            return a.score < b.score ? 1 : a.score > b.score ? -1 : 0;
-        })
-
-        for (var i = 0, len = orderArray.length; i < len; i++) {
-            let hotel = this.data.hotels[orderArray[i].hid];
-            let score = Math.round((1 - (i/len)*(i/len))*60)/10  + 4
-             //4.0 ~ 10.0 사이의 점수를 소수점 1자리까지 부여한다.
-             //높은 점수가 더 많당
-
-            if(hotel.assessment){
-                hotel.assessment.transport = {
-                    score: score
-                }
-            }else{
-                hotel.assessment = {
-                    transport:{
-                        score:score
-                    }
-                }
-            }
-        }
-
-        $("#status_transport").html("대중교통 정보 발견. 교통 편의성을 계산합니다. - 계산을 완료했습니다.");
-        this.data.status.hotels.transport = true;
 
         var musical = [{
                 name:"위키드",
@@ -996,6 +481,51 @@ let Hotel = {
                 lng:-73.9870814
             }
         }
+
+        var lowerpolyCoor = [{ lat: 40.7139396, lng: -74.0083909 }, { lat: 40.7146715, lng: -74.014678 }, { lat: 40.7101824, lng: -74.0157294 }, { lat: 40.7093935, lng: -74.0155256 }, { lat: 40.7089787, lng: -74.0146458 }, { lat: 40.7081085, lng: -74.011749 }, { lat: 40.7139396, lng: -74.0083909 }]
+        var polygon = new google.maps.Polygon({
+            paths: lowerpolyCoor
+        });
+
+        var promenade = [
+            {
+                lat: 40.6955013,
+                lng: -73.9983004
+            },
+            {
+                lat: 40.6965059,
+                lng: -73.9978069
+            },
+            {
+                lat: 40.6985029,
+                lng: -73.9968467
+            },
+            {
+                lat: 40.6997636,
+                lng: -73.9956236
+            }
+        ]
+
+        var dumbo = {
+            lat: 40.7032205,
+            lng: -73.989594
+        }
+        var bridge = [
+            {
+                lat: 40.7004896,
+                lng: -73.9897388
+            },
+            {
+                lat: 40.6961765,
+                lng: -73.9887357
+            }
+        ]
+
+        var largeStreet = ['Water', 'Church', 'West', 'Wall'];
+        var largeStreetKo = ['워터', '처치', '웨스트', '월']
+
+
+
 
         var centralNearestPoly = [{lat:40.7692643,lng:-73.9838648},{lat:40.7667291,lng:-73.9828348},{lat:40.7628611,lng:-73.9739513},{lat:40.7638363,lng:-73.970046},{lat:40.7957804,lng:-73.9469576},{lat:40.7981845,lng:-73.9482451},{lat:40.8019205,lng:-73.9571286},{lat:40.8015631,lng:-73.9601326},{lat:40.7692643,lng:-73.9838648}]
         var centralNearPoly = [{lat:40.7699032,lng:-73.9862647},{lat:40.7647029,lng:-73.9842686},{lat:40.7608674,lng:-73.9752778},{lat:40.7628499,lng:-73.9676824},{lat:40.7948758,lng:-73.9444867},{lat:40.7999117,lng:-73.9470126},{lat:40.803745,lng:-73.9558932},{lat:40.802478,lng:-73.9626718},{lat:40.7699032,lng:-73.9862647}]
@@ -1479,12 +1009,154 @@ let Hotel = {
                     central : centralWord
                 }
             }
+
+
+            
+
+            themeArray = [];
+            summary = "";
+            score = 0;
+
+            var hotel = data.hotels[hid];
+            var txt = '';
+
+            var hasLowerTheme = false;
+
+            if (hotel.area === 22) {
+                score += 8;
+                //금융지구
+                txt = '뉴욕의 <strong>가장 현대적인 모습을 곳곳에서 느낄 수 있는</strong> 금융지구 안에 위치한 숙소'
+                themeArray.push(txt);
+
+                var address = hotel.address.toLowerCase();
+                var nearSomething = false;
+                var coor = new google.maps.LatLng(hotel.coor.lat, hotel.coor.lng)
+                if (google.maps.geometry.poly.containsLocation(coor, polygon)) {
+                    score += 1.7;
+                    txt = '금융지구 뿐만 아니라 <strong>뉴욕 내에서 가장 높은 원 월드 트레이드 센터</strong> 부근에 위치함'
+                    themeArray.push(txt);
+                    summary = '뉴욕의 가장 현대적인 모습을 느낄 수 있는 <strong>금융지구 안, 원 월드 트레이드 센터 부근</strong>에 위치함'
+                    nearSomething = true;
+                } else {
+                    for (let i = 0; i < largeStreet.length; i++) {
+                        if (hotel.address.includes(largeStreet[i])) {
+                            score += 1.5;
+                            nearSomething = true;
+                            txt = '금융지구 내에서도 <strong>아름다운 건물들이 늘어선 ' + largeStreetKo[i] + ' 스트리트</strong>에 위치함'
+                            themeArray.push(txt);
+                            summary = '뉴욕의 가장 현대적인 모습을 느낄 수 있는 <strong>금융지구 안, 그 안에서도 아름다운 건물들이 늘어선 ' + largeStreetKo[i] + ' 스트리트</strong>에 위치함'
+                        }
+                    }
+
+                    if (!nearSomething) {
+                        summary = '뉴욕의 <strong>가장 현대적인 모습을 곳곳에서 느낄 수 있는</strong> 금융지구 안에 위치한 숙소'
+                    }
+                }
+                hasLowerTheme = true;
+                hotel.summary.theme.lower = summary;
+            }
+            if (hotel.area === 23) {
+                score += 8;
+                //브루클린
+                txt = '<strong>뉴욕의 아름다운 스카이라인을 감상하기 가장 좋은</strong> 브루클린 헤이츠/비네거 힐 안에 위치한 숙소'
+                themeArray.push(txt);
+
+                var nearSomething = false;
+                var somethingTxtArr = [];
+                var pdif = 800;
+                var nearPromenade = false;
+                var summary = '';
+
+                for (let i = 0; i < promenade.length; i++) {
+                    var coor = promenade[i];
+                    var dif = calculateDif(coor, hotel.coor);
+                    if (dif < 800 && dif < pdif) {
+                        pdif = dif;
+                        nearPromenade = true;
+                    }
+                }
+
+                if (nearPromenade) {
+                    score += 0.6;
+                    var difdif = bdif / 700
+                    score += (1 - difdif.toFixed(1) * 1);
+                    txt = '맨해튼 스카이라인을 감상할 수 있는 <strong>최고 명소 중 하나인 브루클린 헤이츠 산책로</strong>까지 ' + difToMinWord(pdif);
+                    themeArray.push(txt);
+                    nearSomething = true;
+                    somethingTxtArr.push('브루클린 헤이츠 산책로');
+                }
+
+                var ddif = calculateDif(dumbo, hotel.coor);
+
+                if (ddif < 800) {
+                    score += 0.6;
+                    var difdif = bdif / 600
+                    score += (1 - difdif.toFixed(1) * 1);
+                    txt = 'MBC 예능 <strong>무한도전의 달력 화보 촬영지로도 유명한 덤보 포토존</strong>까지 ' + difToMinWord(ddif);
+                    themeArray.push(txt);
+                    nearSomething = true;
+                    somethingTxtArr.push('덤보 포토존');
+                }
+
+                themeArray.push(txt);
+                var bdif = 900;
+                var nearBridge = false;
+                for (let i = 0; i < bridge.length; i++) {
+                    var coor = bridge[i];
+                    var dif = calculateDif(coor, hotel.coor);
+                    if (dif < 800 && dif < bdif) {
+                        bdif = dif;
+                        nearBridge = true;
+                        nearSomething = true;
+                    }
+                }
+
+                if (nearBridge) {
+                    score += 0.6;
+                    var difdif = bdif / 600
+                    score += (1 - difdif.toFixed(1) * 1);
+                    txt = '맨해튼의 아름다운 스카이라인을 보며 직접 건널 수 있는 <strong>브루클린 브릿지의 입구</strong>까지 ' + difToMinWord(pdif);
+                    themeArray.push(txt);
+                    somethingTxtArr.push('브루클린 브릿지 입구');
+                }
+                if (nearSomething) {
+                    if (somethingTxtArr.length > 1) {
+                        summary = '<strong>뉴욕 스카이라인을 감상하기 좋은 브루클린 헤이츠/비네거 힐</strong> 안에 위치해 있으면서, 스카이라인 감상 명소들인 <strong>'
+                        summary += somethingTxtArr.join(', ') + '</strong>에서 가까운 위치'
+                    } else {
+                        summary = '<strong>뉴욕 스카이라인을 감상하기 좋은 브루클린 헤이츠/비네거 힐</strong> 안에 위치해 있으면서, 스카이라인 감상 명소인 <strong>'
+                        summary += somethingTxtArr[0] + '</strong>에서 가까운 위치'
+                    }
+                } else {
+                    summary = '<strong>뉴욕의 아름다운 스카이라인을 감상하기 가장 좋은</strong> 브루클린 헤이츠/비네거 힐 안에 위치한 숙소'
+                }
+
+                hotel.summary.theme.lower = summary;
+
+                hasLowerTheme = true;
+            }
+
+            if (!hasLowerTheme) {
+                themeArray = ['로워 맨해튼 부근에 위치하지는 않지만 다른 이유들로 인해 추천된 숙소'];
+                hotel.summary.theme.lower = '로워 맨해튼 부근에 위치하지는 않지만 다른 이유들로 인해 추천된 숙소'
+            }
+            score = (score.toFixed(1) * 1);
+            scoreArray.push(score)
+            if (score < 8) {
+                score = 6;
+            }
+
+            hotel.explain.theme.lower = themeArray;
+            hotel.assessment.theme.lower = score;
+
+
+
         }
 
         broadScoreArray.sort((a, b) => b - a)
         console.log(broadScoreArray)
 
-        firebase.database().ref("cities/"+city).update(this.data)
+        firebase.database().ref("cities/"+city).update(data)
     }
 }
 
