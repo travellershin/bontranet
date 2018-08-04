@@ -1,13 +1,38 @@
+import AutoCombine from './autoCombine.js';
+
 var First_Check = {
-    init: function(data){
+    init: function(){
         var that = this;
-        this.inflate(data)
+
+        $(".spot").on("click", ".check__remainLargeData", function () {
+            that.setRemainNumber($(this).parent().attr("id"), $(this).parent().children(".check__remainNumber").val());
+        })
+
+        $(".spot").on("click", ".check__nodata", function () {
+            var sid = $(this).attr('sid');
+            that.siteNodata(sid);
+            toast('데이터 공백 처리')
+        })
+
+        //좌표 없는 관광지의 좌표를 입력함
+        $(".spot").on("click", ".check__spotDelete", function () {
+            that.deleteSpot($(this).parent().attr("id"), $(this).parent().children(".check__spotName").html());
+        })
+
+        //좌표 없는 관광지의 좌표를 입력함
+        $(".spot").on("click", ".check__confirm", function () {
+            console.log('yolo')
+            that.inputCoordinate($(this).parent().attr("id"), $(this).parent().children(".check__spotCoor").val());
+        })
     },
 
     siteNodata: function (sid) {
         var city = $(".cityName").attr("cid");
-        console.log(city);
-        firebase.database().ref("cities/" + city + "/spots/" + sid + "/nodata").set(true)
+
+        if (confirm("데이터를 정말 없앱니까!?")){
+            firebase.database().ref("cities/" + city + "/spots/" + sid + "/nodata").set(true)
+        }
+        
     },
 
     setRemainNumber: function (site, number) {
@@ -29,12 +54,59 @@ var First_Check = {
         }
     },
 
+    deleteSpot: function (sid, name) {
+        let city = $(".cityName").attr("cid");
+        let site = sid.split("_")[0];
+        let no = sid.split("_")[1];
+
+        if (name) {
+            if (confirm(name + " 장소를 제거합니다. 계속할까요?")) {
+                firebase.database().ref("cities/" + city + "/spots/" + site + "/" + no).set({ deleted: true });
+                $("#" + sid).remove();
+                toast("장소가 제거되었습니다.")
+            }
+        }else{
+            if (confirm(no + "번 장소를 제거합니다. 계속할까요?")) {
+                firebase.database().ref("cities/" + city + "/spots/" + site + "/" + no).set({ deleted: true });
+                $("#" + sid).remove();
+                toast("장소가 제거되었습니다.")
+            }
+        }
+    },
+
+    inputCoordinate: function (sid, coorTxt) {
+        let city = $(".cityName").attr("cid");
+        let site = sid.split("_")[0];
+        let no = sid.split("_")[1];
+        let coor = {};
+
+        if (coorTxt.split(",").length === 2) {
+            let lat = coorTxt.split(",")[0].trim() * 1;
+            let lng = coorTxt.split(",")[1].trim() * 1;
+
+            if (isNaN(lat) || isNaN(lng)) {
+                //좌표 중 하나가
+                toast("좌표가 부정확하게 입력되었습니다")
+            } else {
+                coor = {
+                    lat: lat,
+                    lng: lng
+                }
+                toast("좌표가 입력되었습니다");
+                $("#" + sid).remove();
+                firebase.database().ref("cities/" + city + "/spots/" + site + "/" + no + "/coor").set(coor);
+            }
+        } else {
+            toast("좌표가 부정확하게 입력되었습니다")
+        }
+    },
+
     inflate: function(data){
         $(".header").append('<p class="return">돌아가기</p>')
 
         let hasProblem = false;
         let txt = ''
-        let searchUrl = 'https://www.google.co.kr/maps/place/' + $(".cityName").html() + "+";
+        let searchUrl = 'https://www.google.co.kr/maps/place/' + $(".cityName").attr('cityName') + "+";
 
         let siteObj = {
             gg: "구글",
@@ -155,8 +227,10 @@ var First_Check = {
             txt += '<p class="check__finish">검사를 모두 마쳤습니다</p>'
             $(".spot .wrapper").html(txt);
         } else {
-            toast("발견된 문제가 없어 데이터 병합을 실시합니다.")
-            // this.autoCombine__spotRestructure();
+            var cid = $(".cityName").attr('cid');
+            toast("발견된 문제가 없어 데이터 병합을 실시합니다.");
+
+            AutoCombine.init(data);
         }
 
         $(".wrap").scrollTop(0)

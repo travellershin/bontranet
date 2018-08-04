@@ -1,8 +1,9 @@
-import Attend from "./modules/attend.js";
-import City from "./modules/city.js";
-import Spot from "./modules/spot.js"
-import Subway from "./modules/subway.js";
-import Account from "./modules/account.js";
+import Attend from "./pages/attend.js";
+import City from "./pages/city.js";
+import Spot from "./pages/spot.js"
+import Account from "./pages/account.js";
+import Subway from "./pages/subway.js";
+import Hotel from "./pages/hotel.js";
 
 var initialized = {}
 
@@ -28,12 +29,13 @@ var Nav_function = {
     },
     spot: function () {
         Spot.init(u_i);
+        initialized.spot = true;
     },
     calc: function () {
 
     },
     hotel: function () {
-
+        Hotel.init();
     },
     link: function () {
 
@@ -46,15 +48,16 @@ function login(name){
     $(".helloWorld").click(function(){
         if(confirm(name+"님 로그아웃 하시겠습니까?")){
             firebase.auth().signOut().then(function() {
-              window.location.reload()
+              window.location.reload();
             }).catch(function(error) {
               // An error happened.
             });
         }
-    })
+    });
 }
 
 $(document).ready(function () {
+
 
     var provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().onAuthStateChanged(function (user) {
@@ -103,7 +106,7 @@ $(document).ready(function () {
                     var data = snap.val();
 
                     if(data[mail]){
-                        u_i = data[mail]
+                        u_i = data[mail];
                         var grade = u_i.grade * 1;
 
                         if (grade > 0) {
@@ -124,9 +127,7 @@ $(document).ready(function () {
                             name: user.displayName,
                             mail: userMail,
                             setting: {
-                                spot: {
-                                    order: "abc"
-                                }
+                                order: "abc"
                             }
 
                         });

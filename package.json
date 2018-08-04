@@ -18,9 +18,11 @@
     "webpack": "^3.10.0"
   },
   "dependencies": {
+    "eslint": "^5.2.0",
     "file-system": "^2.2.2",
     "firebase": "^5.2.0",
     "jquery": "^3.2.1",
+    "jshint": "^2.9.6",
     "randomstring": "^1.1.5",
     "request": "^2.87.0",
     "vue-hotel-datepicker": "^2.2.0"

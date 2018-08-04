@@ -174,6 +174,12 @@ header nav .worker_selector{
             box-sizing: border-box;
     padding: 30px;
 }
+.color--red{
+    color:#E72C33;
+}
+.weight--bold{
+    font-weight: bold;
+}
 .selector{
 
     width: 180px;
@@ -868,6 +874,168 @@ However, delay the fade out process for 2.5 seconds */
 .account__calendar{
         width: 900px;
     }
+.hotel__alert{
+    background-color: #fff;
+    padding: 20px 0;
+    width: 400px;
+    padding-bottom:0;
+}
+.hotel__alert__wrap{
+        position: fixed;
+        top:0;
+        left:0;
+        height: 100%;
+        width: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 999;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+    }
+.hotel__alert>p{
+        margin-bottom:20px;
+        text-align: center;
+    }
+.hotel__alert__confirm{
+        width: 100%;
+        height: 50px;
+        line-height: 50px;
+        background-color: #333;
+        text-align: center;
+        color: #fafafa;
+        font-weight: bold;
+        cursor: pointer;
+    }
+.hotel .header{
+        overflow: hidden;
+        height: 60px;
+        width: 100%;
+        line-height: 60px;
+    }
+.hotel .wrapper{
+        width: 100%;
+    }
+.hotel .wrapper .status__liner{
+                width: 100%;
+                overflow: hidden;
+                height: 40px;
+                line-height: 40px;
+            }
+.hotel .wrapper .status__liner>*{
+                    float: left;
+                    text-align:center;
+                }
+.hotel .wrapper .status__make{
+                width: 250px;
+            }
+.hotel .wrapper .status__make__hotel{
+                    cursor: pointer;
+                }
+.hotel .wrapper .status__make__hotel:hover{
+                        text-decoration: underline;
+                    }
+.hotel .wrapper .status__name{
+                width: 180px;
+            }
+.hotel .wrapper .status__city{
+                width: 180px;
+            }
+.hotel .wrapper .status__hotel{
+                width:150px;
+            }
+.hotel .wrapper .status__area{
+                width: 100px;
+            }
+.hotel .wrapper .status__spot{
+                width: 120px;
+            }
+.hotel .wrapper .status__transport{
+                width: 140px;
+            }
+.city{
+    width: 100%;
+    height: 100%;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    position: relative;
+}
+.city .header{
+        width: 100%;
+        height: 80px;
+        overflow: hidden;
+        line-height:80px;
+    }
+.city .header h2{
+            float: left;
+            margin: 0 20px;
+        }
+.city .header .refresh{
+            float: left;
+            margin-left: 50px;
+            cursor: pointer;
+        }
+.city .line{
+        overflow: hidden;
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+    }
+.city .line p{
+            float: left;
+            text-align: center;
+            font-size: 17px;
+            padding: 0 30px;
+        }
+.city .line p:hover{
+                cursor: pointer;
+                text-decoration: underline;
+            }
+.city .line .name{
+            width: 180px;
+            padding: 0 40px;
+        }
+.city .line .name:hover{
+                cursor: default;
+                text-decoration: none;
+            }
+.city .line .nodata{
+            color:red;
+        }
+.city__hotels{
+        width: 150px;
+    }
+.city__spots{
+        width: 150px;
+    }
+.city__transport{
+        width:150px;
+    }
+.city__area{
+        width: 40px;
+    }
+.city__price{
+        width: 40px;
+    }
+.city .line.top{
+        height: 50px;
+        border-bottom: 1px solid #777;
+        line-height: 50px;
+        left: 30px;
+        background-color: white;
+        border-top:none;
+        margin-bottom:12px;
+    }
+.city .line.top p:hover{
+                cursor: default;
+                text-decoration: none;
+                padding-bottom:12px;
+            }
 .spot .header{
     margin: 0 auto;
     width: 1080px;
@@ -1047,159 +1215,6 @@ However, delay the fade out process for 2.5 seconds */
         font-size: 24px;
         font-weight: bold;
     }
-.cityCodeView{
-    width: 100%;
-    height: 100%;
-    -webkit-box-sizing: border-box;
-            box-sizing: border-box;
-    padding: 30px;
-    position: relative;
-    padding-top: 80px;
-}
-.cityCodeView .line{
-        overflow: hidden;
-        width: 100%;
-        height: 40px;
-        line-height: 40px;
-    }
-.cityCodeView .line p{
-            float: left;
-            text-align: center;
-            font-size: 17px;
-            width: 40px;
-            padding: 0 30px;
-        }
-.cityCodeView .line p:hover{
-                cursor: pointer;
-                text-decoration: underline;
-            }
-.cityCodeView .line .name{
-            width: 180px;
-            padding: 0 40px;
-        }
-.cityCodeView .line .name:hover{
-                cursor: default;
-                text-decoration: none;
-            }
-.cityCodeView .line .nodata{
-            color:red;
-        }
-.cityCodeView .line .spots{
-            width: 230px;
-        }
-.cityCodeView .line.top{
-        height: 50px;
-        border-bottom: 2px solid #777;
-        line-height: 50px;
-        position: fixed;
-        top: 60px;
-        padding-top: 20px;
-        left: 30px;
-        width: calc(100% - 60px);
-        background-color: white;
-    }
-.cityCodeView .line.top p:hover{
-                cursor: default;
-                text-decoration: none;
-            }
-.verifying__box{
-    width: 100%;
-    height: 100%;
-}
-.verifying__control{
-    width: 240px;
-    height: 100px;
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    margin-left: -120px;
-    -webkit-box-shadow: 1px 2px 2px grey;
-            box-shadow: 1px 2px 2px grey;
-    background-color: white;
-}
-.verifying__control p{
-        width: 100%;
-        text-align: center;
-        line-height: 50px;
-        font-size: 18px;
-        font-weight: bold;
-    }
-.verifying__control__line{
-        width: 100%;
-        overflow: hidden;
-    }
-.verifying__control__line>p{
-            float: left;
-            width: 120px;
-            text-align: center;
-            cursor: pointer;
-        }
-.verifying__control__line>p:hover{
-                text-decoration:underline;
-            }
-.top, .result_box{
-    overflow: hidden;
-    width: 1459px;
-}
-.top>*,.result_box>*{
-        float: left;
-        text-align: center;
-        border-right: 1px solid #aaa;
-        height: 50px;
-        line-height: 50px;
-        width: 60px;
-        font-size: 16px;
-    }
-.top .result_name,.result_box .result_name{
-            width: 600px;
-        }
-.top .result_url,.result_box .result_url{
-            width: 350px;
-        }
-.top .result_remove,.result_box .result_remove{
-            width: 100px;
-        }
-.top .result_save,.result_box .result_save{
-            width: 100px;
-        }
-.top .result_rank,.result_box .result_rank{
-            cursor: pointer;
-        }
-.top .result_rank.selected,.result_box .result_rank.selected{
-            background-image: url("./assets/check.png");
-            background-size: 40px 40px;
-            background-repeat: no-repeat;
-            background-position: left 10px top 4px;
-        }
-.top{
-    border-bottom: 1px solid #777;
-    border-top: 1px solid #777;
-}
-.top p{
-        font-weight: bold;
-        font-size: 17px;
-    }
-.result_box{
-    border-bottom: 1px solid #ccc;
-}
-.result_box:hover{
-        background-color: #fbfbfb;
-    }
-.result_box:hover input{
-            background-color: #fbfbfb;
-        }
-.result_box .result_remove:hover{
-            background-color:#F8A1BE;
-            color:white;
-            font-weight: bold;
-            cursor: pointer;
-        }
-.result_box .result_save:hover{
-            background-color:#8ABAD1;
-            color:white;
-            font-weight: bold;
-            cursor: pointer;
-        }
 .combine{
     -webkit-box-sizing: border-box;
             box-sizing: border-box;

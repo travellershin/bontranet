@@ -51,15 +51,17 @@
         <div class="pages attend displayNone"></div>
 
         <div class="pages spot displayNone"></div>
+        <div class="pages hotel displayNone"></div>
         
 
         <div class="pages account displayNone"></div>
 
+        <div class="pages city"></div>
+
         
 
-        <div class="pages city displayNone">
+        <div class="pages displayNone">
             <!-- modules/city/cityCodeView.css -->
-            <div class="cityCodeView"></div>
             <div class="city__pages spot displayNone">
                 <div class="header clearfix">
                     <p class="header__cityName cityName"></p>
@@ -156,8 +158,6 @@
 
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB14yPdQPLZ-jh7gL-PmJF0vkvTSHTt8Aw&libraries=geometry"></script>
-    <script src="/scripts/map.js"></script>
-
     <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase.js"></script>
     <script>
       // Initialize Firebase
@@ -170,13 +170,12 @@
         messagingSenderId: "141304382157"
       };
       firebase.initializeApp(config);
-    </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="./modules/moment.min.js"></script>
-    <script src="./modules/anypicker.min.js"></script>
-    <script src="./modules/fullcalendar.min.js"></script>
-    <script src="/scripts/toast.js"></script>
-    <script src="/scripts/index.js"></script>
+    </script><script src="./scripts/jQuery.js"></script>
+    <script src="./scripts/libraries/moment.min.js"></script>
+    <script src="./scripts/libraries/anypicker.min.js"></script>
+    <script src="./scripts/libraries/fullcalendar.min.js"></script>
+    <script src="./scripts/modules.js"></script>
+    <script src="./scripts/index.js"></script>
 </body>
 
 </html>

@@ -10,13 +10,13 @@
 @import "modules/chat";
 @import "modules/toast";
 @import "modules/account";
+@import "modules/hotel";
+@import "modules/city";
 
 @import "modules/spot/status.css";
 @import "modules/spot/first_check.css";
 
-@import "modules/city/cityCodeView";
 @import "modules/city/spot";
-@import "modules/city/spot/verifying";
 @import "modules/city/combine";
 @import "modules/city/hotel";
 @import "modules/city/area";
