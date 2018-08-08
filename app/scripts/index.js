@@ -1,13 +1,13 @@
 import Attend from "./pages/attend.js";
 import City from "./pages/city.js";
-import Spot from "./pages/spot.js"
+import Spot from "./pages/spot.js";
 import Account from "./pages/account.js";
 import Subway from "./pages/subway.js";
 import Hotel from "./pages/hotel.js";
 
-var initialized = {}
+var initialized = {};
 
-var u_i = {}
+var u_i = {};
 
 var Nav_function = {
     attend: function () {
@@ -40,7 +40,7 @@ var Nav_function = {
     link: function () {
 
     }
-}
+};
 
 function login(name){
     $(".helloWorld").html(name[1]+"하!");
@@ -57,8 +57,6 @@ function login(name){
 }
 
 $(document).ready(function () {
-
-
     var provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
@@ -88,12 +86,12 @@ $(document).ready(function () {
                         login(u_i.name);
 
                     } else {
-                        toast("데이터 열람 권한이 없습니다. 관리자에게 문의해주세요")
+                        toast("데이터 열람 권한이 없습니다. 관리자에게 문의해주세요");
                     }
                 } else {
-                    toast("데이터 열람 권한이 없습니다. 관리자에게 문의해주세요")
+                    toast("데이터 열람 권한이 없습니다. 관리자에게 문의해주세요");
                 }
-            })
+            });
             // User is signed in.
 
         } else {
@@ -105,21 +103,21 @@ $(document).ready(function () {
                 firebase.database.ref("users").once("value", snap => {
                     var data = snap.val();
 
-                    if(data[mail]){
-                        u_i = data[mail];
+                    if (data[userMail]) {
+                        u_i = data[userMail];
                         var grade = u_i.grade * 1;
 
                         if (grade > 0) {
-                            Attend.init(data[mail]);
+                            Attend.init(data[userMail]);
                             if (grade === 5) {
-                                Account.init(mail);
+                                Account.init(userMail);
                                 initialized.account = true;
                             }
                             initialized.attend = true;
                             login(u_i.name);
 
                         } else {
-                            toast("데이터 열람 권한이 없습니다. 관리자에게 문의해주세요")
+                            toast("데이터 열람 권한이 없습니다. 관리자에게 문의해주세요");
                         }
                     }else{
                         firebase.database().ref('users/' + userMail).set({
@@ -131,13 +129,12 @@ $(document).ready(function () {
                             }
 
                         });
-                        toast("데이터 열람 권한이 없습니다. 관리자에게 문의해주세요")
+                        toast("데이터 열람 권한이 없습니다. 관리자에게 문의해주세요");
                     }
 
-
-                })
+                });
             }).catch(function (error) {
-                toast('code:' + error.code + ' - 일시적인 문제가 발생했습니다. 관리자에게 문의해주세요.')
+                toast('code:' + error.code + ' - 일시적인 문제가 발생했습니다. 관리자에게 문의해주세요.');
                 // Handle Errors here.
                 var errorCode = error.code;
                 var errorMessage = error.message;
@@ -150,7 +147,7 @@ $(document).ready(function () {
         }
     });
 
-})
+});
 
 $(".nav__item").click(function () {
     if(!$(this).hasClass('nav__item--hasDrawer')){
@@ -166,7 +163,7 @@ $(".nav__item").click(function () {
             Nav_function[item]();
         }
     }
-})
+});
 
 $(".nav__drawer__item").click(function(){
     var item = $(this).attr("id").split("_")[1];
@@ -174,7 +171,7 @@ $(".nav__drawer__item").click(function(){
     $(".nav>*").removeClass("nav__item--selected");
     $(this).parent().parent().addClass("nav__item--selected");
 
-    $(".nav__drawer__item").removeClass("nav__drawer__item--selected")
+    $(".nav__drawer__item").removeClass("nav__drawer__item--selected");
     $(this).addClass("nav__drawer__item--selected");
 
     $(".pages").addClass("displayNone");
@@ -183,4 +180,4 @@ $(".nav__drawer__item").click(function(){
     if (!initialized[item]) {
         Nav_function[item]();
     }
-})
+});

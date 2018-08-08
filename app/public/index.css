@@ -55,6 +55,9 @@ a,span{
 li{
     display: inline-block;
 }
+.pages{
+    height: 100%;
+}
 .loadingView{
     position: fixed;
     z-index: 9999;
@@ -834,7 +837,7 @@ a.fc-more:hover{text-decoration:underline}
     border-radius: 2px; /* Rounded borders */
     padding: 16px; /* Padding */
     position: fixed; /* Sit on top of the screen */
-    z-index: 120; /* Add a z-index if needed */
+    z-index: 9999; /* Add a z-index if needed */
     left: 50%; /* Center the snackbar */
     bottom: 30px; /* 30px from the bottom */
 }
@@ -958,6 +961,17 @@ However, delay the fade out process for 2.5 seconds */
 .hotel .wrapper .status__transport{
                 width: 140px;
             }
+.cityArea__wrap{
+        height: calc(100% - 60px);
+        max-width: 1280px;
+        margin: 0 auto;
+    }
+.cityArea__wrap #cityArea__map{
+            float: left;
+            width:calc(100% - 400px);
+            max-width: 880px;
+            height: 100%;
+        }
 .city{
     width: 100%;
     height: 100%;

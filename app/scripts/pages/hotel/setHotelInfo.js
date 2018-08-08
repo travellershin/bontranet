@@ -1,9 +1,13 @@
+import SetLocal from "./setHotelInfo/setLocal.js";
+import Calculate_City from "./calculateCityInfo.js";
+
 var SetHotelInfo = {
-    init: function(data){
+    init: function(data, cid, cityName){
         //statusCheck 진행
         var checkTxt = '';
 
-        var hotel = data.hotels[Object.keys()[0]];
+        var hotel = data.hotels[Object.keys(data.hotels)[0]];
+        console.log(Object.keys(data.hotels));
 
         var status = {
             local: {
@@ -14,28 +18,32 @@ var SetHotelInfo = {
                 food: 0,
                 metro: 0,
                 spot:0
+            },
+
+            assessment: {
+                transport:0,
+                safety:0,
+                theme:0,
+                convenience:0
             }
         };
 
-        if(hotel.local){
-            if(hotel.local.atm){
-                if(Array.isArray(hotel.local.atm)){ //VISA ATM이 정리되지 않은 형태로 들어가있는 상태
+        if (hotel.local) {
+            if (hotel.local.atm) {
+                if (Array.isArray(hotel.local.atm)) { //VISA ATM이 정리되지 않은 형태로 들어가있는 상태
                     status.local.atm.visa = 1;
-                }else{ //atm객체를 가지고 있는 상태
-                    if(hotel.local.atm.visa){  // hotel local에 visa가 있음
-                        status.local.atm.visa = 2;
-                    }else{ //hotel local에 citi만 들어가있고 비자는 안 만들어져있음
-                        status.local.atm.visa = 0;
-                    }
+                    SetLocal.visaATM(data.hotels);
+                } else { //atm객체를 가지고 있는 상태 - 반드시 visa atm이 들어가 있어야 함
+                    status.local.atm.visa = 2;
 
-                    if(hotel.local.atm.citi){
+                    if (hotel.local.atm.citi) {
                         status.local.atm.citi = 2;
-                    }else if(data.local.atm){
+                    } else if (data.local.atm) {
                         status.local.atm.citi = 1;
                         //중요: CITI작업은 VISA작업 후에 이루어져야 함
                     }
                 }
-            }else{  //local에 atm이 없음 -> 비자 추출된 적이 없음
+            } else { //local에 atm이 없음 -> 비자 추출된 적이 없음
                 status.local.atm.visa = 0;
 
                 if (data.local.atm) { //그 경우에도 CITI는 RAW데이터로 존재할 수 있음
@@ -44,22 +52,22 @@ var SetHotelInfo = {
                 }
             }
 
-            if(hotel.local.food){
+            if (hotel.local.food) {
                 status.local.food = 2;
-            }else{
-                if(data.local.food){
+            } else {
+                if (data.local.food) {
                     status.local.food = 1;
-                }else{
+                } else {
                     status.local.food = 0;
                 }
             }
 
-            if(hotel.local.metro){
+            if (hotel.local.metro) {
                 status.local.metro = 2;
-            }else{
-                if(data.local.metroLine){
+            } else {
+                if (data.metroLine) {
                     status.local.metro = 1;
-                }else{
+                } else {
                     status.local.metro = 0;
                 }
             }
@@ -74,7 +82,7 @@ var SetHotelInfo = {
                 }
             }
 
-        }else{
+        } else {
             status.local.atm.visa = 0; //VISA는 무조건 호텔 로컬에 직접 들어가므로 호텔 로컬 경로가 없다는 것은 VISA가 없다는 것.
 
             if (data.local.atm) { //citi나 visa는 호텔 로컬이 아닌 도시 로컬에 저장될 수 있음.
@@ -87,7 +95,7 @@ var SetHotelInfo = {
                 status.local.food = 0;
             }
 
-            if (data.local.metroLine) {
+            if (data.metroLine) {
                 status.local.metro = 1;
             } else {
                 status.local.metro = 0;
@@ -103,21 +111,21 @@ var SetHotelInfo = {
         checkTxt += '<h2 class="hotel__status__title">호텔 주변정보</h2>';
 
 
-        if(status.local.atm.visa === 2){
+        if (status.local.atm.visa === 2) {
             checkTxt += '<p class="hotel__status__txt">OK - 정리된 VISA ATM정보 확인.</p>';
-        }else if(status.local.atm.visa === 1){
+        } else if (status.local.atm.visa === 1) {
             checkTxt += '<p class="hotel__status__txt">Making - RAW VISA ATM정보 확인. 호텔별로 가장 가까운 ATM과 24시간 ATM을 추출합니다.</p>';
-        }else if(status.local.atm.visa === 0){
+        } else if (status.local.atm.visa === 0) {
             checkTxt += '<p class="hotel__status__txt color--red">No Data - VISA ATM정보가 없습니다. VISA ATM locator에서 정보를 먼저 크롤링해주세요.</p>';
         }
 
-        if(status.local.atm.citi === 2){
+        if (status.local.atm.citi === 2) {
             checkTxt += '<p class="hotel__status__txt">OK - 정리된 CITI ATM정보 확인.</p>';
-        }else if(status.local.atm.citi === 1){
+        } else if (status.local.atm.citi === 1) {
             checkTxt += '<p class="hotel__status__txt">Making - RAW CITI ATM정보 확인. 가장 가까운 CITI ATM을 추출합니다.</p>';
         } // citi status 0은 없음.
 
-        if(status.local.food === 2){
+        if (status.local.food === 2) {
             checkTxt += '<p class="hotel__status__txt">OK - 정리된 식료품점/편의점 정보 확인.</p>';
         } else if (status.local.food === 1) {
             checkTxt += '<p class="hotel__status__txt">Making - RAW 식료품점/편의점 정보 확인. 호텔별로 가까운 식료품점 추출.</p>';
@@ -138,10 +146,10 @@ var SetHotelInfo = {
         } else if (status.local.spot === 1) {
             checkTxt += '<p class="hotel__status__txt">Making - RAW 관광지 정보 확인. 호텔별로 가까운 관광지 추출.</p>';
         } else if (status.local.spot === 0) {
-            checkTxt += '<p class="hotel__status__txt color--red">No Data - 도시 지하철/대중교통 정보가 없습니다. 먼저 정보를 입력해주세요.</p>';
+            checkTxt += '<p class="hotel__status__txt color--red">No Data - 도시 관광지 순위가 아직 확정되지 않았습니다. 먼저 확인해주세요.</p>';
         }
 
-        console.log(data);
+        console.log(checkTxt);
     }
 };
 

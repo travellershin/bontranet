@@ -16,6 +16,18 @@ $(".hd_nav_apply").click(function () {
     location.href = "index.html";
 });
 
+function isInArea(spot, area) {
+    var polygon = new google.maps.Polygon({paths:area});
+    var coor = new google.maps.LatLng(spot.lat, spot.lng);
+
+    if(google.maps.geometry.poly.containsLocation(coor, polygon)){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+
 
 function calculateDif(coor1, coor2) {
     var R = 6371000; // Radius of the earth in km

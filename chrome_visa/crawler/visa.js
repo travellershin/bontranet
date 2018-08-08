@@ -17,8 +17,10 @@ let parse_visa = {
 
                     this.checkATM(0, cid);
                 });
+            }else{
+                alert("호텔정보가 없어 크롤링이 중지되었습니다. 호텔정보가 있다면 Status를 업데이트 해주세요");
             }
-        })
+        });
 
         
     },
@@ -26,18 +28,18 @@ let parse_visa = {
 
 
     makeUrl: function(idx, cid){
-        let txt = '{"wsRequestHeaderV2":{"applicationId":"VATMLOC","requestMessageId":"test12345678","userId":"CDISIUserID","userBid":"10000108","correlationId":"909420141104053819418"},'
-        txt+='"requestData":{"culture":"en-US","distance":null,"distanceUnit":"mi","metaDataOptions":0,"location":{"address":null,"placeName":"","geocodes":{"latitude":"'
+        let txt = '{"wsRequestHeaderV2":{"applicationId":"VATMLOC","requestMessageId":"test12345678","userId":"CDISIUserID","userBid":"10000108","correlationId":"909420141104053819418"},';
+        txt+='"requestData":{"culture":"en-US","distance":null,"distanceUnit":"mi","metaDataOptions":0,"location":{"address":null,"placeName":"","geocodes":{"latitude":"';
         txt+=this.hotels[cid][this.array[cid][idx]].coor.lat + '","longitude":"' + this.hotels[cid][this.array[cid][idx]].coor.lng;
         txt+='"}},"options":{"sort":{"primary":"distance","direction":"asc"},"range":{"start":0,"count":';
         txt+=30;
         txt+='},"operationName":"and","useFirstAmbiguous":true}}}';
 
-        return encodeURI(txt)
+        return encodeURI(txt);
     },
 
     checkATM: function (idx, cid) {
-        let url = 'https://www.visa.com/atmlocator_services/rest/findNearByATMs?callback=jQuery1124018670284300449302_1530957634024&request='
+        let url = 'https://www.visa.com/atmlocator_services/rest/findNearByATMs?callback=jQuery1124018670284300449302_1530957634024&request=';
         url += this.makeUrl(idx, cid) + '%26_%3D1530957634028';
 
         let that = this;
@@ -49,36 +51,64 @@ let parse_visa = {
             if(request.readyState === 4 && request.status === 200){
                 //제대로 통신 되었는지를 확인한다.
 
-                       let txt = (request.responseText);
-                       //데이터 타입이 텍스트가 맞다면 받아온 데이터를 txt라는 변수에 넣는다.
+                let txt = (request.responseText);
+                //데이터 타입이 텍스트가 맞다면 받아온 데이터를 txt라는 변수에 넣는다.
 
-                       txt = txt.split('jQuery1124018670284300449302_1530957634024(')[1];
-                       txt = txt.slice(0,-1);
+                txt = txt.split('jQuery1124018670284300449302_1530957634024(')[1];
+                txt = txt.slice(0,-1);
 
-                       let data = JSON.parse(txt);
-                       let setData = data.responseData[0].foundATMLocations;
+                let data = JSON.parse(txt);
 
-                       if(!that.hotels[cid][that.array[cid][idx]].temp){
-                           if(data.responseData){
-                                firebase.database().ref("cities/" + cid + "/hotels/" + that.array[cid][idx] + "/local/atm").set(setData)
-                                console.log("cities/" + cid + "/hotels/" + that.array[cid][idx] + "/local/atm");
-                                console.log(setData)
-                           }
-                       }else{
-                           if (!that.hotels[cid][that.array[cid][idx]].temp.atm) {
-                               if(data.responseData){
-                                    firebase.database().ref("cities/"+cid+"/hotels/"+that.array[cid][idx]+"/local/atm").set(setData)
-                               }
-                           }
-                       }
+                if(data.responseData){
+                    if (data.responseData[0].foundATMLocations){
+                        data = data.responseData[0].foundATMLocations;
+
+                        var setData = [];
+
+                        for (let i = 0; i < data.length; i++) {
+                            var atm = data[i].location;
+
+                            var obj = {
+                                coor: {
+                                    lat: atm.coordinates.latitude,
+                                    lng: atm.coordinates.longitude
+                                },
+                                owner: atm.ownerBusName,
+                                placeName: atm.placeName,
+                                is24: false,
+                                score: atm.score
+                            };
+
+                            for (let j = 0; j < atm.properties.length; j++) {
+                                var pp = atm.properties[j];
+                                if (pp.name === 'OPER_HRS') {
+                                    if (pp.value === 'A') {
+                                        obj.is24 = true;
+                                    }
+                                }
+                            }
+                            setData.push(obj);
+                        }
+
+                        if (that.hotels[cid][that.array[cid][idx]].local) { //로컬이 있다면 atm 있는지 다시 확인
+                            if (!that.hotels[cid][that.array[cid][idx]].local.atm) { //atm 없을때만 수행
+                                firebase.database().ref("cities/" + cid + "/hotels/" + that.array[cid][idx] + "/local/atm").set(setData);
+                            } else { //로컬에 이미 atm이 박혀있다면
+                                congole.log(that.array[cid][idx] + '번 숙소에는 이미 atm 데이터가 존재합니다.');
+                            }
+                        } else {
+                            firebase.database().ref("cities/" + cid + "/hotels/" + that.array[cid][idx] + "/local/atm").set(setData);
+                        }
+                    }
+                }
 
              }else{
-                 console.log(request.status)
+                 console.log(request.status);
                  console.log('사이트 응답 지연중');
                  //비동기 방식의 특성상, 이 로그는 서버 응답이 아무리 빨라도 몇 차례 뜰 것이다.
              }
          };
-         request.send(null)
+         request.send(null);
 
          idx++;
 
@@ -87,7 +117,7 @@ let parse_visa = {
                  that.checkATM(idx, cid);
                  $(".site").html("호텔번호 - "+that.array[cid][idx] + " 처리중");
              }
-         }, 1000);
+         }, 1200);
 
 
     }

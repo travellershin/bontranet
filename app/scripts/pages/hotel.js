@@ -1,4 +1,5 @@
 import SetHotelInfo from "./hotel/setHotelInfo";
+import SetArea from "./hotel/setHotelInfo/setArea";
 
 var Hotel = {
 
@@ -14,14 +15,33 @@ var Hotel = {
         });
 
         $(".hotel").on("click", ".status__make__hotel", function () {
-            that.inflate_city($(this).attr('cid'));
+            var cid = $(this).attr('cid');
+            var cityName = $(this).parent().children('.status__city').html();
+            that.inflate_city(cid, cityName);
         });
         $(".hotel").on("click", ".hotel__alert__confirm", function () {
             $(".hotel__alert__wrap").remove();
         });
+
+        $(".hotel").on("click", ".cityArea__finish", function () {  //setArea를 끝낼때
+            var cid = $(this).attr('cid');
+            firebase.database().ref('cities/'+cid+'/hotels').once('value', snap =>{
+                var data = snap.val();
+                for (var hid in data) {
+                    if(!data[hid].area){
+                        delete data[hid];
+                    }
+                }
+
+                 firebase.database().ref('cities/'+cid+'/hotels').set(data);
+                 firebase.database().ref('setting/cities/' + cid + '/status/area').set(2);
+            });
+
+           
+        });
     },
 
-    inflate_city: function(cid){
+    inflate_city: function(cid, cityName){
 
         firebase.database().ref('cities/'+cid).once('value', snap =>{
             var data = snap.val();
@@ -62,6 +82,10 @@ var Hotel = {
                 if (!data.area) {
                     alertModal += '<p>지역구분 정보가 없습니다.</p>';
                     check = false;
+                }else if (data.area === 1){
+                    SetArea.inflate(cityName, cid);
+                    check = false;
+                    toast('지역 설정을 먼저 진행합니다');
                 }
             }
 
@@ -71,7 +95,7 @@ var Hotel = {
             alertModal += '</div></div>';
 
             if(check){
-                SetHotelInfo.init(data);
+                SetHotelInfo.init(data, cid, cityName);
             }else{
                 $(".hotel").append(alertModal);
             }
