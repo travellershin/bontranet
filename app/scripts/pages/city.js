@@ -106,7 +106,6 @@ let City = {
                 var city = data[cid];
 
                 if(city){
-
                     status = {
                         hotel: 0, //0:데이터없음, 1:숙소데이터만 있음, 2:평가데이터(워딩) 있음
                         spot: that.data[cid].status.spot,
@@ -114,6 +113,10 @@ let City = {
                         transport: 0, //데이터없음, 1:메트로데이터만 있음, 2:가공데이터(라인별..등) 있음
                         price: 0
                     };
+
+                    if (city.area) {
+                        status.area = 1;
+                    }
 
                     if(city.hotels){
                         var hotel = city.hotels[Object.keys(city.hotels)[0]];
@@ -123,6 +126,30 @@ let City = {
                         }else{
                             status.hotel = 1;
                         }
+
+                        if(hotel.area){
+                            status.area = 2;
+                        }else if(hotel.area === 1){
+                            status.area = 2;
+
+                            if(city.status){
+                                city.status.area = true;
+                            }else{
+                                city.status = {
+                                    area: true
+                                };
+                            }
+
+                        }else{
+                            if (city.status) {
+                                city.status.area = false;
+                            } else {
+                                city.status = {
+                                    area: false
+                                };
+                            }
+                        }
+                        firebase.database().ref('cities/' + cid + '/status').update(city.status);
                     }
 
                     if(city.metro){
@@ -131,10 +158,6 @@ let City = {
                         }else{
                             status.transport = 1;
                         }
-                    }
-
-                    if(city.area){
-                        status.area = 1;
                     }
 
                     if(city.price){
@@ -152,7 +175,7 @@ let City = {
 
                 this.data[cid].status = status;
             }
-            firebase.database().ref('setting/cities').set(this.data).then(() => {
+            firebase.database().ref('setting/cities').set(that.data).then(() => {
                 that.inflate(that.data);
                 toast('최신화 완료');
             });

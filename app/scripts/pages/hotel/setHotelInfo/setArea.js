@@ -39,30 +39,38 @@ var SetArea = {
 
             console.log(data);
 
+            var area = {};
+
             for (var hid in data.hotels) {
                 var hotel = data.hotels[hid];
                 var noArea = true;
 
-                if (!hotel.area) {
-                    for (let i = 0; i < data.area.length; i++) {
+                for (let i = 0; i < data.area.length; i++) {
+                    if(!data.area[i].notArea){
                         var areaCoor = data.area[i].coor;
 
                         if (isInArea(hotel.coor, areaCoor)) {
                             hotel.area = i;
                             noArea = false;
+                            if(area[i]){
+                                area[i]++;
+                            }else{
+                                area[i] = 1;
+                            }
                         }
                     }
+                }
 
-                    if (noArea) {
-                        this.marker[hid] = new google.maps.Marker({
-                            position: hotel.coor,
-                            map: this.map,
-                            label: '' + hid
-                        });
-                    }
+                if (noArea) {
+                    this.marker[hid] = new google.maps.Marker({
+                        position: hotel.coor,
+                        map: this.map,
+                        label: '' + hid
+                    });
                 }
             }
-
+            console.log(area);
+            
             firebase.database().ref('cities/' + cid + '/hotels').update(data.hotels);
         });
     }

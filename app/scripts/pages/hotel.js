@@ -29,12 +29,17 @@ var Hotel = {
                 var data = snap.val();
                 for (var hid in data) {
                     if(!data[hid].area){
-                        delete data[hid];
+                        if(data[hid].area === 0){
+                            
+                        }else{
+                            delete data[hid];
+                        }
                     }
                 }
 
                  firebase.database().ref('cities/'+cid+'/hotels').set(data);
                  firebase.database().ref('setting/cities/' + cid + '/status/area').set(2);
+                 firebase.database().ref('cities/' + cid + '/status/area').set(true);
             });
 
            
@@ -82,7 +87,7 @@ var Hotel = {
                 if (!data.area) {
                     alertModal += '<p>지역구분 정보가 없습니다.</p>';
                     check = false;
-                }else if (data.area === 1){
+                }else if (!data.status.area){
                     SetArea.inflate(cityName, cid);
                     check = false;
                     toast('지역 설정을 먼저 진행합니다');

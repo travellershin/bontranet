@@ -1,5 +1,4 @@
-import SetLocal from "./setHotelInfo/setLocal.js";
-import Calculate_City from "./calculateCityInfo.js";
+import SetATM from "./setHotelInfo/setATM.js";
 
 var SetHotelInfo = {
     init: function(data, cid, cityName){
@@ -7,7 +6,6 @@ var SetHotelInfo = {
         var checkTxt = '';
 
         var hotel = data.hotels[Object.keys(data.hotels)[0]];
-        console.log(Object.keys(data.hotels));
 
         var status = {
             local: {
@@ -32,7 +30,6 @@ var SetHotelInfo = {
             if (hotel.local.atm) {
                 if (Array.isArray(hotel.local.atm)) { //VISA ATM이 정리되지 않은 형태로 들어가있는 상태
                     status.local.atm.visa = 1;
-                    SetLocal.visaATM(data.hotels);
                 } else { //atm객체를 가지고 있는 상태 - 반드시 visa atm이 들어가 있어야 함
                     status.local.atm.visa = 2;
 
@@ -114,6 +111,7 @@ var SetHotelInfo = {
         if (status.local.atm.visa === 2) {
             checkTxt += '<p class="hotel__status__txt">OK - 정리된 VISA ATM정보 확인.</p>';
         } else if (status.local.atm.visa === 1) {
+            SetATM.init(data.hotels);
             checkTxt += '<p class="hotel__status__txt">Making - RAW VISA ATM정보 확인. 호텔별로 가장 가까운 ATM과 24시간 ATM을 추출합니다.</p>';
         } else if (status.local.atm.visa === 0) {
             checkTxt += '<p class="hotel__status__txt color--red">No Data - VISA ATM정보가 없습니다. VISA ATM locator에서 정보를 먼저 크롤링해주세요.</p>';
