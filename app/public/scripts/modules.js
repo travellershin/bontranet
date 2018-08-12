@@ -52,12 +52,18 @@ function comma(x) {
 }
 
 function difToMin(dif) {
-    var min = Math.floor(dif / 60) + 1;
-    return min;
+    var time = ""
+    if(dif<40){
+        time = (Math.floor(dif*1.2/10)*10+10) +'초';
+    }else{
+        var time = (Math.floor(dif / 50) + 1) +'분';
+    }
+    
+    return time;
 }
 
 function difToMinWord(dif) {
-    var min = Math.floor(dif / 60) + 1;
+    var min = Math.floor(dif / 50) + 1;
     var word = '';
 
     if (min < 6) {

@@ -4,6 +4,7 @@ import Spot from "./pages/spot.js";
 import Account from "./pages/account.js";
 import Subway from "./pages/subway.js";
 import Hotel from "./pages/hotel.js";
+import GeoCode from "./modules/geoCode.js";
 
 var initialized = {};
 
@@ -61,6 +62,15 @@ $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             let mail = user.email.split('@')[0];
+
+            firebase.database().ref("temp/geocode").once("value", snap => {
+                var data = snap.val();
+
+                if(data){
+                    GeoCode.code(data.arr, data.ref);
+                    toast("지오코딩 작업을 이어서 진행합니다.");
+                }
+            })
 
             firebase.database().ref("users").once("value", snap => {
                 var data = snap.val();

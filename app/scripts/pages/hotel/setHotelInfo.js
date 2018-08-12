@@ -1,4 +1,5 @@
 import SetATM from "./setHotelInfo/setATM.js";
+import SetFood from "./setHotelInfo/setFood.js";
 
 var SetHotelInfo = {
     init: function(data, cid, cityName){
@@ -111,7 +112,7 @@ var SetHotelInfo = {
         if (status.local.atm.visa === 2) {
             checkTxt += '<p class="hotel__status__txt">OK - 정리된 VISA ATM정보 확인.</p>';
         } else if (status.local.atm.visa === 1) {
-            SetATM.init(data);
+            SetATM.init(data, cid);
             checkTxt += '<p class="hotel__status__txt">Making - RAW VISA ATM정보 확인. 호텔별로 가장 가까운 ATM과 24시간 ATM을 추출합니다.</p>';
         } else if (status.local.atm.visa === 0) {
             checkTxt += '<p class="hotel__status__txt color--red">No Data - VISA ATM정보가 없습니다. VISA ATM locator에서 정보를 먼저 크롤링해주세요.</p>';
@@ -126,6 +127,7 @@ var SetHotelInfo = {
         if (status.local.food === 2) {
             checkTxt += '<p class="hotel__status__txt">OK - 정리된 식료품점/편의점 정보 확인.</p>';
         } else if (status.local.food === 1) {
+            SetFood.init(data, cid);
             checkTxt += '<p class="hotel__status__txt">Making - RAW 식료품점/편의점 정보 확인. 호텔별로 가까운 식료품점 추출.</p>';
         } else if (status.local.food === 0) {
             checkTxt += '<p class="hotel__status__txt color--red">No Data - 도시 식료품점/편의점 정보가 없습니다. 먼저 정보를 입력해주세요.</p>';
