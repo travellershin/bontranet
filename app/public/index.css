@@ -1229,6 +1229,76 @@ However, delay the fade out process for 2.5 seconds */
         font-size: 24px;
         font-weight: bold;
     }
+.spot .wrapper, .spot .header{
+        margin:0;
+        width:1275px;
+    }
+.spot .top, .spot .result_box{
+        overflow: hidden;
+        width: 1275px;
+    }
+.spot .top>*,.spot .result_box>*{
+            float: left;
+            text-align: center;
+            border-right: 1px solid #aaa;
+            height: 45px;
+            line-height: 50px;
+            width: 45px;
+            font-size: 14.5px;
+        }
+.spot .top .result_name_ko,.spot .result_box .result_name_ko{
+                width: 260px;
+            }
+.spot .top .result_name_en,.spot .result_box .result_name_en{
+                width: 310px;
+            }
+.spot .top .result_url,.spot .result_box .result_url{
+                width: 310px;
+            }
+.spot .top .result_remove,.spot .result_box .result_remove{
+                width: 80px;
+            }
+.spot .top .result_save,.spot .result_box .result_save{
+                width: 80px;
+            }
+.spot .top{
+        border-bottom: 1px solid #777;
+        border-top: 1px solid #777;
+    }
+.spot .top p{
+            font-weight: bold;
+            font-size: 17px;
+        }
+.spot .result_box{
+        border-bottom: 1px solid #ccc;
+    }
+.spot .result_box:hover{
+            background-color: #fbfbfb;
+        }
+.spot .result_box:hover input{
+                background-color: #fbfbfb;
+            }
+.spot .result_box .result_remove:hover{
+                background-color:#F8A1BE;
+                color:white;
+                font-weight: bold;
+                cursor: pointer;
+            }
+.spot .result_box .result_save:hover{
+                background-color:#8ABAD1;
+                color:white;
+                font-weight: bold;
+                cursor: pointer;
+            }
+.spot .return{
+        float: left;
+        cursor: pointer;
+    }
+.spot .redo_remove{
+        float: left;
+        cursor: pointer;
+        margin-left: 30px;
+    }
 .combine{
     -webkit-box-sizing: border-box;
             box-sizing: border-box;

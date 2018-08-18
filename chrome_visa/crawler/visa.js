@@ -90,14 +90,14 @@ let parse_visa = {
                             setData.push(obj);
                         }
 
-                        if (that.hotels[cid][that.array[cid][idx]].local) { //로컬이 있다면 atm 있는지 다시 확인
-                            if (!that.hotels[cid][that.array[cid][idx]].local.atm) { //atm 없을때만 수행
-                                firebase.database().ref("cities/" + cid + "/hotels/" + that.array[cid][idx] + "/local/atm").set(setData);
+                        if (that.hotels[cid][that.array[cid][idx]].temp) { //로컬이 있다면 atm 있는지 다시 확인
+                            if (!that.hotels[cid][that.array[cid][idx]].temp.atm) { //atm 없을때만 수행
+                                firebase.database().ref("cities/" + cid + "/hotels/" + that.array[cid][idx] + "/temp/atm").set(setData);
                             } else { //로컬에 이미 atm이 박혀있다면
-                                congole.log(that.array[cid][idx] + '번 숙소에는 이미 atm 데이터가 존재합니다.');
+                                console.log(that.array[cid][idx] + '번 숙소에는 이미 atm 데이터가 존재합니다.');
                             }
                         } else {
-                            firebase.database().ref("cities/" + cid + "/hotels/" + that.array[cid][idx] + "/local/atm").set(setData);
+                            firebase.database().ref("cities/" + cid + "/hotels/" + that.array[cid][idx] + "/temp/atm").set(setData);
                         }
                     }
                 }

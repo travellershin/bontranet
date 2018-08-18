@@ -71,19 +71,20 @@ var Hotel = {
                     alertModal += '<p>관광지 정보가 아직 정리되지 않았습니다.</p>';
                     check = false;
                 }
-                
-                if (!data.metro) {
-                    alertModal += '<p>대중교통 정보가 없습니다.</p>';
-                    check = false;
-                }else if(!data.metroLine){
-                    alertModal += '<p>대중교통 정보가 정리되지 않았습니다(metroLine 없음).</p>';
-                    check = false;
-                }
 
                 if (!data.local) {
                     alertModal += '<p>편의시설 정보가 없습니다.</p>';
                     check = false;
+                }else{
+                    if (!data.local.metro) {
+                        alertModal += '<p>대중교통 정보가 없습니다.</p>';
+                        check = false;
+                    }else if(!data.metroLine){
+                        alertModal += '<p>대중교통 정보가 정리되지 않았습니다(metroLine 없음).</p>';
+                        check = false;
+                    }
                 }
+
                 if (!data.area) {
                     alertModal += '<p>지역구분 정보가 없습니다.</p>';
                     check = false;

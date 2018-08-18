@@ -1,0 +1,188 @@
+import Config from "../config.js";
+
+var SetMetro = {
+    data:{},
+    statistic:{nearest:[]},
+
+    init: function(data){
+        this.data = data;
+        this.first_setMetro(); //숙소별로 지하철을 때려넣음
+        this.second_byAreas();
+        this.third_makeScore();
+        this.fourth_wording();
+        console.log(this.data);
+    },
+
+    fourth_wording: function(){
+        for (var hid in this.data.hotels) {
+            let hotel = this.data.hotels[hid];
+            let txtArr = [];
+
+            let metro = hotel.local.metro;
+            if(metro){
+                var nearestDif = difToMin(metro.nearest.dif);
+                var nearestStn = metro.nearest.name;
+                var txt = `숙소에서 가장 가까운 지하철역은 ${nearestDif} 거리의 ${nearestStn}역`;
+                txt.push(txtArr);
+                
+
+            }else{
+                txtArr = ["이 숙소 도보 15분 이내 거리에 지하철 역이 없어서 대중교통을 이용하기 불편할 수 있음"];
+            }
+        }
+    },
+
+    third_makeScore: function(){
+        var scoreArray = [];
+
+        for (var hid in this.data.hotels) {
+            let hotel = this.data.hotels[hid];
+            let metro = hotel.local.metro;
+            let score = 0;
+            let metroLineObj = this.data.metroLine;
+            let spot = [];
+
+            if(metro){
+                if(metro.byLine){
+                    for (let lineName in metro.byLine) {
+                        let line = metro.byLine[lineName];
+                        score = (1000 - line.dif)*(metroLineObj[lineName].score+25);
+                    }
+                }
+            }
+            scoreArray.push({hid:hid,score:score});
+        }
+
+        console.log(scoreArray);
+
+        scoreArray.sort((a, b) => b.score - a.score);
+
+        var total = scoreArray.length;
+
+        var rankSys = Config.metro.score.percentile;
+
+        for (let i = 0; i < scoreArray.length; i++) {
+            let hid = scoreArray[i].hid;
+            let score = 0;
+            var rank = (i / total); // 백분위
+            var percentile = 0;
+
+            var isRanked = false;
+
+            for (let j = 0; j < rankSys.length; j++) {
+                if(!isRanked){
+                    var minus = percentile;
+                    percentile += rankSys[j];
+
+                    if(rank<percentile){  //35% 안에 들면
+                        rank -= minus;   //rank를 0~0.2로 맞춰줌
+                        score = (9-j) + Math.floor((rank/rankSys[j])*10)/10; //rank(0~0.2)를 0.2로 나눈값*10/10 -> 0~0.9가 나옴
+                        isRanked = true;
+                    }
+                }
+            }
+
+            let hotel = this.data.hotels[hid];
+
+            if(hotel.assessment){
+                if(hotel.assessment.score){
+                    hotel.assessment.score.metro = score;
+                }else{
+                    hotel.assessment.score = {metro:score};
+                }
+            }else{
+                hotel.assessment = {
+                    score:{metro:score},
+                    word:{metro:""}
+                };
+            }
+        }
+    },
+
+    second_byAreas: function(){
+        //다른 local들과는 달리 지하철 역을 Area별로 나눔 - 지역별로 어떤 노선들이 지나가는지 체크;
+        let areaArr = this.data.area;
+        let metroArr = this.data.local.metro;
+        
+        for (let i = 0; i < areaArr.length; i++) {
+            let area = areaArr[i];
+            if(!area.notArea){
+                for (let j = 0; j < metroArr.length; j++) {
+                    let metro = metroArr[j];
+                    if(isInArea(metro.coor, area.coor)){
+                        for (let k = 0; k < metro.line.length; k++) {
+                            var line = metro.line[k];
+
+                            if(area.local){
+                                if(area.local.metro){
+                                    if(area.local.metro[line]){
+                                        area.local.metro[line] ++;
+                                    }else{
+                                        area.local.metro[line] = 1;
+                                    }
+                                }else{
+                                    area.local.metro = {};
+                                    area.local.metro[line] = 1;
+                                }
+                            }else{
+                                area.local = {metro:{}};
+                                area.local.metro[line] = 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+
+    first_setMetro: function(){
+        for (var hid in this.data.hotels) {
+            var hotel = this.data.hotels[hid];
+            if(hotel.local){
+                hotel.local.metro = {
+                    nearest:{dif:Config.metro.nearStd},
+                    near:[],
+                    byLine:{}
+                };
+            }
+
+            var metroArr = this.data.local.metro;
+            var byLine = hotel.local.metro.byLine;
+
+            for (let i = 0; i < metroArr.length; i++) {
+                var metro = metroArr[i];
+                var dif = calculateDif(hotel.coor, metro.coor);
+
+                if(dif<Config.metro.nearStd){
+                    var metro_c = {
+                        coor:metro.coor,
+                        line:metro.line,
+                        name:metro.name,
+                        dif:dif.toFixed(0)*1
+                    };
+                    hotel.local.metro.near.push(metro_c);
+
+                    if(dif<hotel.local.metro.nearest.dif){
+                        hotel.local.metro.nearest = metro_c;
+                    }
+
+                    for (let j = 0; j < metro.line.length; j++) {
+                        var line = metro.line[j];
+
+                        if(byLine[line]){
+                            if(byLine[line].dif > metro_c.dif){
+                                byLine[line] = metro_c;
+                            }
+                        }else{
+                            byLine[line] = metro_c;
+                        }
+                    }
+                }
+            }
+
+            this.statistic.nearest.push(hotel.local.metro.nearest.dif);
+        }
+    }
+};
+
+export default SetMetro;

@@ -14,7 +14,8 @@
 @import "modules/city";
 
 @import "modules/spot/status.css";
-@import "modules/spot/first_check.css";
+@import "modules/spot/first_check";
+@import "modules/spot/third_finalize";
 
 @import "modules/city/spot";
 @import "modules/city/combine";

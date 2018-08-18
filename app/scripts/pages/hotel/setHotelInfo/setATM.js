@@ -26,8 +26,8 @@ var SetATM = {
 
         for (const hid in hotels) {
             var hotel = hotels[hid];
-            if (hotel.local) { //hotel.temp로 바꿀것임
-                var atmArr = hotel.local.atm;
+            if (hotel.temp) { //hotel.temp로 바꿀것임
+                var atmArr = hotel.temp.atm;
                 var atmObj = {
                     nearest: atmArr[0],
                     in130: 0,
@@ -66,7 +66,11 @@ var SetATM = {
                 } else {
                     errNo++;
                 }
-                hotel.local.atm = atmObj;
+                if(hotel.local){
+                    hotel.local.atm = atmObj;
+                }else{
+                    hotel.local = {atm: atmObj};
+                }
 
                 //in130은 호텔을 한 번 다 돈 다음에 통계에 기록할 수 있음
                 this.statistic.in130.push(atmObj.in130);
@@ -164,7 +168,7 @@ var SetATM = {
         for (var hid in this.data.hotels) {
             var hotel = this.data.hotels[hid];
             var atm = hotel.local.atm;
-            var rank = {
+            var rank = { //꼴지 랭크를 부여함 -> 혹시 hotel에 각 내용들이 없다면 랭크는 꼴찌
                 bank24: total,
                 nearest: total,
                 in130: total
@@ -194,11 +198,11 @@ var SetATM = {
 
         var scoreArray = [];
 
-        for (var hid in this.data.hotels) {
-            var hotel = this.data.hotels[hid];
+        for (let hid in this.data.hotels) {
+            let hotel = this.data.hotels[hid];
             var atm = hotel.rank.atm;
-            var weight = Config.atm.score.weight
-            var score = (atm.bank24*weight.bank24 + atm.nearest*weight.nearest + atm.in130*weight.in130);
+            var weight = Config.atm.score.weight;
+            let score = (atm.bank24*weight.bank24 + atm.nearest*weight.nearest + atm.in130*weight.in130);
 
             scoreArray.push({score:score,hid:hid});
         }
@@ -210,8 +214,8 @@ var SetATM = {
         var rankSys = Config.atm.score.percentile;
 
         for (let i = 0; i < scoreArray.length; i++) {
-            var hid = scoreArray[i].hid;
-            var score = 0;
+            let hid = scoreArray[i].hid;
+            let score = 0;
             var rank = (i / total); // 백분위
             var percentile = 0;
 
@@ -230,7 +234,7 @@ var SetATM = {
                 }
             }
 
-            var hotel = this.data.hotels[hid];
+            let hotel = this.data.hotels[hid];
 
             if(hotel.assessment){
                 if(hotel.assessment.score){
@@ -253,9 +257,9 @@ var SetATM = {
 
         var rank = 0;
         if(type === "integrate"){
-            rank = (hotel.rank.atm.bank24 / total)
+            rank = (hotel.rank.atm.bank24 / total);
         }else{
-            rank = (hotel.rank.atm[type] / total)
+            rank = (hotel.rank.atm[type] / total);
         }
 
         var config = Config.atm.word;
@@ -265,7 +269,7 @@ var SetATM = {
         for (let i = 0; i < config[type].std.length; i++) {   //n분 거리에 있다.
             if(!inStd){
                 if(rank < config[type].std[i]){
-                    txt += config[type].word[i]
+                    txt += config[type].word[i];
                     inStd = true;
                 }
             }
@@ -296,12 +300,12 @@ var SetATM = {
                 }else{ //시나리오 2
                     let dif = difToMin(atm.nearest.dif);
                     let dif24 = difToMin(atm.bank24.dif);
-                    txt += `가장 가까운 ATM은 도보 ${dif} 거리에 있고, 은행이 소유한 24시간 오픈 ATM도 도보 ${dif24}`
+                    txt += `가장 가까운 ATM은 도보 ${dif} 거리에 있고, 은행이 소유한 24시간 오픈 ATM도 도보 ${dif24}`;
                     txt += this.tfc('nearest', hotel);
                 }
             }else{
                 let dif = difToMin(atm.nearest.dif);
-                txt += `가장 가까운 ATM은 도보 ${dif} 거리에 있음.`
+                txt += `가장 가까운 ATM은 도보 ${dif} 거리에 있음.`;
             }
 
 

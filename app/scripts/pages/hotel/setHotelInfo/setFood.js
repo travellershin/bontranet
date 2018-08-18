@@ -6,66 +6,137 @@ var SetFood = {
 
     statistic:{
         nearest:[],
-        in250:[]
+        nearby:[]
     },
     byArea:{},
 
     init: function(data, cid){
         this.data = data;
+        console.log(this.data);
         if(this.first_geoCode(cid)){    //지오코딩 할 게 없으면 second부터 진행함
             this.second_setFood();  //숙소별로 식료품점들을 때려넣음
             this.third_byAreas(); //통계값을 만들어냄
             this.fourth_makeStats(); //통계값을 만들어냄 - cid/stat/local/food 라고 들어갈것임
-            this.fifth_makeRank();
-
-            console.log(this.data)
+            this.fifth_makeScore();
+            this.sixth_wording();
         }
     },
-
-    fifth_makeRank: function(){
-
-        this.statistic.nearest.sort((a, b) => a - b);
-        this.statistic.in250.sort((a, b) => b - a);
-
-        var total = Object.keys(this.data.hotels).length;
+    sixth_wording: function(){
+        //!todo!!! 지금은 뉴욕 기준으로 되어있음 -> 도시별로 나누기(예-편의점 있는 도시용)
 
         for (var hid in this.data.hotels) {
             var hotel = this.data.hotels[hid];
+            var txt = '';
 
-            //todo:!!!! food는 종류가 여러가지 있기 때문에 key값별로 줘야 함. Score에서는 large 근처에 있는 녀석만 9점이상을 주는게 좋을듯
+            if(hotel.local){
+                if(hotel.local.food){
+                    var food = hotel.local.food;
+                    if(food.grocery){
+                        if(food.large){ //둘 다 있는 케이스
+                            let dif = difToMin(food.large.nearest.dif);
+                            let josa = food.large.nearest.josa;
+                            let name = food.large.nearest.name;
+                            if(food.large.nearest.dif < food.grocery.nearest.dif + 50){
+                                txt = `각종 식료품을 살 수 있는 대형 마트인 ${name}${josa} 도보 ${dif} 거리에 있음`;
+                            }else{
+                                var gdif = difToMin(food.grocery.nearest.dif);
+                                txt = `간단한 먹거리를 살 수 있는 식료품점이 도보 ${gdif} 거리에 있고, 각종 음식들을 살 수 있는 대형 마트 ${name}${josa} 도보 ${dif} 거리에 있음`;
+                            }
+                        }else{  //grocery만 있는 케이스
+                            let dif = difToMin(food.grocery.nearest.dif);
+                            txt = `간단한 먹거리를 살 수 있는 식료품점이 도보 ${dif} 거리에 있음`;
+                        }
+                    }else if(food.large){ ///주변에 grocery는 없는데 large만 있는 특이케이스
+                        let dif = difToMin(food.large.nearest.dif);
+                        let name = food.large.nearest.name;
+                        let josa = food.large.nearest.josa;
+                        txt = `각종 식료품을 살 수 있는 대형 마트 ${name}${josa} 도보 ${dif} 거리에 있음`;
+                    }
+                }else{
+                    txt = '식료품을 살 만한 곳은 주변 5분거리 이내에 없음';
+                }
+            }else{
+                txt = '식료품을 살 만한 곳은 주변 5분거리 이내에 없음';
+            }
 
-            // var food = hotel.local.food;
-            // var rank = {
-            //     nearest: total,
-            //     in250: total
-            // };
+            if(hotel.assessment.word){
+                hotel.assessment.word.food = txt;
+            }else{
+                hotel.assessment.word = {food:txt};
+            }
+        }
+    },
 
-            // for (var key in rank) {
-            //     if(key === "in250"){
-            //         if(food[key]){
-            //             rank[key] = this.statistic[key].indexOf(food[key])+1;
-            //         }
-            //     }else{
-            //         if(food[key]){
-            //             rank[key] = this.statistic[key].indexOf(food[key].dif)+1;
-            //         }
-            //     }
-                
-            // }
-            // if(hotel.rank){
-            //     hotel.rank.food = rank;
-            // }else{
-            //     hotel.rank = {food:rank};
-            // }
+    fifth_makeScore: function(){
+        var scoreArray = [];
+        for (let hid in this.data.hotels) {
+            let hotel = this.data.hotels[hid];
+            let score = 0;
+            if(hotel.local){
+                if(hotel.local.food){
+                    for (var kind in hotel.local.food) {
+                        var food = hotel.local.food[kind];
+                        var nearestDif = food.nearest.dif;
+                        
+                        score += (Config.food.kind[kind].std - nearestDif);
+                        if(Config.food.kind[kind].multiple){
+                            score = score * Config.food.kind[kind].multiple;
+                        }
+                        score += food.nearby*2;
+                    }
+                }
+            }
+            scoreArray.push({score:score,hid:hid});
+        }
+        scoreArray.sort((a, b) => b.score - a.score); //높을수록 좋음
 
+        var total = scoreArray.length;
+
+        var rankSys = Config.food.score.percentile;
+
+        for (let i = 0; i < scoreArray.length; i++) {
+            let hid = scoreArray[i].hid;
+            let score = 0;
+            var rank = (i / total); // 백분위
+            var percentile = 0;
+
+            var isRanked = false;
+
+            for (let j = 0; j < rankSys.length; j++) {
+                if(!isRanked){
+                    var minus = percentile;
+                    percentile += rankSys[j];
+
+                    if(rank<percentile){  //35% 안에 들면
+                        rank -= minus;   //rank를 0~0.2로 맞춰줌
+                        score = (9-j) + Math.floor((rank/rankSys[j])*10)/10; //rank(0~0.2)를 0.2로 나눈값*10/10 -> 0~0.9가 나옴
+                        isRanked = true;
+                    }
+                }
+            }
+
+            let hotel = this.data.hotels[hid];
+
+            if(hotel.assessment){
+                if(hotel.assessment.score){
+                    hotel.assessment.score.food = score;
+                }else{
+                    hotel.assessment.score = {food:score};
+                }
+            }else{
+                hotel.assessment = {
+                    score:{food:score},
+                    word:{food:""}
+                };
+            }
         }
     },
 
     fourth_makeStats: function(){
         var stat = {
             nearest: 0,
-            in250:0
-        }
+            nearby:0
+        };
 
         for (var id in stat) {
             var sum = 0;
@@ -134,86 +205,98 @@ var SetFood = {
             var hotel = this.data.hotels[hid];
             var isSomeFood = false;
 
-            for (var type in this.data.local.food) {
+            for (let type in this.data.local.food) {
                 var groArr = this.data.local.food[type];
-                var std = Config.food.nearStd;
+                var std = Config.food.kind[type].std;
 
                 for (let i = 0; i < groArr.length; i++) {
                     var food = groArr[i];
                     var dif = calculateDif(hotel.coor, food.coor);
 
-                    if(dif<std[type]){
+                    if(dif<std){
                         isSomeFood = true;
                         food.dif = dif;
+                        food.type = type;
 
-                        if(hotel.local){
-                            if(hotel.local.food){
-                                if(hotel.local.food[type]){
-                                    hotel.local.food[type].push(food);
+                        if(hotel.temp){
+                            if(hotel.temp.food){
+                                if(hotel.temp.food[type]){
+                                    hotel.temp.food[type].push(food);
                                 }else{
-                                    hotel.local.food[type] = [food];
+                                    hotel.temp.food[type] = [food];
                                 }
                             }else{
-                                hotel.local.food = {};
-                                hotel.local.food[type] = [food];
+                                hotel.temp.food = {};
+                                hotel.temp.food[type] = [food];
                             }
                         }else{
-                            hotel.local = {
+                            hotel.temp = {
                                 food:{}
                             };
-                            hotel.local.food[type] = [food];
+                            hotel.temp.food[type] = [food];
                         }
                     }
                 }
             }
 
             if(!isSomeFood){
-                hotel.local.food = false;
+                hotel.temp.food = false;
             }else{
+                var nearby = 0;
+                var nearest = {dif:999};
 
-                for (var type in hotel.local.food) {
-                    if(type !== "large"){
-                        hotel.local.food[type].sort((a, b) => a.dif - b.dif);
-                        var deepArr = [];
+                for (let type in hotel.temp.food) {
+                    hotel.temp.food[type].sort((a, b) => a.dif - b.dif);
+                    
+                    var foodArr = [];
+                    for (let i = 0; i <  hotel.temp.food[type].length; i++) {
+                        let copy = $.extend(true,{},hotel.temp.food[type][i]);
+                        foodArr.push(copy);
+                    }
 
-                        for (let i = 0; i < hotel.local.food[type].length; i++) {  //깊은 복사를 반드시 해야함
-                            var hotelObj = hotel.local.food[type][i];
+                    nearby += foodArr.length;
 
-                            var deep = {
-                                address: hotelObj.address,
-                                coor:{
-                                    lat: hotelObj.coor.lat,
-                                    lng: hotelObj.coor.lng
-                                },
-                                dif:hotelObj.dif,
-                                name:hotelObj.name
-                            }
-                            deepArr.push(deep)
-                        }
+                    if(foodArr[0].dif < nearest.dif){
+                        nearest = foodArr[0];
+                    }
 
-                        var in250 = deepArr.length;
-                        this.statistic.nearest.push(deepArr[0].dif);
-                        this.statistic.in250.push(in250);
+                    if(foodArr.length>5){
+                        foodArr.length = 5;
+                    }
 
-                        if(this.byArea[hotel.area]){//지역별 food 밀집도를 확인하는 그런 녀석
-                            this.byArea[hotel.area].push(in250);
+                    if(hotel.local){
+                        if(hotel.local.food){
+                            hotel.local.food[type] = {
+                                nearby: hotel.temp.food[type].length,
+                                near5: foodArr,
+                                nearest: foodArr[0]
+                            };
                         }else{
-                            this.byArea[hotel.area] = [in250];
+                            hotel.local.food = {};
+                            hotel.local.food[type] = {
+                                nearby: hotel.temp.food[type].length,
+                                near5: foodArr,
+                                nearest: foodArr[0]
+                            };
                         }
-                        
-
-                        if(deepArr.length>5){
-                            deepArr.length = 5;
-                        }
-
-                        this.data.hotels[hid].local.food[type] = {
-                            in250: hotel.local.food[type].length,
-                            near5: deepArr,
-                            nearest: deepArr[0]
+                    }else{
+                        hotel.local = {food:{}};
+                        hotel.local.local.food[type] = {
+                            nearby: hotel.temp.food[type].length,
+                            near5: foodArr,
+                            nearest: foodArr[0]
                         };
-
                     }
                 }
+
+                if(this.byArea[hotel.area]){//지역별 food 밀집도를 확인하는 그런 녀석
+                    this.byArea[hotel.area].push(nearby);
+                }else{
+                    this.byArea[hotel.area] = [nearby];
+                }
+
+                this.statistic.nearest.push(nearest.dif);
+                this.statistic.nearby.push(nearby);
             }
         }
     },
@@ -236,7 +319,7 @@ var SetFood = {
             }
         }
         if(isGeoNeeded){
-            var ref = "cities/"+cid+"/local/food/grocery"
+            var ref = "cities/"+cid+"/local/food/grocery";
             GeoCode.init(geoArr, ref);
             return false;
         }else{

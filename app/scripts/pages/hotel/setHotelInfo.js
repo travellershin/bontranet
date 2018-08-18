@@ -1,5 +1,6 @@
 import SetATM from "./setHotelInfo/setATM.js";
 import SetFood from "./setHotelInfo/setFood.js";
+import SetMetro from "./setHotelInfo/setMetro.js";
 
 var SetHotelInfo = {
     init: function(data, cid, cityName){
@@ -136,6 +137,7 @@ var SetHotelInfo = {
         if (status.local.metro === 2) {
             checkTxt += '<p class="hotel__status__txt">OK - 정리된 지하철/대중교통 정보 확인.</p>';
         } else if (status.local.metro === 1) {
+            SetMetro.init(data);
             checkTxt += '<p class="hotel__status__txt">Making - RAW 지하철/대중교통 정보 확인. 호텔별로 가까운 지하철 추출.</p>';
         } else if (status.local.metro === 0) {
             checkTxt += '<p class="hotel__status__txt color--red">No Data - 도시 지하철/대중교통 정보가 없습니다. 먼저 정보를 입력해주세요.</p>';

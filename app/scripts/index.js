@@ -57,6 +57,7 @@ function login(name){
     });
 }
 
+
 $(document).ready(function () {
     var provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().onAuthStateChanged(function (user) {

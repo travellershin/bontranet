@@ -16,9 +16,9 @@ $(".hd_nav_apply").click(function () {
     location.href = "index.html";
 });
 
-function isInArea(spot, area) {
-    var polygon = new google.maps.Polygon({paths:area});
-    var coor = new google.maps.LatLng(spot.lat, spot.lng);
+function isInArea(spotCoor, areaCoor) {
+    var polygon = new google.maps.Polygon({paths:areaCoor});
+    var coor = new google.maps.LatLng(spotCoor.lat, spotCoor.lng);
 
     if(google.maps.geometry.poly.containsLocation(coor, polygon)){
         return true;
@@ -44,7 +44,7 @@ function calculateDif(coor1, coor2) {
 }
 
 function deg2rad(deg) {
-    return deg * (Math.PI / 180)
+    return deg * (Math.PI / 180);
 }
 
 function comma(x) {
@@ -52,11 +52,11 @@ function comma(x) {
 }
 
 function difToMin(dif) {
-    var time = ""
+    var time = "";
     if(dif<40){
         time = (Math.floor(dif*1.2/10)*10+10) +'초';
     }else{
-        var time = (Math.floor(dif / 50) + 1) +'분';
+        time = (Math.floor(dif / 50) + 1) +'분';
     }
     
     return time;

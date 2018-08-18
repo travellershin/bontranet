@@ -6,24 +6,23 @@ var First_Check = {
 
         $(".spot").on("click", ".check__remainLargeData", function () {
             that.setRemainNumber($(this).parent().attr("id"), $(this).parent().children(".check__remainNumber").val());
-        })
+        });
 
         $(".spot").on("click", ".check__nodata", function () {
             var sid = $(this).attr('sid');
             that.siteNodata(sid);
-            toast('데이터 공백 처리')
-        })
+            toast('데이터 공백 처리');
+        });
 
         //좌표 없는 관광지의 좌표를 입력함
         $(".spot").on("click", ".check__spotDelete", function () {
             that.deleteSpot($(this).parent().attr("id"), $(this).parent().children(".check__spotName").html());
-        })
+        });
 
         //좌표 없는 관광지의 좌표를 입력함
         $(".spot").on("click", ".check__confirm", function () {
-            console.log('yolo')
             that.inputCoordinate($(this).parent().attr("id"), $(this).parent().children(".check__spotCoor").val());
-        })
+        });
     },
 
     siteNodata: function (sid) {
@@ -38,7 +37,7 @@ var First_Check = {
     setRemainNumber: function (site, number) {
         let city = $(".cityName").attr("cid");
         let cutNo = number.trim() * 1;
-        console.log(this.data)
+        console.log(this.data);
 
         if (cutNo < 100) {
             toast("100개 이상의 장소를 유지해주세요");
@@ -63,13 +62,13 @@ var First_Check = {
             if (confirm(name + " 장소를 제거합니다. 계속할까요?")) {
                 firebase.database().ref("cities/" + city + "/spots/" + site + "/" + no).set({ deleted: true });
                 $("#" + sid).remove();
-                toast("장소가 제거되었습니다.")
+                toast("장소가 제거되었습니다.");
             }
         }else{
             if (confirm(no + "번 장소를 제거합니다. 계속할까요?")) {
                 firebase.database().ref("cities/" + city + "/spots/" + site + "/" + no).set({ deleted: true });
                 $("#" + sid).remove();
-                toast("장소가 제거되었습니다.")
+                toast("장소가 제거되었습니다.");
             }
         }
     },
@@ -86,26 +85,26 @@ var First_Check = {
 
             if (isNaN(lat) || isNaN(lng)) {
                 //좌표 중 하나가
-                toast("좌표가 부정확하게 입력되었습니다")
+                toast("좌표가 부정확하게 입력되었습니다");
             } else {
                 coor = {
                     lat: lat,
                     lng: lng
-                }
+                };
                 toast("좌표가 입력되었습니다");
                 $("#" + sid).remove();
                 firebase.database().ref("cities/" + city + "/spots/" + site + "/" + no + "/coor").set(coor);
             }
         } else {
-            toast("좌표가 부정확하게 입력되었습니다")
+            toast("좌표가 부정확하게 입력되었습니다");
         }
     },
 
     inflate: function(data){
-        $(".header").append('<p class="return">돌아가기</p>')
+        $(".header").append('<p class="return">돌아가기</p>');
 
         let hasProblem = false;
-        let txt = ''
+        let txt = '';
         let searchUrl = 'https://www.google.co.kr/maps/place/' + $(".cityName").attr('cityName') + "+";
 
         let siteObj = {
@@ -113,8 +112,8 @@ var First_Check = {
             nv: "네이버",
             ta: "트립어드바이저",
             lp: "론리플래닛"
-        }
-        console.log(data)
+        };
+        console.log(data);
 
         for (var site in siteObj) {
 
@@ -125,7 +124,7 @@ var First_Check = {
             let noSpotTxt = '<p class="check__subTitle">비어있는 관광지가 있습니다</p>';
 
             if (data[site]) {
-                txt += '<p class="check__title">' + siteObj[site] + ' 데이터 확인</p>'
+                txt += '<p class="check__title">' + siteObj[site] + ' 데이터 확인</p>';
                 if (!data[site].nodata) {
                     for (var i = 0; i < data[site].length; i++) {
                         let spot = data[site][i];
@@ -155,11 +154,11 @@ var First_Check = {
                                 }
 
                                 if (!hasCoor) {
-                                    noCoorTxt += '<div class="check__line" id="' + site + '_' + i + '">'
-                                    noCoorTxt += '<a class="check__spotName" href="' + searchUrl + spot.name + '" target="_blank">' + spot.name + '</a>'
-                                    noCoorTxt += '<input class="check__spotCoor" placeholder="xx.xxxxx, xx.xxxxx 형태 입력">'
-                                    noCoorTxt += '<p class="check__confirm">좌표 입력</p><p class="check__spotDelete">장소 삭제</p>'
-                                    noCoorTxt += '</div>'
+                                    noCoorTxt += '<div class="check__line" id="' + site + '_' + i + '">';
+                                    noCoorTxt += '<a class="check__spotName" href="' + searchUrl + spot.name + '" target="_blank">' + spot.name + '</a>';
+                                    noCoorTxt += '<input class="check__spotCoor" placeholder="xx.xxxxx, xx.xxxxx 형태 입력">';
+                                    noCoorTxt += '<p class="check__confirm">좌표 입력</p><p class="check__spotDelete">장소 삭제</p>';
+                                    noCoorTxt += '</div>';
                                     hasProblem = true;
                                     siteHasProblem = true;
                                     noCoor = true;
@@ -167,10 +166,10 @@ var First_Check = {
                             }
 
                         } else {
-                            noSpotTxt += '<div class="check__line" id="' + site + '_' + i + '">'
-                            noSpotTxt += '<p class="check__txt">' + i + ' 번 관광지</p>'
-                            noSpotTxt += '<p class="check__spotDelete">장소 삭제</p>'
-                            noSpotTxt += '</div>'
+                            noSpotTxt += '<div class="check__line" id="' + site + '_' + i + '">';
+                            noSpotTxt += '<p class="check__txt">' + i + ' 번 관광지</p>';
+                            noSpotTxt += '<p class="check__spotDelete">장소 삭제</p>';
+                            noSpotTxt += '</div>';
                             hasProblem = true;
                             siteHasProblem = true;
                             noSpot = true;
@@ -199,11 +198,11 @@ var First_Check = {
                         if (!largeOK) {
                             hasProblem = true;
                             siteHasProblem = true;
-                            txt += '<p class="check__subTitle">' + siteObj[site] + ' 장소 데이터가 150개를 초과(' + data[site].length + '개)합니다.</p>'
-                            txt += '<div class="check__line" id="' + site + '">'
-                            txt += '<input class="check__remainNumber" value="' + data[site].length + '">'
-                            txt += '<p class="check__remainLargeData">개의 장소 유지하기</p>'
-                            txt += '</div>'
+                            txt += '<p class="check__subTitle">' + siteObj[site] + ' 장소 데이터가 150개를 초과(' + data[site].length + '개)합니다.</p>';
+                            txt += '<div class="check__line" id="' + site + '">';
+                            txt += '<input class="check__remainNumber" value="' + data[site].length + '">';
+                            txt += '<p class="check__remainLargeData">개의 장소 유지하기</p>';
+                            txt += '</div>';
                         }
 
                     }
@@ -211,20 +210,20 @@ var First_Check = {
 
 
             } else {
-                txt += '<p class="check__title">' + siteObj[site] + ' 데이터가 존재하지 않습니다.</p>'
-                txt += '<p class="check__subTitle check__nodata" sid="' + site + '">데이터가 원래 없을 경우 클릭해주세욥</p>'
+                txt += '<p class="check__title">' + siteObj[site] + ' 데이터가 존재하지 않습니다.</p>';
+                txt += '<p class="check__subTitle check__nodata" sid="' + site + '">데이터가 원래 없을 경우 클릭해주세욥</p>';
                 hasProblem = true;
                 siteHasProblem = true;
 
                 // TODO: 원래 사이트 데이터가 존재하지 않는 경우를 대비한 버튼을 만들고 site 값으로 nodata: true를 넣어준다.
             }
             if (!siteHasProblem) {
-                txt += '<p class="check__subTitle">발견된 문제가 없습니다</p>'
+                txt += '<p class="check__subTitle">발견된 문제가 없습니다</p>';
             }
         }
 
         if (hasProblem) {
-            txt += '<p class="check__finish">검사를 모두 마쳤습니다</p>'
+            txt += '<p class="check__finish">검사를 모두 마쳤습니다</p>';
             $(".spot .wrapper").html(txt);
         } else {
             var cid = $(".cityName").attr('cid');
@@ -233,7 +232,7 @@ var First_Check = {
             AutoCombine.init(data);
         }
 
-        $(".wrap").scrollTop(0)
+        $(".wrap").scrollTop(0);
     }
 }
 

@@ -1,5 +1,6 @@
 import First_check from "./spot/first_check.js";
-import Second_combine from "./spot/seond_combine.js"
+import Second_combine from "./spot/seond_combine.js";
+import Third_finalize from "./spot/third_finalize.js";
 
 var Spot = {
     cities: {},
@@ -14,30 +15,40 @@ var Spot = {
         this.order = u_i.setting.order;
 
         firebase.database().ref('setting/cities').on("value", snap => {
-            var data = snap.val()
+            var data = snap.val();
             that.cities = data;
             that.order = u_i.setting.order;
             that.data = data;
             that.inflate_status();
-        })
+        });
 
         $(".spot").on("click", ".active", function () {
             var cid = $(this).parent().parent().attr('id');
             var status = that.cities[cid].status.spot;
 
-            that.inflate_city(cid, status)
-        })
+            that.inflate_city(cid, status);
+        });
 
         $(".spot").on("click", ".order", function () {
             that.order = $(this).attr("id");
             var uid = u_i.mail;
             firebase.database().ref('users/' + uid + "/setting/order").set(that.order);
             that.inflate_status();
-        })
+        });
 
         $(".spot").on("click", ".return", function () {
             that.inflate_status();
-        })
+        });
+
+        //2차검증
+        $(".spot").on("click", ".remove_spot", function(){
+            Third_finalize.remove_spot($(this).parent().attr("id"));
+        });
+        $(".spot").on("click", ".redo_remove", function(){
+            Third_finalize.redo_remove();
+        });
+
+        
     },
 
     inflate_status: function(){
@@ -57,21 +68,20 @@ var Spot = {
         txt += '</div>';
 
         var orderArray = [];
-        console.log(data);
 
         for (var cid in data) {
             var city = data[cid];
 
             if (this.order === "abc") {
-                orderArray.push({ cid: cid, idx: city.name })
+                orderArray.push({ cid: cid, idx: city.name });
             } else if (this.order === "changed") {
-                orderArray.push({ cid: cid, idx: city.order.changed })
+                orderArray.push({ cid: cid, idx: city.order.changed });
             }
         }
 
         orderArray.sort(function (a, b) {
-            return a.idx > b.idx ? 1 : a.idx < b.idx ? -1 : 0
-        })
+            return a.idx > b.idx ? 1 : a.idx < b.idx ? -1 : 0;
+        });
 
         var statusArray = [
             '<p class="liner__status"><span class="active">정보수집</span> > <span>정보검증</span> > <span>합치기</span> > <span>2차검증</span> > <span>완료</span></p>',
@@ -79,11 +89,11 @@ var Spot = {
             '<p class="liner__status"><span>정보수집</span> > <span>정보검증</span> > <span class="active">합치기</span> > <span>2차검증</span> > <span>완료</span></p>',
             '<p class="liner__status"><span>정보수집</span> > <span>정보검증</span> > <span>합치기</span> > <span class="active">2차검증</span> > <span>완료</span></p>',
             '<p class="liner__status"><span>정보수집</span> > <span>정보검증</span> > <span>합치기</span> > <span>2차검증</span> > <span class="active">완료</span></p>'
-        ]
+        ];
 
         for (let i = 0; i < orderArray.length; i++) {
-            var cid = orderArray[i].cid;
-            var city = data[cid];
+            let cid = orderArray[i].cid;
+            let city = data[cid];
 
             txt += '<div class="liner" id="' + cid + '">';
             txt += '<p class="liner__cityName">' + city.name + '</p>';
@@ -112,29 +122,30 @@ var Spot = {
                     $(".header").html('<h2>' + cityName + ' 정보검증</h2>').attr('cid', cid).attr('cityName',cityName).addClass("cityName");
                     First_check.inflate(data.spots);
                 } else if (status === 2) { //합치기작업
-                    Second_combine.init()
+                    Second_combine.init();
                 } else {  //2차검증화면과 완료화면은 따로 차이가 없음
-
+                    $(".header").html('<h2>' + cityName + ' 2차검증</h2>').attr('cid', cid).attr('cityName',cityName).addClass("cityName");
+                    Third_finalize.inflate(data);
                 }
             }else{
-                toast('아무런 데이터가 없습니다. 데이터 수집을 먼저 진행해주세요.')
+                toast('아무런 데이터가 없습니다. 데이터 수집을 먼저 진행해주세요.');
             }
-        })
+        });
 
         $(".nav__item").click(function () {
             if($(this).hasClass('nav__item--hasDrawer')){
                 return false;
             }
             firebase.database().ref('cities/' + that.current).off("value");
-        })
+        });
 
         $(".nav__drawer__item ").click(function () {
             if ($(this).attr('id') === 'nav_spot') {
                 return false;
             }
             firebase.database().ref('cities/' + that.current).off("value");
-        })
+        });
     }
-}
+};
 
 export default Spot;
