@@ -27,6 +27,7 @@ var Third_finalize = {
 
 
     inflate: function(data){
+        let cid = $(".cityName").attr("cid");
         $(".header").append('<p class="return">돌아가기</p>');
         
         if(this.temp){
@@ -35,7 +36,6 @@ var Third_finalize = {
 
         let spotObj = data.spots.combined;
         this.spotObj = spotObj;
-        console.log(spotObj);
         let rankArr = [];
         let spotTotal = Object.keys(spotObj).length;
         let txt = '';
@@ -59,15 +59,15 @@ var Third_finalize = {
             score -= minRank;
 
             if(individualArr.length === 1){
-                score -= 120;
+                score -= spotTotal/2;
                 score -= minRank;
                 if(spot.rank.nv){
                     score += 50;
                 }
             }else if(individualArr.length === 3){
-                score += (160 - minRank);
+                score += (spotTotal - minRank);
             }else if(individualArr.length === 4){
-                score += 160;
+                score += spotTotal;
             }
             
             rankArr.push({sid:sid, score:score});
@@ -104,6 +104,12 @@ var Third_finalize = {
         }
 
         $(".pages.spot .wrapper").html(txt);
+
+        let pushArr = [];
+        for (let i = 0; i < rankArr.length; i++) {
+            pushArr.push(spotObj[rankArr[i].sid]);
+        }
+        // firebase.database().ref("cities/"+cid+"/spots/ranked").set(pushArr);
 
    }
 };

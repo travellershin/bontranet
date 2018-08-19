@@ -216,7 +216,7 @@ var SetATM = {
         for (let i = 0; i < scoreArray.length; i++) {
             let hid = scoreArray[i].hid;
             let score = 0;
-            var rank = (i / total); // 백분위
+            var rank = ((i+1) / total); // 백분위
             var percentile = 0;
 
             var isRanked = false;
@@ -228,7 +228,7 @@ var SetATM = {
 
                     if(rank<percentile){  //35% 안에 들면
                         rank -= minus;   //rank를 0~0.2로 맞춰줌
-                        score = (9-j) + Math.floor((rank/rankSys[j])*10)/10; //rank(0~0.2)를 0.2로 나눈값*10/10 -> 0~0.9가 나옴
+                        score = (10-j) - Math.ceil((rank/rankSys[j])*10)/10; //rank(0~0.2)를 0.2로 나눈값*10/10 -> 0~0.9가 나옴
                         isRanked = true;
                     }
                 }

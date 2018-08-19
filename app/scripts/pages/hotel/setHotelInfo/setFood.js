@@ -12,7 +12,6 @@ var SetFood = {
 
     init: function(data, cid){
         this.data = data;
-        console.log(this.data);
         if(this.first_geoCode(cid)){    //지오코딩 할 게 없으면 second부터 진행함
             this.second_setFood();  //숙소별로 식료품점들을 때려넣음
             this.third_byAreas(); //통계값을 만들어냄
@@ -97,7 +96,7 @@ var SetFood = {
         for (let i = 0; i < scoreArray.length; i++) {
             let hid = scoreArray[i].hid;
             let score = 0;
-            var rank = (i / total); // 백분위
+            let rank = ((i+1) / total); // 백분위 - 0~1 (높을수록 0에 가까움)
             var percentile = 0;
 
             var isRanked = false;
@@ -109,7 +108,7 @@ var SetFood = {
 
                     if(rank<percentile){  //35% 안에 들면
                         rank -= minus;   //rank를 0~0.2로 맞춰줌
-                        score = (9-j) + Math.floor((rank/rankSys[j])*10)/10; //rank(0~0.2)를 0.2로 나눈값*10/10 -> 0~0.9가 나옴
+                        score = (10-j) - Math.ceil((rank/rankSys[j])*10)/10; //rank(0~0.2)를 0.2로 나눈값*10/10 -> 0~0.9가 나옴
                         isRanked = true;
                     }
                 }

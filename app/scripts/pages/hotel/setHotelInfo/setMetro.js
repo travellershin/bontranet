@@ -1,19 +1,22 @@
 import Config from "../config.js";
 
 var SetMetro = {
-    data:{},
     statistic:{nearest:[]},
 
-    init: function(data){
+    init: function(data, cityName){
         this.data = data;
+        this.cityName = cityName;
         this.first_setMetro(); //숙소별로 지하철을 때려넣음
         this.second_byAreas();
         this.third_makeScore();
         this.fourth_wording();
-        console.log(this.data);
     },
 
     fourth_wording: function(){
+        
+        var cityName = this.cityName;
+        var totalLine = Object.keys(this.data.metroLine).length;
+
         for (var hid in this.data.hotels) {
             let hotel = this.data.hotels[hid];
             let txtArr = [];
@@ -22,38 +25,79 @@ var SetMetro = {
             if(metro){
                 var nearestDif = difToMin(metro.nearest.dif);
                 var nearestStn = metro.nearest.name;
-                var txt = `숙소에서 가장 가까운 지하철역은 ${nearestDif} 거리의 ${nearestStn}역`;
-                txt.push(txtArr);
-                
-
+                var lineNo = Object.keys(metro.byLine).length;
+                var spotNo = Object.keys(metro.spot).length;
+                var score = hotel.assessment.score.metro;
+                var avgTime = difToMin(metro.avgDif);
+                txtArr.push(`숙소에서 가장 가까운 지하철역은 도보 ${nearestDif} 거리의 ${nearestStn}역`);
+                txtArr.push(`도보 10분거리 이내에 ${totalLine}개의 ${cityName} 전체 지하철 노선 중 ${lineNo}개 노선이 지남`);
+                txtArr.push(`${cityName} 100대 관광지 중 ${spotNo}개를 지하철 환승 없이 평균 ${avgTime}의 도보 이동으로 방문 가능`);
+                if(score>8.9){
+                    txtArr.push('지하철을 이용해 관광하기 매우 편리한 대중교통의 최고 요지에 위치함');
+                }else if(score>7.9){
+                    txtArr.push('지하철을 이용해 관광하기 편리한 대중교통의 요지에 위치함');
+                }else if(score>6.9){
+                    txtArr.push('지하철을 이용해 관광하기 나쁘지 않은 위치에 있음');
+                }else if(score>5.9){
+                    txtArr.push('지하철을 이용해 관광하기에 아주 좋은 위치는 아님');
+                }else{
+                    txtArr.push('대중교통 편의성은 약간 낮은 편으로, 관광이 조금 불편할 수 있음');
+                }
             }else{
                 txtArr = ["이 숙소 도보 15분 이내 거리에 지하철 역이 없어서 대중교통을 이용하기 불편할 수 있음"];
             }
+            hotel.assessment.word.metro = txtArr;
         }
     },
 
     third_makeScore: function(){
         var scoreArray = [];
+        //1개 관광지를 갈 수 있을 때마다 1800 - dif합계(호텔에서, 내려서)점만큼 추가
 
         for (var hid in this.data.hotels) {
             let hotel = this.data.hotels[hid];
             let metro = hotel.local.metro;
+            let spots = this.data.spots.ranked;
+            metro.spot = [];
             let score = 0;
             let metroLineObj = this.data.metroLine;
-            let spot = [];
+            let spotObj = {};
 
             if(metro){
-                if(metro.byLine){
-                    for (let lineName in metro.byLine) {
-                        let line = metro.byLine[lineName];
-                        score = (1000 - line.dif)*(metroLineObj[lineName].score+25);
+                for (let lineName in metro.byLine) {
+                    let line = metro.byLine[lineName];
+                    let difHotel = line.dif;
+                    for (let i = 0; i < metroLineObj[lineName].length; i++) {
+                        let spot = metroLineObj[lineName][i];
+                        let difSpot = spot.dif;
+                        if(spotObj[spot.rank]){
+                            if(difSpot + difHotel < spotObj[spot.rank].dif){
+                                spotObj[spot.rank] = {dif: (difSpot + difHotel), line:lineName};
+                            }
+                        }else{
+                            spotObj[spot.rank] = {dif: (difSpot + difHotel), line:lineName};
+                        }
                     }
                 }
+                var avg = 0;
+
+                for (let rank in spotObj) {
+                    score += (1800 - spotObj[rank].dif);
+                    avg += spotObj[rank].dif;
+                    let hotelSpot = {
+                        coor: spots[rank].coor,
+                        line: spotObj[rank].line,
+                        name:spots[rank].name,
+                        spotMetroName:spots[rank].metroInfo[spotObj[rank].line].name,
+                        rank:rank
+                    };
+                    metro.spot.push(hotelSpot);
+                }
+                avg = Math.round((avg / Object.keys(spotObj).length));
+                metro.avgDif = avg;
             }
             scoreArray.push({hid:hid,score:score});
         }
-
-        console.log(scoreArray);
 
         scoreArray.sort((a, b) => b.score - a.score);
 
@@ -64,7 +108,7 @@ var SetMetro = {
         for (let i = 0; i < scoreArray.length; i++) {
             let hid = scoreArray[i].hid;
             let score = 0;
-            var rank = (i / total); // 백분위
+            let rank = ((i+1) / total); // 백분위 - 0~1 (높을수록 0에 가까움)
             var percentile = 0;
 
             var isRanked = false;
@@ -76,7 +120,7 @@ var SetMetro = {
 
                     if(rank<percentile){  //35% 안에 들면
                         rank -= minus;   //rank를 0~0.2로 맞춰줌
-                        score = (9-j) + Math.floor((rank/rankSys[j])*10)/10; //rank(0~0.2)를 0.2로 나눈값*10/10 -> 0~0.9가 나옴
+                        score = (10-j) - Math.ceil((rank/rankSys[j])*10)/10; //rank(0~0.2)를 0.2로 나눈값*10/10 -> 0~0.9가 나옴
                         isRanked = true;
                     }
                 }

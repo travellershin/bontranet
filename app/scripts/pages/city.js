@@ -5,9 +5,11 @@ let City = {
         let that = this;
 
         $(".city").on("click", ".refresh", function(){
-            if (confirm("데이터를 많이 잡아먹습니다! 정말 최신화하시겠습니까?")) {
-                that.refreshStatus();
-            }
+            that.refreshStatus();
+        });
+
+        $(".city").on("click", ".city__transport", function(){
+            that.createMetroLine($(this).parent().attr("id"));
         });
     },
 
@@ -94,92 +96,172 @@ let City = {
         });
     },
 
+    createMetroLine: function(cid){
+        let status = this.data[cid].status;
+        if(status.spot>2 && status.transport>0){
+            toast("대중교통 정보를 가공합니다.");
+
+            firebase.database().ref("cities/"+cid).once("value", snap =>{
+                let data = snap.val();
+                let spots = data.spots.ranked;
+                let max = spots.length;
+                if(max>99){
+                    max = 99;
+                }
+
+                let metros = data.local.metro;
+                let metroLine = {};
+                let tempLine = {};
+
+                for (let j = 0; j < metros.length; j++) {
+                    let metro = metros[j];
+                    
+                    for (let i = 0; i < max; i++) {
+                        let hasSpot = false;
+                        let spot = spots[i];
+                        let dif = 600;
+                        let tempDif = 0;
+
+                        if(spot.enterance){
+                            for (let k = 0; k < spot.enterance.length; k++) {
+                                let ent = spot.enterance[k];
+                                tempDif = calculateDif(ent, metro.coor);
+                                if(tempDif<dif){
+                                    dif = tempDif;
+                                    hasSpot = true;
+                                }
+                            }
+                        }
+
+                        tempDif = calculateDif(spot.coor, metro.coor);
+                        if(tempDif<dif){
+                            dif = tempDif;
+                            hasSpot = true;
+                        }
+
+                        if(hasSpot){
+                            for (let k = 0; k < metro.line.length; k++) {
+                                let line = metro.line[k];
+                                if(!tempLine[line]){
+                                    tempLine[line] = {};
+                                }
+                                if(tempLine[line][i]){
+                                    if(dif < tempLine[line][i].dif){
+                                        tempLine[line][i] = {coor:spot.coor, rank:i, name:spot.name, dif:dif, stn:{coor:metro.coor, name:metro.name}}; 
+                                    }
+                                }else{
+                                    tempLine[line][i] = {coor:spot.coor, rank:i, name:spot.name, dif:dif, stn:{coor:metro.coor, name:metro.name}}; 
+                                }
+                            }
+                        }
+                    }
+                    for (var line in tempLine) {
+                        metroLine[line] = [];
+
+                        for (var rank in tempLine[line]) {
+                            metroLine[line].push(tempLine[line][rank]);
+                        }
+                    }
+                    
+                }
+                console.log(metroLine);
+                firebase.database().ref("cities/"+cid+"/metroLine").set(metroLine);
+            });
+
+        }else{
+            toast("대중교통 정보를 가공하기에 자료가 부족합니다.");
+        }
+    },
+
+
     refreshStatus: function(){
         var that = this;
 
-        firebase.database().ref('cities').once("value", snap=>{
-            var data = snap.val();
-            for (var cid in that.data) {
-
-                var status = {};
-
-                var city = data[cid];
-
-                if(city){
-                    status = {
-                        hotel: 0, //0:데이터없음, 1:숙소데이터만 있음, 2:평가데이터(워딩) 있음
-                        spot: that.data[cid].status.spot,
-                        area: 0,
-                        transport: 0, //데이터없음, 1:메트로데이터만 있음, 2:가공데이터(라인별..등) 있음
-                        price: 0
-                    };
-
-                    if (city.area) {
-                        status.area = 1;
-                    }
-
-                    if(city.hotels){
-                        var hotel = city.hotels[Object.keys(city.hotels)[0]];
-
-                        if(hotel.assessment){
-                            status.hotel = 2;
-                        }else{
-                            status.hotel = 1;
+        if (confirm("데이터를 많이 잡아먹습니다! 정말 최신화하시겠습니까?")) {
+            firebase.database().ref('cities').once("value", snap=>{
+                var data = snap.val();
+                for (var cid in that.data) {
+    
+                    var status = {};
+    
+                    var city = data[cid];
+    
+                    if(city){
+                        status = {
+                            hotel: 0, //0:데이터없음, 1:숙소데이터만 있음, 2:평가데이터(워딩) 있음
+                            spot: that.data[cid].status.spot,
+                            area: 0,
+                            transport: 0, //데이터없음, 1:메트로데이터만 있음, 2:가공데이터(라인별..등) 있음
+                            price: 0
+                        };
+    
+                        if (city.area) {
+                            status.area = 1;
                         }
-
-                        if(hotel.area){
-                            status.area = 2;
-                        }else if(hotel.area === 1){
-                            status.area = 2;
-
-                            if(city.status){
-                                city.status.area = true;
+    
+                        if(city.hotels){
+                            var hotel = city.hotels[Object.keys(city.hotels)[0]];
+    
+                            if(hotel.assessment){
+                                status.hotel = 2;
                             }else{
-                                city.status = {
-                                    area: true
-                                };
+                                status.hotel = 1;
                             }
-
-                        }else{
-                            if (city.status) {
-                                city.status.area = false;
-                            } else {
-                                city.status = {
-                                    area: false
-                                };
+    
+                            if(hotel.area){
+                                status.area = 2;
+                            }else if(hotel.area === 1){
+                                status.area = 2;
+    
+                                if(city.status){
+                                    city.status.area = true;
+                                }else{
+                                    city.status = {
+                                        area: true
+                                    };
+                                }
+    
+                            }else{
+                                if (city.status) {
+                                    city.status.area = false;
+                                } else {
+                                    city.status = {
+                                        area: false
+                                    };
+                                }
+                            }
+                            firebase.database().ref('cities/' + cid + '/status').update(city.status);
+                        }
+    
+                        if(city.metro){
+                            if(city.metroLine){
+                                status.transport = 2;
+                            }else{
+                                status.transport = 1;
                             }
                         }
-                        firebase.database().ref('cities/' + cid + '/status').update(city.status);
-                    }
-
-                    if(city.metro){
-                        if(city.metroLine){
-                            status.transport = 2;
-                        }else{
-                            status.transport = 1;
+    
+                        if(city.price){
+                            status.price = 1;
                         }
+                    }else{
+                        status = {
+                            hotel: 0, //0:데이터없음, 1:숙소데이터만 있음, 2:평가데이터(워딩) 있음
+                            spot: 0,
+                            area: 0,
+                            transport: 0, //데이터없음, 1:메트로데이터만 있음, 2:가공데이터(라인별..등) 있음
+                            price: 0
+                        };
                     }
-
-                    if(city.price){
-                        status.price = 1;
-                    }
-                }else{
-                    status = {
-                        hotel: 0, //0:데이터없음, 1:숙소데이터만 있음, 2:평가데이터(워딩) 있음
-                        spot: 0,
-                        area: 0,
-                        transport: 0, //데이터없음, 1:메트로데이터만 있음, 2:가공데이터(라인별..등) 있음
-                        price: 0
-                    };
+    
+                    this.data[cid].status = status;
                 }
-
-                this.data[cid].status = status;
-            }
-            firebase.database().ref('setting/cities').set(that.data).then(() => {
-                that.inflate(that.data);
-                toast('최신화 완료');
+                firebase.database().ref('setting/cities').set(that.data).then(() => {
+                    that.inflate(that.data);
+                    toast('최신화 완료');
+                });
             });
-        });
+        }
     }
 };
 
