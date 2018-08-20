@@ -44,6 +44,7 @@ var SetMetro = {
                     txtArr.push('대중교통 편의성은 약간 낮은 편으로, 관광이 조금 불편할 수 있음');
                 }
             }else{
+                hotel.assessment.score.transport = 4;
                 txtArr = ["이 숙소 도보 15분 이내 거리에 지하철 역이 없어서 대중교통을 이용하기 불편할 수 있음"];
             }
             hotel.assessment.word.transport = txtArr;
@@ -58,17 +59,17 @@ var SetMetro = {
             let hotel = this.data.hotels[hid];
             let metro = hotel.local.metro;
             let spots = this.data.spots.ranked;
-            metro.spot = [];
             let score = 0;
             let metroLineObj = this.data.metroLine;
             let spotObj = {};
 
             if(metro){
+                metro.spot = [];
                 for (let lineName in metro.byLine) {
                     let line = metro.byLine[lineName];
                     let difHotel = line.dif;
-                    for (let i = 0; i < metroLineObj[lineName].length; i++) {
-                        let spot = metroLineObj[lineName][i];
+                    for (let i = 0; i < metroLineObj[lineName].spot.length; i++) {
+                        let spot = metroLineObj[lineName].spot[i];
                         let difSpot = spot.dif;
                         if(spotObj[spot.rank]){
                             if(difSpot + difHotel < spotObj[spot.rank].dif){
@@ -95,8 +96,9 @@ var SetMetro = {
                 }
                 avg = Math.round((avg / Object.keys(spotObj).length));
                 metro.avgDiftoSpot = avg;
+                scoreArray.push({hid:hid,score:score});
             }
-            scoreArray.push({hid:hid,score:score});
+
         }
 
         scoreArray.sort((a, b) => b.score - a.score);
@@ -192,12 +194,14 @@ var SetMetro = {
 
             var metroArr = this.data.local.metro;
             var byLine = hotel.local.metro.byLine;
+            let hasMetro = false;
 
             for (let i = 0; i < metroArr.length; i++) {
                 var metro = metroArr[i];
                 var dif = calculateDif(hotel.coor, metro.coor);
 
                 if(dif<Config.metro.nearStd){
+                    hasMetro = true;
                     var metro_c = {
                         coor:metro.coor,
                         line:metro.line,
@@ -224,7 +228,13 @@ var SetMetro = {
                 }
             }
 
-            this.statistic.nearest.push(hotel.local.metro.nearest.dif);
+            if(hasMetro){
+                this.statistic.nearest.push(hotel.local.metro.nearest.dif);
+            }else{
+                hotel.local.metro = false;
+            }
+
+            
         }
     }
 };

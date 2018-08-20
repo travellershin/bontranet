@@ -7,6 +7,14 @@ var Config = {
         }
     },
 
+    laundry:{
+        nearStd:500,
+
+        score:{
+            percentile : [0.15, 0.2, 0.25, 0.2, 0.2], //9, 8, 7...점대의 백분위 비율 - 합계 1 되어야 함!!! - 없으면 5점 부여
+        }
+    },
+
     food:{
         kind:{
             bakery:{ //일반적 베이커리 총칭

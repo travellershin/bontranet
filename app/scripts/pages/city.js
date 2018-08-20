@@ -1,3 +1,5 @@
+import MetroLine from "./city/metroLine.js";
+
 let City = {
     data: {},
 
@@ -9,7 +11,14 @@ let City = {
         });
 
         $(".city").on("click", ".city__transport", function(){
-            that.createMetroLine($(this).parent().attr("id"));
+            let cid = $(this).parent().attr("id"); 
+            let status = that.data[cid].status;
+            if(status.spot>2 && status.transport>0){
+                toast("대중교통 정보를 가공합니다.");
+                MetroLine.init(cid);
+            }else{
+                toast("대중교통 정보를 가공하기에 자료가 부족합니다.");
+            }
         });
     },
 
@@ -95,84 +104,6 @@ let City = {
             this.inflate(data);
         });
     },
-
-    createMetroLine: function(cid){
-        let status = this.data[cid].status;
-        if(status.spot>2 && status.transport>0){
-            toast("대중교통 정보를 가공합니다.");
-
-            firebase.database().ref("cities/"+cid).once("value", snap =>{
-                let data = snap.val();
-                let spots = data.spots.ranked;
-                let max = spots.length;
-                if(max>99){
-                    max = 99;
-                }
-
-                let metros = data.local.metro;
-                let metroLine = {};
-                let tempLine = {};
-
-                for (let j = 0; j < metros.length; j++) {
-                    let metro = metros[j];
-                    
-                    for (let i = 0; i < max; i++) {
-                        let hasSpot = false;
-                        let spot = spots[i];
-                        let dif = 600;
-                        let tempDif = 0;
-
-                        if(spot.enterance){
-                            for (let k = 0; k < spot.enterance.length; k++) {
-                                let ent = spot.enterance[k];
-                                tempDif = calculateDif(ent, metro.coor);
-                                if(tempDif<dif){
-                                    dif = tempDif;
-                                    hasSpot = true;
-                                }
-                            }
-                        }
-
-                        tempDif = calculateDif(spot.coor, metro.coor);
-                        if(tempDif<dif){
-                            dif = tempDif;
-                            hasSpot = true;
-                        }
-
-                        if(hasSpot){
-                            for (let k = 0; k < metro.line.length; k++) {
-                                let line = metro.line[k];
-                                if(!tempLine[line]){
-                                    tempLine[line] = {};
-                                }
-                                if(tempLine[line][i]){
-                                    if(dif < tempLine[line][i].dif){
-                                        tempLine[line][i] = {coor:spot.coor, rank:i, name:spot.name, dif:dif, stn:{coor:metro.coor, name:metro.name}}; 
-                                    }
-                                }else{
-                                    tempLine[line][i] = {coor:spot.coor, rank:i, name:spot.name, dif:dif, stn:{coor:metro.coor, name:metro.name}}; 
-                                }
-                            }
-                        }
-                    }
-                    for (var line in tempLine) {
-                        metroLine[line] = [];
-
-                        for (var rank in tempLine[line]) {
-                            metroLine[line].push(tempLine[line][rank]);
-                        }
-                    }
-                    
-                }
-                console.log(metroLine);
-                firebase.database().ref("cities/"+cid+"/metroLine").set(metroLine);
-            });
-
-        }else{
-            toast("대중교통 정보를 가공하기에 자료가 부족합니다.");
-        }
-    },
-
 
     refreshStatus: function(){
         var that = this;
