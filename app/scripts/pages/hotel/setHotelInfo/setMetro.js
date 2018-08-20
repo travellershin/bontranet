@@ -27,7 +27,7 @@ var SetMetro = {
                 var nearestStn = metro.nearest.name;
                 var lineNo = Object.keys(metro.byLine).length;
                 var spotNo = Object.keys(metro.spot).length;
-                var score = hotel.assessment.score.metro;
+                var score = hotel.assessment.score.transport;
                 var avgTime = difToMin(metro.avgDif);
                 txtArr.push(`숙소에서 가장 가까운 지하철역은 도보 ${nearestDif} 거리의 ${nearestStn}역`);
                 txtArr.push(`도보 10분거리 이내에 ${totalLine}개의 ${cityName} 전체 지하철 노선 중 ${lineNo}개 노선이 지남`);
@@ -46,7 +46,7 @@ var SetMetro = {
             }else{
                 txtArr = ["이 숙소 도보 15분 이내 거리에 지하철 역이 없어서 대중교통을 이용하기 불편할 수 있음"];
             }
-            hotel.assessment.word.metro = txtArr;
+            hotel.assessment.word.transport = txtArr;
         }
     },
 
@@ -94,7 +94,7 @@ var SetMetro = {
                     metro.spot.push(hotelSpot);
                 }
                 avg = Math.round((avg / Object.keys(spotObj).length));
-                metro.avgDif = avg;
+                metro.avgDiftoSpot = avg;
             }
             scoreArray.push({hid:hid,score:score});
         }
@@ -130,14 +130,14 @@ var SetMetro = {
 
             if(hotel.assessment){
                 if(hotel.assessment.score){
-                    hotel.assessment.score.metro = score;
+                    hotel.assessment.score.transport = score;
                 }else{
-                    hotel.assessment.score = {metro:score};
+                    hotel.assessment.score = {transport:score};
                 }
             }else{
                 hotel.assessment = {
-                    score:{metro:score},
-                    word:{metro:""}
+                    score:{transport:score},
+                    word:{transport:""}
                 };
             }
         }

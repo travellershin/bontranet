@@ -6,8 +6,8 @@ let Area = {
     listener: function(){
         let that = this;
         $(".area__page").on("change", ".area__line input", function(){
-            that.scoreChange($(this))
-        })
+            that.scoreChange($(this));
+        });
     },
 
     init: function(data, cid, name){
@@ -18,7 +18,7 @@ let Area = {
         this.data = data;
         this.city = cid;
         this.cityName = name;
-        console.log(data)
+        console.log(data);
 
         this.listener();
         this.inflate();
@@ -36,14 +36,14 @@ let Area = {
             }else{
                 if(div.hasClass("input__score")){
                     let idx = $(".input__score").index(div);
-                    div.val(div.val()*1)
+                    div.val(div.val()*1);
                     toast(this.data.area[idx].name+"의 치안점수가 "+div.val()*1+"점으로 변경되었습니다.");
-                    firebase.database().ref("cities/"+this.city+"/area/"+idx+"/safety/score").set(div.val())
+                    firebase.database().ref("cities/"+this.city+"/area/"+idx+"/safety/score").set(div.val()*1);
                 }else if(div.hasClass("input__misdemeanor")){
                     let idx = $(".input__misdemeanor").index(div);
                     div.val(div.val()*1)
                     toast(this.data.area[idx].name+"의 경범죄 점수가 "+div.val()*1+"점으로 변경되었습니다.");
-                    firebase.database().ref("cities/"+this.city+"/area/"+idx+"/safety/misdemeanor").set(div.val())
+                    firebase.database().ref("cities/"+this.city+"/area/"+idx+"/safety/misdemeanor").set(div.val()*1);
                 }
             }
         }
