@@ -1050,6 +1050,73 @@ However, delay the fade out process for 2.5 seconds */
                 text-decoration: none;
                 padding-bottom:12px;
             }
+.view .wrapper{
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+.view .wrapper .left{
+            width: calc(100% - 900px);
+            height: 100%;
+            float: left;
+        }
+.view .wrapper .right{
+            width: 900px;
+            height: 100%;
+            float: left;
+            -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+            padding: 0 20px;
+        }
+.view .wrapper .right .header{
+                width: 100%;
+                height: 50px;
+                -webkit-box-sizing:border-box;
+                        box-sizing:border-box;
+                border-top: 2px solid #888;
+                border-bottom: 2px solid #888;
+
+            }
+.view .wrapper .right .header .ul{
+                    overflow: hidden;
+                }
+.view .wrapper .right .header .dropdown{
+                    cursor: pointer;
+                    margin: 0 10px;
+                    display: inline-block;
+                }
+.view .wrapper .right .header .dropdown .dropbtn{
+                        font-size:17px;
+                        color: #555;
+                        padding: 0 20px;
+                        line-height: 48px;
+                        font-weight:bold;
+                    }
+.view .wrapper .right .header .dropdown__content{
+                        display: none;
+                        position: absolute;
+                        min-width: 120px;
+                        -webkit-box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                        z-index: 1;
+                        background: #fff;
+                    }
+.view .wrapper .right .header .dropdown__content p{
+                            line-height:50px;
+                            padding-left:20px;
+                        }
+.view .wrapper .right .header .dropdown__content p:hover{
+                                background-color:#eee;
+                            }
+.view .wrapper .right .header .dropdown:hover{
+                        background-color:#555;
+                    }
+.view .wrapper .right .header .dropdown:hover .dropbtn{
+                            color:#fff;
+                        }
+.view .wrapper .right .header .dropdown:hover .dropdown__content{
+                            display:block;
+                        }
 .spot .header{
     margin: 0 auto;
     width: 1080px;

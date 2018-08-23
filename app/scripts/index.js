@@ -3,6 +3,7 @@ import City from "./pages/city.js";
 import Spot from "./pages/spot.js";
 import Account from "./pages/account.js";
 import Subway from "./pages/subway.js";
+import View from "./pages/view.js";
 import Hotel from "./pages/hotel.js";
 import GeoCode from "./modules/geoCode.js";
 
@@ -22,8 +23,9 @@ var Nav_function = {
         City.init(u_i);
         initialized.city = true;
     },
-    map: function () {
-        Subway.init();
+    view: function () {
+        View.init();
+        initialized.view = true;
     },
     account: function () {
 
@@ -37,6 +39,7 @@ var Nav_function = {
     },
     hotel: function () {
         Hotel.init();
+        initialized.hotel = true;
     },
     link: function () {
 

@@ -12,6 +12,7 @@
 @import "modules/account";
 @import "modules/hotel";
 @import "modules/city";
+@import "modules/view";
 
 @import "modules/spot/status.css";
 @import "modules/spot/first_check";
