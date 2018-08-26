@@ -1095,7 +1095,7 @@ However, delay the fade out process for 2.5 seconds */
 .view .wrapper .right .header .dropdown__content{
                         display: none;
                         position: absolute;
-                        min-width: 120px;
+                        min-width: 160px;
                         -webkit-box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
                                 box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
                         z-index: 1;
@@ -1117,6 +1117,103 @@ However, delay the fade out process for 2.5 seconds */
 .view .wrapper .right .header .dropdown:hover .dropdown__content{
                             display:block;
                         }
+.view .setter{
+        width: 100%;
+        overflow: hidden;
+        height: 50px;
+        -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+        padding: 0 20px;
+        margin-bottom: 20px;
+    }
+.view .setter h3{
+            line-height:50px;
+            float: left;
+            font-weight: bold;
+        }
+.view .setter__radius{
+            margin-left: 20px;
+            float: left;
+            height: 50px;
+            line-height: 50px;
+        }
+.view .setter__radius__input{
+                height: 32px;
+                border: 1px solid #999;
+                margin-left: 12px;
+                width: 60px;
+                -webkit-box-sizing: border-box;
+                        box-sizing: border-box;
+                padding-right: 12px;
+                text-align: right;
+            }
+.view .viewer{
+        width: 100%;
+        height: calc(100% - 120px);
+        overflow: auto;
+    }
+.view .viewer .metro__info{
+            width: 100%;
+        }
+.view .viewer .metro__info__stn{
+                width: 100%;
+                height: 50px;
+                overflow: hidden;
+                line-height: 50px;
+            }
+.view .viewer .metro__info__stn__name{
+                    float: left;
+                    font-weight:bold;
+                    color:#555;
+                }
+.view .viewer .metro__info__stn__line{
+                    float: left;
+                    overflow: hidden;
+                    margin-left: 12px;
+                }
+.view .viewer .metro__info__lineName{
+                float: left;
+                height: 24px;
+                margin-top: 13px;
+                margin-right:4px;
+                width:24px;
+                border-radius:30px;
+                line-height:26px;
+                text-align:center;
+                font-weight:bold;
+            }
+.view .viewer .spot__info__line{
+                width: 100%;
+                height: 40px;
+                overflow: hidden;
+            }
+.view .viewer .spot__info__line>*{
+                    float: left;
+                    line-height: 40px;
+                    text-align: center;
+                }
+.view .viewer .spot__info__name{
+                width: 250px;
+            }
+.view .viewer .spot__info__lineName{
+                width: 24px;
+                height: 24px;
+                line-height:24px;
+                margin: 0 13px;
+                margin-top: 8px;
+                border-radius: 30px;
+                font-size:14px;
+                font-weight:bold;
+            }
+.view .viewer .spot__info__lineName--txt{
+                    width: 50px;
+                }
+.view .viewer .spot__info__stnName{
+                width: 300px;
+            }
+.view .viewer .spot__info__distance{
+                width: 100px;
+            }
 .spot .header{
     margin: 0 auto;
     width: 1080px;
