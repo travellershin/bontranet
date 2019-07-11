@@ -1,192 +1,103 @@
-.attend{
-    box-sizing: border-box;
+.at{
+    position: relative;
+    margin-top:50px;
     width: 100%;
-    margin: 0 auto;
 
-    &__top{
+    &__box{
+        width: 400px;
+        height: 80px;
+        margin:0 auto;
+        position: relative;
         overflow: hidden;
-        padding-top: 10px;
-        display: flex;
-        justify-content: center;
-    }
 
-    #calendar{
-        float: left;
-        width: 820px;
-
-        & .fc-header-toolbar{
-            margin-bottom: 14px;
-            height: 36px;
-        }
-
-        & .fc-day-number{
-            font-size: 14px;
-            color: #333;
-        }
-        & .fc-left{
-            overflow: hidden;
-        }
-
-        & h2{
+        &__word{
             float: left;
-            font-size: 24px;
-            line-height: 32px;
-            height: 32px;
-            margin-left: 10px;
+            height: 80px;
+            line-height:80px;
+            font-size:20px;
+            font-weight:bold;
+            margin-right:20px;
         }
 
-        & .fc-day{
-            text-align: center;
-            line-height: 72px;
-            height: 72px;
-            color: #666;
-            font-weight: bold;
-            padding:20px 0 12px 0;
-            box-sizing: border-box;
-            position: relative;
+        &__clock{
+            float: left;
+            height: 80px;
+            line-height:80px;
+            font-size:36px;
+            font-weight:bold;
+        }
+
+        &__btn{
+            float: right;
+            line-height:48px;
+            height: 48px;
+            width: 70px;
+            margin: 16px;
+            margin-right:0;
+            text-align:center;
+            background-color:#de1c52;
+            color: #fcfcfc;
+            font-size: 20px;
             cursor: pointer;
-            font-size: 15px;
+            user-select:none;
 
-            & p{
-                line-height: 25px;
-
-                &:last-child{
-                    font-weight: bold;
-                }
-            }
-        }
-        & .fc-other-month{
-            color:#dadada;
-            font-weight: normal;
-            background-color: white;
-        }
-        & .fc-other-month.fc-today{
-            background-color: #fffefa;
-        }
-
-        & .fc-week{
-            height: 82px;
-        }
-    }
-
-    &__week{
-        float: left;
-        width: 100px;
-        margin-left: 40px;
-        height: 496px;
-        margin-top: 68px;
-
-        &__hour{
-            height: 83px;
-            line-height: 83px;
-            font-size: 17px;
-        }
-    }
-
-    &__month{
-        width: 670px;
-        margin: 20px auto;
-
-        &__line{
-            overflow: hidden;
-            height: 32px;
-            line-height: 32px;
-
-            &>*{
-                float: left;
+            &:hover{
+                background-color:#e61c52;
             }
 
-            &--red{
-                &>.attend__month__value{
-                    color: #E72C33;
-                }
-            }
-            &--sum{
-                margin-top: 10px;
-                &>.attend__month__value, .attend__month__category{
-                    font-weight: bold;
-                    font-size: 17px;
-                }
+            &:active{
+                background-color:#a61c52;
             }
         }
-
-        &__category{
-            width: 120px;
-        }
-
-        &__value{
-            width: 110px;
-            text-align: right;
-            margin-right: 40px;
-        }
-
-        &__explain{
-            width: 400px;
-            color: #999;
-            font-size: 15px;
-        }
-
-
     }
 
-}
-
-
-.inputWindow{
-    width: 370px;
-    height: 250px;
-    background-color: white;
-
-    & .title{
-        height: 40px;
-        line-height: 60px;
-        margin-left: 24px;
-        font-size: 18px;
-        font-weight: bold;
-        color: #777;
-    }
-
-    & .line{
-        height: 50px;
-        margin-top: 20px;
-        line-height: 50px;
-
-        &>*{
-            float: left;
-        }
-        &>input{
-            margin-top: 8px;
-            height: 36px;
-            width: 100px;
-            margin-left: 24px;
-            margin-right: 12px;
-            box-sizing: border-box;
-            border: 1px solid #666;
-            box-sizing: border-box;
-            padding-left: 12px;
-            font-size: 16px;
-        }
-    }
-
-    & .bottom{
+    &__memo{
+        margin:70px auto 6px auto;
+        padding-top:20px;
+        border-top: 1px solid #999;
+        font-size:18px;
+        font-weight:bold;
         width: 100%;
-        overflow: hidden;
-        height: 50px;
-        margin-top: 20px;
-        line-height: 50px;
+        max-width: 800px;
+    }
 
-        & .confirm, .close{
-            width: 185px;
+    &__msg{
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        box-sizing:border-box;
+        height:50px;
+        border: 3px solid #555;
+        border-radius:5px;
+
+        &__input{
+            height: 44px;
+            line-height:44px;
+            margin-left:18px;
+            font-size:15px;
             float: left;
-            text-align: center;
-            font-size: 17px;
-            cursor: pointer;
-            box-sizing: border-box;
-            border-top: 1px solid #555;
+            width: calc(100% - 88px);
         }
 
-        & .confirm{
-            border-right: 1px solid #555;
+        &__send{
+            height: 44px;
+            line-height:44px;
+            width: 70px;
+            font-size:16px;
+            float: right;
+            text-align:center;
+            user-select: none;
+            cursor: pointer;
+            background-color: #555;
+            color:#fafafa;
         }
+    }
+    &__info{
+        margin:6px auto;
+        font-size:12px;
+        color:#888;
+        width: 100%;
+        max-width: 800px;
+        padding-left:12px;
     }
 }

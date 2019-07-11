@@ -9,7 +9,8 @@ body{
     font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
     position: relative;
     color: #444;
-    min-width: 900px;
+    min-width:400px;
+    overflow: hidden;
 }
 input{
     border-style:none;

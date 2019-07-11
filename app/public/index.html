@@ -4,150 +4,48 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="index.css">
     <title>트립본 인트라넷</title>
-    <script src="https://www.gstatic.com/firebasejs/ui/3.1.1/firebase-ui-auth__ko.js"></script>
-    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/3.1.1/firebase-ui-auth.css" />
+    <script src="https://cdn.firebase.com/libs/firebaseui/4.0.0/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/4.0.0/firebaseui.css" />
 </head>
 
 <body>
     <!-- global/layout.css -->
-    <div class="loadingView">
-        <div>
-            <img class="loadingView__img" src="./assets/lion.gif" alt="">
-            <p class="loadingView__txt">정보를 불러오는 중</p>
-        </div>
-    </div>
 
     <header class="clearfix">
         <nav class="clearfix">
             <!-- index.js / function login -->
             <ul class="clearfix nav">
                 <li id="nav_attend" class="nav__item nav__item--selected">출근</li>
-                <li id="nav_todo" class="nav__item">업무</li>
-                <div class="nav__item nav__item--hasDrawer">
-                    <p>도시</p>
-                    <div class="nav__drawer">
-                        <p class="nav__drawer__item" id="nav_city">전체현황</p>
-                        <p class="nav__drawer__item" id="nav_spot">관광지</p>
-                        <p class="nav__drawer__item" id="nav_calc">계산기</p>
-                        <p class="nav__drawer__item" id="nav_hotel">숙소</p>
-                        <p class="nav__drawer__item" id="nav_link">링크</p>
-                    </div>
-                </div>
-                <li id="nav_view" class="nav__item">지도</li>
-                <li id="nav_account" class="nav__item">회계</li>
+                <li id="nav_calendar" class="nav__item">달력</li>
+                <li id="nav_logOut" class="nav__item">로그아웃</li>
             </ul>
         </nav>
-
-
-        <!-- modules/chat.css -->
-        <div class="alert clearfix">M</div>
-        <p class="helloWorld"></p>
-
     </header>
 
     <!-- global/layout.css -->
     <div class="wrap">
-        <!-- modules/attend.css -->
-        <div class="pages attend displayNone"></div>
-
-        <div class="pages spot displayNone"></div>
-        <div class="pages hotel displayNone"></div>
-        <div class="pages account displayNone"></div>
-        <div class="pages view displayNone"></div>
-
-        <div class="pages city"></div>
-
-        
-
-        <div class="pages displayNone">
-            <!-- modules/city/cityCodeView.css -->
-            <div class="city__pages spot displayNone">
-                <div class="header clearfix">
-                    <p class="header__cityName cityName"></p>
-                    <p class="header__status"></p>
-                    <p class="header__return">돌아가기</p>
-                </div>
-                <div class="spot__page check">
-
-                </div>
-
-                <div class="spot__page combine clearfix">
-                    <div class="combine__left">
-                        <div class="combine__main">
-
-                        </div>
-                        <div class="combine__target">
-
-                        </div>
-                    </div>
-                    <div class="combine__map" id="map">
-
-                    </div>
-                </div>
-
-                <div class="spot__page verifying">
-                    <div class="verifying__box">
-
-                    </div>
-                    <div class="verifying__control displayNone">
-                        <p>선택한 관광지를</p>
-                        <div class="verifying__control__line">
-                            <p id="verifying__control__merge">병합</p>
-                            <p id="verifying__control__remove">제거</p>
-                        </div>
-                    </div>
-                </div>
+        <div class="page at" id="attend">
+            <div class="at__box">
+                <p class="at__box__word">현재시간</p>
+                <div class="at__box__clock" id="clock"></div>
+                <p class="at__box__btn displayNone" id="at__btn">출근</p>
             </div>
-
-            <div class="city__pages hotel displayNone">
-                <div class="header clearfix">
-                    <p class="header__cityName cityName"></p>
-                    <p class="header__status"></p>
-                    <p class="header__return">돌아가기</p>
-                </div>
-                <div class="hotel__page hotel__status">
-                    <div class="hotel__status__line">
-                        <p class="hotel__status__title">교통편의성</p>
-                        <p class="hotel__status__txt" id="status_transport"></p>
-                    </div>
-                    <div class="hotel__status__line">
-                        <p class="hotel__status__title">치안</p>
-                        <p class="hotel__status__txt" id="status_safety"></p>
-                    </div>
-                    <div class="hotel__status__line">
-                        <p class="hotel__status__title">주변편의시설</p>
-                        <p class="hotel__status__txt" id="status_facility"></p>
-                    </div>
-                    <div class="hotel__status__line">
-                        <p class="hotel__status__title">가성비 정보</p>
-                        <p class="hotel__status__txt" id="status_costEff"></p>
-                    </div>
-
-                    <div class="hotel__info">
-
-                    </div>
-                </div>
+            <div class="at__box">
+                <p class="at__box__word">근무시간</p>
+                <div class="at__box__clock" id="clock-left">00:00</div>
+                <p class="at__box__btn displayNone" id="at__btn-tg">퇴근</p>
             </div>
-
-            <div class="city__pages area displayNone">
-                <div class="header clearfix">
-                    <p class="header__cityName cityName"></p>
-                    <p class="header__status"></p>
-                    <p class="header__return">돌아가기</p>
-                </div>
-                <div class="area__page">
-
-                </div>
+            <p class="at__memo">메모</p>
+            <div class="at__msg clearfix">
+                <input type="text" class="at__msg__input" id="at__msg">
+                <p class="at__msg__send" id="at__send__msg">남기기</p>
             </div>
+            <p class="at__info">예)오늘 10:15 출근했는데 깜박하고 늦게 눌렀어요</p>
+            <p class="at__info">* 출근시간은 버튼 누르기 5분 전으로 계산됩니다.</p>
+            
         </div>
+        <div class="page displayNone" id="calendar">
 
-        <div class="pages subway displayNone">
-            <div class="subway__map" id="subwayMap">
-
-            </div>
-            <div class="subway__info">
-
-            </div>
         </div>
     </div>
 
@@ -155,26 +53,26 @@
 
     </div>
 
-
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB14yPdQPLZ-jh7gL-PmJF0vkvTSHTt8Aw&libraries=geometry"></script>
-    <script src="./scripts/libraries/maplabel.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase.js"></script>
     <script>
       // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyBKgdEC20ODa-miFUXStyYmAdyoY4FzOc0",
-        authDomain: "intranet-efcad.firebaseapp.com",
-        databaseURL: "https://intranet-efcad.firebaseio.com",
-        projectId: "intranet-efcad",
+    const firebaseConfig = {
+        apiKey: "AIzaSyC6BclPAGLJm9GobTgDhnQfzkLdueJYNG0",
+        authDomain: "bontranet.firebaseapp.com",
+        databaseURL: "https://bontranet.firebaseio.com",
+        projectId: "bontranet",
         storageBucket: "",
-        messagingSenderId: "141304382157"
-      };
-      firebase.initializeApp(config);
-    </script><script src="./scripts/jQuery.js"></script>
-    <script src="./scripts/libraries/moment.min.js"></script>
-    <script src="./scripts/libraries/anypicker.min.js"></script>
-    <script src="./scripts/libraries/fullcalendar.min.js"></script>
+        messagingSenderId: "1032037964883",
+        appId: "1:1032037964883:web:6791cccd40313c37"
+    };
+      firebase.initializeApp(firebaseConfig);
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="./scripts/modules.js"></script>
+    <script src="./scripts/auth.js"></script>
+    <script src="./scripts/main.min.js"></script>
+    <script src="./scripts/interaction.min.js"></script>
+    <script src="./daygrid/main.min.js"></script>
     <script src="./scripts/index.js"></script>
 </body>
 

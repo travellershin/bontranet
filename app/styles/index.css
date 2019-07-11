@@ -2,23 +2,9 @@
 @import "global/layout";
 @import "global/module";
 
-@import "libraries/anypicker";
-@import "libraries/calendar";
+@import "libraries/main.min";
+@import "libraries/daygrid.min";
 
 @import "modules/attend";
-@import "modules/subway";
-@import "modules/chat";
+
 @import "modules/toast";
-@import "modules/account";
-@import "modules/hotel";
-@import "modules/city";
-@import "modules/view";
-
-@import "modules/spot/status.css";
-@import "modules/spot/first_check";
-@import "modules/spot/third_finalize";
-
-@import "modules/city/spot";
-@import "modules/city/combine";
-@import "modules/city/hotel";
-@import "modules/city/area";
