@@ -10,7 +10,7 @@
     "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-postcss": "^7.0.0",
-    "gulp-svg-sprite": "^1.4.0",
+    "gulp-svg-sprite": "^1.5.0",
     "gulp-watch": "^4.3.11",
     "postcss-import": "^11.1.0",
     "postcss-nested": "^2.x",
